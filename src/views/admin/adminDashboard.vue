@@ -1,6 +1,6 @@
 <template>
 <h2>
-    nihao
+    adminDashboard
 </h2>
 </template>
 

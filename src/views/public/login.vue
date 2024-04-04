@@ -28,6 +28,8 @@
 <script setup>
 import { ref } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElButton, ElCard } from 'element-plus';
+import { useRouter } from 'vue-router';
+import router from '@/router';
 
 const formData = ref({
   username: '',
@@ -54,9 +56,15 @@ const login = () => {
   const formInstance = formRef.value;
   formInstance.validate(valid => {
     if (valid) {
-      if (formData.value.username === 'admin' && formData.value.password === 'password') {
-        console.log('登录成功');
-      } else {
+      if (formData.value.username === 'admin') {
+        router.push('/adminDashboard')
+      }else if (formData.value.username === 'registrar') {
+        router.push('/registrarDashboard')
+      }else if (formData.value.username === 'student') {
+        router.push('/studentDashboard')
+      }else if (formData.value.username === 'teacher') {
+        router.push('/teacherDashboard')
+      }else {
         errorMessage.value = '用户名或密码错误';
       }
     } else {
