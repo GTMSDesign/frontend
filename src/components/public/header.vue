@@ -6,6 +6,7 @@
       <span class="title">论文评审管理系统</span>
     </div>
     <!-- Header content -->
+
     <el-dropdown @command="handleCommand" size="large">
       <div class="avatar-container">
         <el-icon color="#ffffff" size="20px"> <!-- 增大图标的大小 -->
@@ -27,9 +28,33 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 const router = useRouter()
 const handleCommand = () => {
-  router.push("/")
+
+  ElMessageBox.confirm(
+    '您确认要登出?',
+    '警告',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '成功登出',
+      })
+      router.replace("/")
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消登出',
+      })
+    })
 }
 </script>
 
