@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-    import StudentDashboard from "@/views/student/studentDashboard.vue"
+    import StudentDashboard from "@/views/public/dashboard.vue"
 </script>
 
 <style scoped>

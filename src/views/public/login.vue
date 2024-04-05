@@ -56,14 +56,8 @@ const login = () => {
   const formInstance = formRef.value;
   formInstance.validate(valid => {
     if (valid) {
-      if (formData.value.username === 'admin') {
-        router.push('/adminDashboard')
-      }else if (formData.value.username === 'registrar') {
-        router.push('/registrarDashboard')
-      }else if (formData.value.username === 'student') {
-        router.push('/studentDashboard')
-      }else if (formData.value.username === 'teacher') {
-        router.push('/teacherDashboard')
+      if (formData.value.username === '1') {
+        router.push('/dashboard')
       }else {
         errorMessage.value = '用户名或密码错误';
       }

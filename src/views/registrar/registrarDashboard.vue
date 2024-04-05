@@ -1,9 +1,0 @@
-<template>
-    <h2>
-        registrarDashboard
-    </h2>
-</template>
-    
-<script setup>
-    
-</script>
