@@ -19,42 +19,59 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="exit">退出登录</el-dropdown-item>
+          <EditProfile />
+          <el-dropdown-item divided command="exit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
   </el-header>
+  <!-- 浮动窗口 -->
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
+import EditProfile from '@/views/public/editProfile.vue'
 
 const router = useRouter()
-const handleCommand = () => {
 
-  ElMessageBox.confirm(
-    '您确认要登出?',
-    '警告',
-    {
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '成功登出',
-      })
-      router.replace("/")
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消登出',
-      })
-    })
+const handleCommand = (command: string | number | object) => {
+  switch (command) {
+    case "exit":
+      ElMessageBox.confirm(
+        '您确认要登出?',
+        '警告',
+        {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          ElMessage({
+            type: 'success',
+            message: '成功登出',
+          })
+          handleLogout()
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '取消登出',
+          })
+        })
+      break;
+    default:
+      break;
+  }
+
+  function handleLogout() {
+    // 防止退出后通过浏览器后退按钮返回页面
+    // TODO
+    // 登出
+    router.replace("/")
+  }
 }
 </script>
 

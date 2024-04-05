@@ -1,9 +1,9 @@
 <template>
-    <StudentDashboard />
+    <Dashboard />
 </template>
 
 <script setup>
-    import StudentDashboard from "@/views/public/dashboard.vue"
+    import Dashboard from "@/views/public/dashboard.vue"
 </script>
 
 <style scoped>

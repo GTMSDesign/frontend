@@ -57,7 +57,7 @@ const login = () => {
   formInstance.validate(valid => {
     if (valid) {
       if (formData.value.username === '1') {
-        router.push('/dashboard')
+        router.replace('/dashboard')
       }else {
         errorMessage.value = '用户名或密码错误';
       }
