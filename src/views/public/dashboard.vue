@@ -12,62 +12,7 @@
                 <!-- icon地址：https://element-plus.org/zh-CN/component/icon.html -->
                 <el-menu :router="false" :default-active="defaultActive" @select="handleMenuSelect"
                     background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-                    <el-tooltip effect="dark" content="论文状态" placement="right">
-                        <el-menu-item index="/thesisStatus" class="menu-item">
-                            <el-icon name="el-icon-s-data" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            论文状态
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="修改基本信息" placement="right">
-                        <el-menu-item index="/editProfile" class="menu-item">
-                            <el-icon name="el-icon-s-operation" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            修改基本信息
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="指导老师信息" placement="right">
-                        <el-menu-item index="/advisor-info" class="menu-item">
-                            <el-icon name="el-icon-user" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            指导老师信息
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="指导老师会话" placement="right">
-                        <el-menu-item index="/advisor-conversations" class="menu-item">
-                            <el-icon name="el-icon-chat-dot-round" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            指导老师会话
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="提交文档" placement="right">
-                        <el-menu-item index="/submit-documents" class="menu-item">
-                            <el-icon name="el-icon-document-add" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            提交文档
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="响应导师要求" placement="right">
-                        <el-menu-item index="/respond-requests" class="menu-item">
-                            <el-icon name="el-icon-tickets" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            响应导师要求
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="提交开题报告" placement="right">
-                        <el-menu-item index="/submit-proposal" class="menu-item">
-                            <el-icon name="el-icon-s-check" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            提交开题报告
-                        </el-menu-item></el-tooltip>
-                    <el-tooltip effect="dark" content="修改论文" placement="right">
-                        <el-menu-item index="/edit-paper" class="menu-item">
-                            <el-icon name="el-icon-edit-outline" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            修改论文
-                        </el-menu-item></el-tooltip>
+                    <AdminDashboard />
                 </el-menu>
                 <!-- Main content -->
                 <el-main class="main-content">
@@ -84,7 +29,8 @@
 <script setup lang="ts">
 import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
-import { useRouter } from 'vue-router';
+import AdminDashboard from '../admin/adminDashboard.vue';
+import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted } from 'vue';
 
