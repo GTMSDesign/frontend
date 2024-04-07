@@ -1,6 +1,7 @@
 <template>
 
 </template>
+<<<<<<< HEAD
 
 <script>
 import {ROLE,PATH} from "../../common/const";
@@ -23,3 +24,13 @@ export default {
     }
 }
 </script>
+=======
+
+<script setup lang="ts">
+
+</script>
+
+<style scoped>
+
+</style>
+>>>>>>> 0fc9abf437b62619138222025f1e06e7afd757bb
