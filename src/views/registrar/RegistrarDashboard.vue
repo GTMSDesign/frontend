@@ -3,29 +3,52 @@
         <el-container class="app-container">
             <!-- Header -->
             <Header />
-            <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-                <el-radio-button :value="false">expand</el-radio-button>
-                <el-radio-button :value="true">collapse</el-radio-button>
-            </el-radio-group> -->
             <el-container class="main-container">
                 <!-- Sidebar -->
-                <!-- icon地址：https://element-plus.org/zh-CN/component/icon.html -->
                 <el-menu :router="false" :default-active="defaultActive" @select="handleMenuSelect"
-                    background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-                    <el-tooltip effect="dark" content="论文状态" placement="right">
-                        <el-menu-item index="/thesisStatus" class="menu-item">
-                            <el-icon name="el-icon-s-data" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            教务员
-                        </el-menu-item></el-tooltip>
+                    background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose"
+                    :unique-opened="true">
+                    <!-- Iterate over menuItems array -->
+                    <template v-for="(menuItem, index) in menuItems" :key="index">
+                        <!-- Check if menuItem is a submenu -->
+                        <el-sub-menu v-if="menuItem.submenu" :index="menuItem.index">
+                            <template #title>
+                                <span class="menu-item">
+                                    <el-icon class="menu-icon">
+                                        <Edit />
+                                    </el-icon>
+                                    {{ menuItem.text }}
+                                </span>
+                            </template>
+                            <!-- Iterate over submenu items -->
+                            <template v-for="(subItem, subIndex) in menuItem.items" :key="subIndex">
+                                <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
+                                    <el-menu-item :index="subItem.index" class="menu-item">
+                                        <el-icon class="menu-icon">
+                                            <Edit />
+                                        </el-icon>
+                                        {{ subItem.text }}
+                                    </el-menu-item>
+                                </el-tooltip>
+                            </template>
+                        </el-sub-menu>
+                        <!-- If menuItem is not a submenu -->
+                        <el-tooltip v-else :content="menuItem.tooltip" effect="dark" placement="right">
+                            <el-menu-item :index="menuItem.index" class="menu-item">
+                                <el-icon class="menu-icon">
+                                    <Edit />
+                                </el-icon>
+                                {{ menuItem.text }}
+                            </el-menu-item>
+                        </el-tooltip>
+                    </template>
                 </el-menu>
                 <!-- Main content -->
                 <el-main class="main-content">
                     <!-- Router view -->
                     <router-view></router-view>
                 </el-main>
-                <!-- 沉底块 -->
+                <!-- Footer -->
                 <Footer />
             </el-container>
         </el-container>
@@ -33,34 +56,69 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/public/header.vue'
+import Header from '@/components/public/header.vue';
 import Footer from '@/components/public/footer.vue'
-import AdminDashboard from '../admin/AdminDashboard.vue';
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 
-// 默认活跃的菜单项
-const defaultActive = ref('/thesisStatus');
-// 处理菜单选择
+// Default active menu item
+const defaultActive = ref('/informationManagement');
+
+// Menu items array
+const menuItems = ref([
+    {
+        index: '/informationManagement',
+        text: '信息管理',
+        icon: 'el-icon-s-data',
+        tooltip: '信息管理',
+    },
+    {
+        index: '1',
+        text: '论文管理',
+        submenu: true,
+        items: [
+            { index: '/allThesisRegistrar', tooltip: '所有论文展示', text: '所有论文展示' },
+            { index: '/plagiarismCheck', tooltip: '检测重复率', text: '检测重复率' },
+            { index: '/generateEvaluation', tooltip: '安排评审', text: '安排评审' },
+            { index: '/arrangeReview', tooltip: '安排答辩', text: '安排答辩' },
+            { index: '/arrangePrinting', tooltip: '安排印刷', text: '安排印刷' },
+            { index: '/generateEvaluation', tooltip: '三个一评价', text: '三个一评价' },
+        ],
+    },
+    {
+        index: '/advisorAssignment',
+        text: '导师分配',
+        icon: 'el-icon-s-data',
+        tooltip: '导师分配',
+    },
+]);
+
+// Handle menu selection
 const handleMenuSelect = (index: string) => {
     router.push(index);
 };
-const isCollapse = ref(false)
+
+const isCollapse = ref(false);
+
+const router = useRouter();
+
 const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
+
 const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
-onMounted(() => {
-    // 当页面组件挂载时，获取当前路由路径并更新defaultActive
+
+onBeforeMount(() => {
+    // Update defaultActive when the page component is mounted
     defaultActive.value = router.currentRoute.value.path;
 });
-const router = useRouter();
 </script>
 
 <style scoped>
+/* Styles remain the same */
 #app {
     height: 100vh;
     /* 使整个页面占满视口 */
@@ -116,5 +174,11 @@ const router = useRouter();
     /* 设置主内容为相对定位 */
     padding-bottom: 40px;
     /* 留出底部沉底块的空间 */
+}
+</style>
+
+<style>
+.el-sub-menu .el-sub-menu__icon-arrow {
+    color: white;
 }
 </style>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {ROLE,PATH} from "../common/const";
+import { ROLE, PATH } from "../common/const";
 
 //public
 import login from "@/views/public/login.vue";
@@ -30,7 +30,6 @@ import ApproveDefense from "@/views/teacher/studentthesistracking/ApproveDefense
 import ApproveDeferred from "@/views/teacher/studentthesistracking/ApproveDeferred.vue";
 import ApproveDraft from "@/views/teacher/studentthesistracking/ApproveDraft.vue";
 import ApproveProposal from "@/views/teacher/studentthesistracking/ApproveProposal.vue";
-import DefenseResolution from "@/views/teacher/studentthesistracking/DefenseResolution.vue";
 import ReviewResult from "@/views/teacher/studentthesistracking/ReviewResult.vue";
 import PersonalInfo from "@/views/teacher/PersonalInfo.vue";
 import ReviewManagement from "@/views/teacher/ReviewManagement.vue";
@@ -48,7 +47,7 @@ import StudentDashboard from "@/views/student/StudentDashboard.vue";
 
 const router = createRouter({
     history: createWebHistory(),
-    
+
     routes: [
         {
             path: '/login',
@@ -61,10 +60,6 @@ const router = createRouter({
         {
             path: '/dashboard',
             component: dashboard
-        },
-        {
-            path: '/thesisStatus',
-            component: thesisStatus
         },
         //管理员
         {
@@ -130,11 +125,6 @@ const router = createRouter({
         },
         //老师
         {
-            path: PATH.Deferred_Approval.path,
-            component: DeferredApproval,
-            meta: { requiresAuth: PATH.Deferred_Approval.requiresAuth }
-        },
-        {
             path: PATH.Formal_Submission.path,
             component: FormalSubmission,
             meta: { requiresAuth: PATH.Formal_Submission.requiresAuth }
@@ -150,11 +140,6 @@ const router = createRouter({
             meta: { requiresAuth: PATH.Preliminary_Resolution.requiresAuth }
         },
         {
-            path: PATH.AllThesis_Teacher.path,
-            component: AllThesisTeacher,
-            meta: { requiresAuth: PATH.AllThesis_Teacher.requiresAuth }
-        },
-        {
             path: PATH.Approve_Defense.path,
             component: ApproveDefense,
             meta: { requiresAuth: PATH.Approve_Defense.requiresAuth }
@@ -168,16 +153,6 @@ const router = createRouter({
             path: PATH.Approve_Draft.path,
             component: ApproveDraft,
             meta: { requiresAuth: PATH.Approve_Draft.requiresAuth }
-        },
-        {
-            path: PATH.Approve_Proposal.path,
-            component: ApproveProposal,
-            meta: { requiresAuth: PATH.Approve_Proposal.requiresAuth }
-        },
-        {
-            path: PATH.Defense_Resolution.path,
-            component: DefenseResolution,
-            meta: { requiresAuth: PATH.Defense_Resolution.requiresAuth }
         },
         {
             path: PATH.Review_Result.path,
@@ -197,12 +172,29 @@ const router = createRouter({
         {
             path: PATH.teacher_Dashboard.path,
             component: teacherDashboard,
-            meta: { requiresAuth: PATH.teacher_Dashboard.requiresAuth }
-        },
+            meta: { requiresAuth: PATH.teacher_Dashboard.requiresAuth },
+            children: [
+                {
+                    path: PATH.AllThesis_Teacher.path,
+                    component: AllThesisTeacher,
+                    meta: { requiresAuth: PATH.AllThesis_Teacher.requiresAuth }
+                },
+                {
+                    path: PATH.Approve_Proposal.path,
+                    component: ApproveProposal,
+                    meta: { requiresAuth: PATH.Approve_Proposal.requiresAuth }
+                },
+                {
+                    path: PATH.Deferred_Approval.path,
+                    component: DeferredApproval,
+                    meta: { requiresAuth: PATH.Deferred_Approval.requiresAuth }
+                },
+            ]
+        },        
         {
-            path:PATH.Student_Dashboard.path,
+            path: PATH.Student_Dashboard.path,
             component: StudentDashboard,
-            meta: {requiresAuth:PATH.Student_Dashboard.requiresAuth}
+            meta: { requiresAuth: PATH.Student_Dashboard.requiresAuth }
         }
         //TODO学生、会话
     ]
@@ -211,33 +203,33 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     console.log(to.path);
-   //let token = sessionStorage.getItem("token");
-   //let role = sessionStorage.getItem("role");
-   let token = "y"
-   let role = "TEACHER"
+    //let token = sessionStorage.getItem("token");
+    //let role = sessionStorage.getItem("role");
+    let token = "y"
+    let role = "ADMIN"
     if (to.path === "/login") {
         next();
-    }else if (to.path === "/dashboard"){
+    } else if (to.path === "/dashboard") {
         if (token == null || role == null) {
             next("/login");
         }
         else {
             next();
         }
-    }else if(to.meta.requiresAuth){
+    } else if (to.meta.requiresAuth) {
         //有权限
-        if(to.meta.requiresAuth.includes(role.toString())){
+        if (to.meta.requiresAuth.includes(role.toString())) {
             console.log("有权限");
             next();
-        }else{
+        } else {
             //无权限
             console.log("无权限");
             alert("无权限");
             next("/dashboard");
         }
-    }else {
+    } else {
         next();
     }
-  });
+});
 
 export default router

@@ -71,43 +71,39 @@ export const PATH = {
         requiresAuth:[ROLE.TEACHER]
     },
     Approve_Defense:{
-        path:'/approveDefense',
+        path:'/approveDefense', //审批答辩
         requiresAuth:[ROLE.TEACHER]
     },
     Approve_Deferred:{
-        path:'/approveDeferred',
+        path:'/approveDeferred', //审批暂缓
         requiresAuth:[ROLE.TEACHER]
     },
     Approve_Draft:{
-        path:'/approveDraft',
+        path:'/approveDraft', //审批定稿
         requiresAuth:[ROLE.TEACHER]
     },
     Approve_Proposal:{
-        path:'/approveProposal',
-        requiresAuth:[ROLE.TEACHER]
-    },
-    Defense_Resolution:{
-        path:'/defenseResolution',
+        path:'/approveProposal', //审批开题
         requiresAuth:[ROLE.TEACHER]
     },
     Review_Result:{
-        path:'/reviewResult',
+        path:'/reviewResult',//评审结果
         requiresAuth:[ROLE.TEACHER]
     },
     Deferred_Approval:{
-        path:'/deferredApproval',
+        path:'/deferredApproval',//暂缓审批
         requiresAuth:[ROLE.TEACHER]
     },
     Formal_Submission:{
-        path:'/formalSubmission',
+        path:'/formalSubmission',//正式提交决议
         requiresAuth:[ROLE.TEACHER]
     },
     Modify_Resolution:{
-        path:'/modifyResolution',
+        path:'/modifyResolution',//修改决议
         requiresAuth:[ROLE.TEACHER]
     },
     Preliminary_Resolution:{
-        path:'/preliminaryResolution',
+        path:'/preliminaryResolution',//初拟决议
         requiresAuth:[ROLE.TEACHER]
     },
     teacher_Dashboard:{

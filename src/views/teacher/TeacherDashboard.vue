@@ -3,29 +3,49 @@
         <el-container class="app-container">
             <!-- Header -->
             <Header />
-            <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-                <el-radio-button :value="false">expand</el-radio-button>
-                <el-radio-button :value="true">collapse</el-radio-button>
-            </el-radio-group> -->
             <el-container class="main-container">
                 <!-- Sidebar -->
-                <!-- icon地址：https://element-plus.org/zh-CN/component/icon.html -->
-                <el-menu :router="false" :default-active="defaultActive" @select="handleMenuSelect"
-                    background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-                    <el-tooltip effect="dark" content="论文状态" placement="right">
-                        <el-menu-item index="/thesisStatus" class="menu-item">
-                            <el-icon name="el-icon-s-data" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            老师
-                        </el-menu-item></el-tooltip>
+                <el-menu :router="true" :default-active="defaultActive" @select="handleMenuSelect"
+                    background-color="#73116f" :collapse="isCollapse" :unique-opened="true">
+                    <!-- Iterate over menuItems array -->
+                    <template v-for="(menuItem, index) in menuItems" :key="index">
+                        <el-sub-menu v-if="menuItem.submenu" :index="index" :default-active="defaultActive">
+                            <template #title>
+                                <span class="menu-item">
+                                    <el-icon>
+                                        <Edit />
+                                    </el-icon>
+                                    {{ menuItem.text }}
+                                </span>
+                            </template>
+                            <!-- Iterate over submenu items -->
+                            <template v-for="(subItem, subIndex) in menuItem.items" :key="subIndex">
+                                <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
+                                    <el-menu-item :index="subItem.index" class="menu-item">
+                                        <el-icon>
+                                            <Edit />
+                                        </el-icon>
+                                        {{ subItem.text }}
+                                    </el-menu-item>
+                                </el-tooltip>
+                            </template>
+                        </el-sub-menu>
+                        <el-tooltip v-else :content="menuItem.tooltip" effect="dark" placement="right">
+                            <el-menu-item :index="menuItem.index" class="menu-item">
+                                <el-icon>
+                                    <Edit />
+                                </el-icon>
+                                {{ menuItem.text }}
+                            </el-menu-item>
+                        </el-tooltip>
+                    </template>
                 </el-menu>
                 <!-- Main content -->
                 <el-main class="main-content">
                     <!-- Router view -->
-                    <router-view></router-view>
+                    <router-view />
                 </el-main>
-                <!-- 沉底块 -->
+                <!-- Footer -->
                 <Footer />
             </el-container>
         </el-container>
@@ -35,32 +55,76 @@
 <script setup lang="ts">
 import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
-import AdminDashboard from '../admin/AdminDashboard.vue';
 import { RouterView, useRouter } from 'vue-router';
-import { ref } from 'vue'
-import { onMounted } from 'vue';
+import { ref } from 'vue';
+import { onBeforeMount } from 'vue';
 
-// 默认活跃的菜单项
-const defaultActive = ref('/thesisStatus');
-// 处理菜单选择
+// Declare array to store menu items
+const menuItems = ref([
+    {
+        index: '1',
+        text: '学生论文追踪',
+        submenu: true,
+        items: [
+            { index: '/allThesisTeacher', tooltip: '所有论文展示', text: '所有论文展示' },
+            { index: '/approveProposal', tooltip: '审批开题报告', text: '审批开题报告' },
+            { index: '/approveDraft', tooltip: '审批定稿', text: '审批定稿' },
+            { index: '/reviewResult', tooltip: '评审结果', text: '评审结果' },
+            { index: '/approveDefense', tooltip: '审批答辩', text: '审批答辩' },
+            { index: '/thesisStatus', tooltip: '答辩决议', text: '答辩决议' },
+            { index: '/approveDeferred', tooltip: '审批暂缓通过论文', text: '审批暂缓通过论文' },
+        ],
+    },
+    {
+        index: '2',
+        text: '会话',
+        submenu: true,
+        items: [
+            { index: '/initiateConversation', tooltip: '发起会话', text: '发起会话' },
+            { index: '/respondConversation', tooltip: '响应会话', text: '响应会话' },
+        ],
+    },
+    {
+        index: '/reviewManagement',
+        tooltip: '评审管理',
+        text: '评审管理',
+
+    },
+    {
+        index: '3',
+        text: '答辩管理',
+
+        submenu: true,
+        items: [
+            { index: '/preliminaryResolution', tooltip: '初拟决议', text: '初拟决议' },
+            { index: '/modifyResolution', tooltip: '修改决议', text: '修改决议' },
+            { index: '/formalSubmission', tooltip: '正式提交决议', text: '正式提交决议' },
+            { index: '/deferredApproval', tooltip: '暂缓论文审批', text: '暂缓论文审批' },
+        ],
+    },
+]);
+
+// Default active menu item
+const defaultActive = ref('/allThesisTeacher');
+
+// Handle menu selection
 const handleMenuSelect = (index: string) => {
-    router.push(index);
+    // router.push(index);
 };
-const isCollapse = ref(false)
-const handleOpen = (key: string, keyPath: string[]) => {
-    console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-    console.log(key, keyPath)
-}
-onMounted(() => {
-    // 当页面组件挂载时，获取当前路由路径并更新defaultActive
+
+const isCollapse = ref(false);
+
+const router = useRouter();
+
+onBeforeMount(() => {
+    // Update defaultActive when the page component is mounted
     defaultActive.value = router.currentRoute.value.path;
 });
-const router = useRouter();
+
 </script>
 
 <style scoped>
+/* Styles remain the same */
 #app {
     height: 100vh;
     /* 使整个页面占满视口 */
@@ -116,5 +180,11 @@ const router = useRouter();
     /* 设置主内容为相对定位 */
     padding-bottom: 40px;
     /* 留出底部沉底块的空间 */
+}
+</style>
+
+<style>
+.el-sub-menu .el-sub-menu__icon-arrow {
+    color: white;
 }
 </style>

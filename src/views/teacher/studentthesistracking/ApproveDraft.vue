@@ -1,8 +1,7 @@
 <template>
-    <div>
-      <h1>Hello, Vue!</h1>
-    </div>
-  </template>
-  
-  <script>
-  </script>
+  <TeacherDashboard />
+</template>
+
+<script setup>
+import TeacherDashboard from '@/views/teacher/TeacherDashboard.vue';
+</script>

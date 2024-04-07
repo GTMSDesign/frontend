@@ -12,13 +12,17 @@
                 <!-- icon地址：https://element-plus.org/zh-CN/component/icon.html -->
                 <el-menu :router="false" :default-active="defaultActive" @select="handleMenuSelect"
                     background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-                    <el-tooltip effect="dark" content="论文状态" placement="right">
-                        <el-menu-item index="/thesisStatus" class="menu-item">
-                            <el-icon name="el-icon-s-data" class="menu-icon">
-                                <Edit />
-                            </el-icon>
-                            学生
-                        </el-menu-item></el-tooltip>
+                    <!-- Iterate over menuItems array -->
+                    <template v-for="(menuItem, index) in menuItems" :key="index">
+                        <el-tooltip :content="menuItem.tooltip" effect="dark" placement="right">
+                            <el-menu-item :index="menuItem.index" class="menu-item">
+                                <el-icon class="menu-icon">
+                                    <Edit />
+                                </el-icon>
+                                {{ menuItem.text }}
+                            </el-menu-item>
+                        </el-tooltip>
+                    </template>
                 </el-menu>
                 <!-- Main content -->
                 <el-main class="main-content">
@@ -35,32 +39,44 @@
 <script setup lang="ts">
 import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
-import AdminDashboard from '../admin/AdminDashboard.vue';
 import { RouterView, useRouter } from 'vue-router';
-import { ref } from 'vue'
-import { onMounted } from 'vue';
+import { ref } from 'vue';
+import { onBeforeMount } from 'vue';
 
-// 默认活跃的菜单项
+// Declare array to store menu items
+const menuItems = ref([
+    { index: '/thesisStatus', tooltip: '论文状态', text: '学生' },
+]);
+
+// Default active menu item
 const defaultActive = ref('/thesisStatus');
-// 处理菜单选择
+
+// Handle menu selection
 const handleMenuSelect = (index: string) => {
     router.push(index);
 };
-const isCollapse = ref(false)
+
+const isCollapse = ref(false);
+
 const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
+
 const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
-onMounted(() => {
-    // 当页面组件挂载时，获取当前路由路径并更新defaultActive
+
+const router = useRouter();
+
+onBeforeMount(() => {
+    // Update defaultActive when the page component is mounted
     defaultActive.value = router.currentRoute.value.path;
 });
-const router = useRouter();
+
 </script>
 
 <style scoped>
+/* Styles remain the same */
 #app {
     height: 100vh;
     /* 使整个页面占满视口 */
