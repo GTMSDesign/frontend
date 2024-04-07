@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
-import AdminDashboard from '../admin/adminDashboard.vue';
+import AdminDashboard from './AdminDashboard.vue';
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted } from 'vue';

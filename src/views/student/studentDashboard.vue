@@ -1,13 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div>
-      <h1>Hello, Vue!</h1>
-    </div>
-  </template>
-  
-  <script>
-  </script>
-=======
     <div id="app">
         <el-container class="app-container">
             <!-- Header -->
@@ -44,7 +35,7 @@
 <script setup lang="ts">
 import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
-import AdminDashboard from '../admin/adminDashboard.vue';
+import AdminDashboard from '../admin/AdminDashboard.vue';
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted } from 'vue';
@@ -127,4 +118,3 @@ const router = useRouter();
     /* 留出底部沉底块的空间 */
 }
 </style>
->>>>>>> 0fc9abf437b62619138222025f1e06e7afd757bb
