@@ -63,112 +63,71 @@ const router = createRouter({
         },
         //管理员
         {
-            path: PATH.Account_Management.path,
-            component: AccountManagement,
-            meta: { requiresAuth: PATH.Account_Management.requiresAuth }
-        },
-        {
-            path: PATH.Login_Logs.path,
-            component: LoginLogs,
-            meta: { requiresAuth: PATH.Login_Logs.requiresAuth }
-        },
-        {
             path: PATH.admin_Dashboard.path,
             component: adminDashboard,
-            meta: { requiresAuth: PATH.admin_Dashboard.requiresAuth }
+            meta: { requiresAuth: PATH.admin_Dashboard.requiresAuth },
+            children:[
+                {
+                    path: PATH.Account_Management.path,
+                    component: AccountManagement,
+                    meta: { requiresAuth: PATH.Account_Management.requiresAuth }
+                },
+                {
+                    path: PATH.Login_Logs.path,
+                    component: LoginLogs,
+                    meta: { requiresAuth: PATH.Login_Logs.requiresAuth }
+                }
+            ]
         },
         //教务员
         {
-            path: PATH.AllThesis_Registrar.path,
-            component: AllThesisRegistrar,
-            meta: { requiresAuth: PATH.AllThesis_Registrar.requiresAuth }
-        },
-        {
-            path: PATH.Arrange_Defense.path,
-            component: ArrangeDefense,
-            meta: { requiresAuth: PATH.Arrange_Defense.requiresAuth }
-        },
-        {
-            path: PATH.Arrange_Printing.path,
-            component: ArrangePrinting,
-            meta: { requiresAuth: PATH.Arrange_Printing.requiresAuth }
-        },
-        {
-            path: PATH.Arrange_Review.path,
-            component: ArrangeReview,
-            meta: { requiresAuth: PATH.Arrange_Review.requiresAuth }
-        },
-        {
-            path: PATH.Generate_Evaluation.path,
-            component: GenerateEvaluation,
-            meta: { requiresAuth: PATH.Generate_Evaluation.requiresAuth }
-        },
-        {
-            path: PATH.Plagiarism_Check.path,
-            component: PlagiarismCheck,
-            meta: { requiresAuth: PATH.Plagiarism_Check.requiresAuth }
-        },
-        {
-            path: PATH.Advisor_Assignment.path,
-            component: AdvisorAssignment,
-            meta: { requiresAuth: PATH.Advisor_Assignment.requiresAuth }
-        },
-        {
-            path: PATH.Information_Management.path,
-            component: InformationManagement,
-            meta: { requiresAuth: PATH.Information_Management.requiresAuth }
-        },
-        {
             path: PATH.registrar_Dashboard.path,
             component: registrarDashboard,
-            meta: { requiresAuth: PATH.registrar_Dashboard.requiresAuth }
+            meta: { requiresAuth: PATH.registrar_Dashboard.requiresAuth },
+            children:[
+                {
+                    path: PATH.AllThesis_Registrar.path,
+                    component: AllThesisRegistrar,
+                    meta: { requiresAuth: PATH.AllThesis_Registrar.requiresAuth }
+                },
+                {
+                    path: PATH.Arrange_Defense.path,
+                    component: ArrangeDefense,
+                    meta: { requiresAuth: PATH.Arrange_Defense.requiresAuth }
+                },
+                {
+                    path: PATH.Arrange_Printing.path,
+                    component: ArrangePrinting,
+                    meta: { requiresAuth: PATH.Arrange_Printing.requiresAuth }
+                },
+                {
+                    path: PATH.Arrange_Review.path,
+                    component: ArrangeReview,
+                    meta: { requiresAuth: PATH.Arrange_Review.requiresAuth }
+                },
+                {
+                    path: PATH.Generate_Evaluation.path,
+                    component: GenerateEvaluation,
+                    meta: { requiresAuth: PATH.Generate_Evaluation.requiresAuth }
+                },
+                {
+                    path: PATH.Plagiarism_Check.path,
+                    component: PlagiarismCheck,
+                    meta: { requiresAuth: PATH.Plagiarism_Check.requiresAuth }
+                },
+                {
+                    path: PATH.Advisor_Assignment.path,
+                    component: AdvisorAssignment,
+                    meta: { requiresAuth: PATH.Advisor_Assignment.requiresAuth }
+                },
+                {
+                    path: PATH.Information_Management.path,
+                    component: InformationManagement,
+                    meta: { requiresAuth: PATH.Information_Management.requiresAuth }
+                }
+            ],
         },
         //老师
-        {
-            path: PATH.Formal_Submission.path,
-            component: FormalSubmission,
-            meta: { requiresAuth: PATH.Formal_Submission.requiresAuth }
-        },
-        {
-            path: PATH.Modify_Resolution.path,
-            component: ModifyResolution,
-            meta: { requiresAuth: PATH.Modify_Resolution.requiresAuth }
-        },
-        {
-            path: PATH.Preliminary_Resolution.path,
-            component: PreliminaryResolution,
-            meta: { requiresAuth: PATH.Preliminary_Resolution.requiresAuth }
-        },
-        {
-            path: PATH.Approve_Defense.path,
-            component: ApproveDefense,
-            meta: { requiresAuth: PATH.Approve_Defense.requiresAuth }
-        },
-        {
-            path: PATH.Approve_Deferred.path,
-            component: ApproveDeferred,
-            meta: { requiresAuth: PATH.Approve_Deferred.requiresAuth }
-        },
-        {
-            path: PATH.Approve_Draft.path,
-            component: ApproveDraft,
-            meta: { requiresAuth: PATH.Approve_Draft.requiresAuth }
-        },
-        {
-            path: PATH.Review_Result.path,
-            component: ReviewResult,
-            meta: { requiresAuth: PATH.Review_Result.requiresAuth }
-        },
-        {
-            path: PATH.Personal_Info.path,
-            component: PersonalInfo,
-            meta: { requiresAuth: PATH.Personal_Info.requiresAuth }
-        },
-        {
-            path: PATH.Review_Management.path,
-            component: ReviewManagement,
-            meta: { requiresAuth: PATH.Review_Management.requiresAuth }
-        },
         {
             path: PATH.teacher_Dashboard.path,
             component: teacherDashboard,
@@ -189,6 +148,51 @@ const router = createRouter({
                     component: DeferredApproval,
                     meta: { requiresAuth: PATH.Deferred_Approval.requiresAuth }
                 },
+                {
+                    path: PATH.Formal_Submission.path,
+                    component: FormalSubmission,
+                    meta: { requiresAuth: PATH.Formal_Submission.requiresAuth }
+                },
+                {
+                    path: PATH.Modify_Resolution.path,
+                    component: ModifyResolution,
+                    meta: { requiresAuth: PATH.Modify_Resolution.requiresAuth }
+                },
+                {
+                    path: PATH.Preliminary_Resolution.path,
+                    component: PreliminaryResolution,
+                    meta: { requiresAuth: PATH.Preliminary_Resolution.requiresAuth }
+                },
+                {
+                    path: PATH.Approve_Defense.path,
+                    component: ApproveDefense,
+                    meta: { requiresAuth: PATH.Approve_Defense.requiresAuth }
+                },
+                {
+                    path: PATH.Approve_Deferred.path,
+                    component: ApproveDeferred,
+                    meta: { requiresAuth: PATH.Approve_Deferred.requiresAuth }
+                },
+                {
+                    path: PATH.Approve_Draft.path,
+                    component: ApproveDraft,
+                    meta: { requiresAuth: PATH.Approve_Draft.requiresAuth }
+                },
+                {
+                    path: PATH.Review_Result.path,
+                    component: ReviewResult,
+                    meta: { requiresAuth: PATH.Review_Result.requiresAuth }
+                },
+                {
+                    path: PATH.Personal_Info.path,
+                    component: PersonalInfo,
+                    meta: { requiresAuth: PATH.Personal_Info.requiresAuth }
+                },
+                {
+                    path: PATH.Review_Management.path,
+                    component: ReviewManagement,
+                    meta: { requiresAuth: PATH.Review_Management.requiresAuth }
+                }
             ]
         },        
         {
@@ -206,7 +210,7 @@ router.beforeEach((to, from, next) => {
     //let token = sessionStorage.getItem("token");
     //let role = sessionStorage.getItem("role");
     let token = "y"
-    let role = "ADMIN"
+    let role = "REGISTRAR"
     if (to.path === "/login") {
         next();
     } else if (to.path === "/dashboard") {
