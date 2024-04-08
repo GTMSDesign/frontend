@@ -5,15 +5,19 @@
       <el-card class="login-box" shadow="hover">
         <h2 style="text-align: center;">用户登录</h2>
         <div class="split"></div>
-        <el-form :model="formData" :rules="rules" ref="formRef" label-position="top" @submit.native.prevent="login">
+        <el-form :model="formData" :rules="rules" ref="formRef" label-position="top"
+          @submit.native.prevent="handleLogin">
           <el-form-item prop="username">
-            <el-input v-model="formData.username" placeholder="请输入用户名" class="input-field" maxlength="20" @blur="clearErrorMessage"></el-input>
+            <el-input v-model="formData.username" placeholder="请输入用户名" class="input-field" maxlength="20"
+              @blur="clearErrorMessage"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" v-model="formData.password" placeholder="请输入密码" class="input-field" maxlength="20" @blur="clearErrorMessage"></el-input>
+            <el-input type="password" v-model="formData.password" placeholder="请输入密码" class="input-field" maxlength="20"
+              @blur="clearErrorMessage"></el-input>
           </el-form-item>
           <el-form-item prop="captcha">
-            <el-input v-model="formData.captcha" placeholder="请输入验证码" class="input-field" maxlength="6" @blur="clearErrorMessage"></el-input>
+            <el-input v-model="formData.captcha" placeholder="请输入验证码" class="input-field" maxlength="6"
+              @blur="clearErrorMessage"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" native-type="submit" class="login-button">登录</el-button>
@@ -27,16 +31,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import { ElForm, ElFormItem, ElInput, ElButton, ElCard } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { ElForm, ElFormItem, ElInput, ElButton, ElCard } from 'element-plus';
 import router from '@/router';
-
-const formData = ref({
-  username: '',
-  password: '',
-  captcha: ''
-});
-const errorMessage = ref('');
+import { login } from '@/services/login.ts';
 
 const rules = {
   username: [
@@ -50,23 +48,23 @@ const rules = {
   ]
 };
 
-const formRef = ref(null);
-
-const login = () => {
-  const formInstance = formRef.value;
-  formInstance.validate(valid => {
-    if (valid) {
-      if (formData.value.username === '1') {
-        router.replace('/dashboard')
-      }else {
-        errorMessage.value = '用户名或密码错误';
-      }
-    } else {
-      // 表单验证不通过时的处理
-      errorMessage.value = '请填写所有必填项';
-    }
-  });
+const handleLogin = async () => {
+  try {
+    errorMessage.value = ''; // 清空错误消息
+    await login(formData.value.username, formData.value.password, formData.value.captcha);
+    // 登录成功
+    // 处理其他逻辑，例如跳转页面
+  } catch (error) {
+    errorMessage.value = error.message; // 显示错误消息
+  }
 };
+
+const formData = ref({
+  username: '',
+  password: '',
+  captcha: ''
+});
+const errorMessage = ref('');
 
 const clearErrorMessage = () => {
   if (Object.values(formData.value).every(value => value !== '')) {
@@ -124,21 +122,26 @@ const clearErrorMessage = () => {
   width: 100%;
   margin: 0 auto;
   font-weight: bold;
-  border-width: 2px; /* Add this line to increase border thickness */
+  border-width: 2px;
+  /* Add this line to increase border thickness */
 }
 
 .login-button {
   width: 70%;
   margin: 0 auto;
   font-weight: bold;
-  background-color: #409EFF; /* 默认背景色 */
-  color: #FFFFFF; /* 默认文本颜色 */
-  border-color: #409EFF; /* 默认边框颜色 */
+  background-color: #409EFF;
+  /* 默认背景色 */
+  color: #FFFFFF;
+  /* 默认文本颜色 */
+  border-color: #409EFF;
+  /* 默认边框颜色 */
 }
 
 .login-button:hover {
-  background-color: #980099; /* 鼠标悬停时的背景色 */
-  border-color: #980099; /* 鼠标悬停时的边框颜色 */
+  background-color: #980099;
+  /* 鼠标悬停时的背景色 */
+  border-color: #980099;
+  /* 鼠标悬停时的边框颜色 */
 }
-
 </style>
