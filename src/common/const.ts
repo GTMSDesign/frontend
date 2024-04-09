@@ -111,9 +111,21 @@ export const PATH = {
         requiresAuth:[ROLE.TEACHER]
     },
     //学生
-    //TODO
     Student_Dashboard:{
         path:'/studentDashboard',
         requiresAuth:[ROLE.STUDENT]
+    },
+    AllThesis_Student:{
+        path:'/allThesisStudent',
+        requiresAuth:[ROLE.STUDENT]
+    },
+    //会话
+    Launch_Session:{
+        path:'/launchSession',
+        requiresAuth:[ROLE.STUDENT,ROLE.TEACHER]
+    },
+    Response_Session:{
+        path:'/responseSession',
+        requiresAuth:[ROLE.STUDENT,ROLE.TEACHER]
     }
 }

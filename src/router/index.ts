@@ -4,7 +4,7 @@ import { ROLE, PATH } from "../common/const";
 //public
 import login from "@/views/public/login.vue";
 import dashboard from "@/views/public/dashboard.vue";
-import thesisStatus from "@/views/student/thesisStatus.vue";
+import error from "@/views/public/Error.vue";
 
 //管理员
 import AccountManagement from "@/views/admin/AccountManagement.vue";
@@ -34,9 +34,12 @@ import ReviewResult from "@/views/teacher/studentthesistracking/ReviewResult.vue
 import PersonalInfo from "@/views/teacher/PersonalInfo.vue";
 import ReviewManagement from "@/views/teacher/ReviewManagement.vue";
 import teacherDashboard from "@/views/teacher/TeacherDashboard.vue";
-//学生、会话、error
-//TODO
+//学生
 import StudentDashboard from "@/views/student/StudentDashboard.vue";
+import AllThesisStudent from "@/views/student/AllThesisStudent.vue";
+//会话
+import LaunchSession from "@/views/session/LaunchSession.vue";
+import ResponseSession from "@/views/session/ResponseSession.vue";
 
 
 
@@ -60,6 +63,10 @@ const router = createRouter({
         {
             path: '/dashboard',
             component: dashboard
+        },
+        {
+            path: '/error',
+            component:error
         },
         //管理员
         {
@@ -194,13 +201,29 @@ const router = createRouter({
                     meta: { requiresAuth: PATH.Review_Management.requiresAuth }
                 }
             ]
-        },        
+        },   
+        //学生     
         {
             path: PATH.Student_Dashboard.path,
             component: StudentDashboard,
             meta: { requiresAuth: PATH.Student_Dashboard.requiresAuth }
+        },
+        {
+            path: PATH.AllThesis_Student.path,
+            component: AllThesisStudent,
+            meta: { requiresAuth: PATH.AllThesis_Student.requiresAuth}
+        },
+        //会话
+        {
+            path:PATH.Launch_Session.path,
+            component:LaunchSession,
+            meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
+        },
+        {
+            path:PATH.Response_Session.path,
+            component:ResponseSession,
+            meta:{requiresAuth:PATH.Response_Session.requiresAuth}
         }
-        //TODO学生、会话
     ]
 });
 
@@ -211,7 +234,7 @@ router.beforeEach((to, from, next) => {
     //let role = sessionStorage.getItem("role");
     let token = "y"
     let role = "REGISTRAR"
-    if (to.path === "/login") {
+    if (to.path === "/login" || to.path === "/error") {
         next();
     } else if (to.path === "/dashboard") {
         if (token == null || role == null) {
@@ -232,7 +255,7 @@ router.beforeEach((to, from, next) => {
             next("/dashboard");
         }
     } else {
-        next();
+        next("/error");
     }
 });
 
