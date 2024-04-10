@@ -233,7 +233,7 @@ router.beforeEach((to, from, next) => {
     //let token = sessionStorage.getItem("token");
     //let role = sessionStorage.getItem("role");
     let token = "y"
-    let role = "REGISTRAR"
+    let role = "TEACHER"
     if (to.path === "/login" || to.path === "/error") {
         next();
     } else if (to.path === "/dashboard") {

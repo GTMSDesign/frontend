@@ -53,7 +53,7 @@ const handleLogin = async () => {
     errorMessage.value = ''; // 清空错误消息
     await login(formData.value.username, formData.value.password, formData.value.captcha);
     // 登录成功
-    // 处理其他逻辑，例如跳转页面
+    router.replace('/dashboard')
   } catch (error) {
     errorMessage.value = error.message; // 显示错误消息
   }

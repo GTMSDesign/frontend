@@ -1,12 +1,11 @@
-// 在src/services 目录下创建一个 api.js 文件
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/api', // 替换成您的后端 API 地址
+  baseURL: 'http://localhost:8080', // 替换成您的后端 API 地址
   timeout: 5000, // 设置超时时间
 });
 
-export const login = async (username: string, password: string, captcha: string) => {
+export const login = async (username:string, password:string, captcha:string) => {
   let errorMessage = ''; // 存储错误消息
 
   // 检查表单字段是否为空
@@ -16,13 +15,19 @@ export const login = async (username: string, password: string, captcha: string)
   }
 
   try {
-    const response = await instance.post('/login', {
-      username,
-      password,
-      captcha,
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    const response = await instance.post('/login', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
+
+    console.log(response);
     return response.data;
-  } catch (error: any) {
+  } catch (error:any) {
     if (error.response && error.response.data && error.response.data.message) {
       errorMessage = error.response.data.message;
     } else {
