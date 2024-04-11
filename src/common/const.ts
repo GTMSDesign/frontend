@@ -112,7 +112,7 @@ export const PATH = {
     },
     Defense_Resolution:{
         path:'/defenseResolution',
-        requiresAuth:[ROLE_TEACHER]
+        requiresAuth:[ROLE.TEACHER]
     },
     //学生
     Student_Dashboard:{
