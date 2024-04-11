@@ -34,6 +34,7 @@ import ReviewResult from "@/views/teacher/studentthesistracking/ReviewResult.vue
 import PersonalInfo from "@/views/teacher/PersonalInfo.vue";
 import ReviewManagement from "@/views/teacher/ReviewManagement.vue";
 import teacherDashboard from "@/views/teacher/TeacherDashboard.vue";
+import DefenseResolution from "@/views/teacher/studentthesistracking/DefenseResolution";
 //学生
 import StudentDashboard from "@/views/student/StudentDashboard.vue";
 import AllThesisStudent from "@/views/student/AllThesisStudent.vue";
@@ -211,6 +212,11 @@ const router = createRouter({
                     component:ResponseSession,
                     meta:{requiresAuth:PATH.Response_Session.requiresAuth},
                     name: 'TeacherResponseSession'
+                },
+                {
+                    path:PATH.Defense_Resolution.path,
+                    component:DefenseResolution,
+                    meta:{requiresAuth:PATH.Defense_Resolution.requiresAuth},
                 }
             ]
         },   

@@ -71,7 +71,7 @@ const menuItems = ref([
             { index: '/approveDraft', tooltip: '审批定稿', text: '审批定稿' },
             { index: '/reviewResult', tooltip: '评审结果', text: '评审结果' },
             { index: '/approveDefense', tooltip: '审批答辩', text: '审批答辩' },
-            { index: '/thesisStatus', tooltip: '答辩决议', text: '答辩决议' },
+            { index: '/defenseResolution', tooltip: '答辩决议', text: '答辩决议' },
             { index: '/approveDeferred', tooltip: '审批暂缓通过论文', text: '审批暂缓通过论文' },
         ],
     },
