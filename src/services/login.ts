@@ -25,7 +25,7 @@ export const login = async (username:string, password:string, captcha:string) =>
       }
     });
 
-    console.log(response.data.result);
+    // console.log(response.data.result);
     sessionStorage.setItem("token",response.data.result.token);
     sessionStorage.setItem("role",response.data.result.role.toString());
     return response.data;
@@ -33,7 +33,7 @@ export const login = async (username:string, password:string, captcha:string) =>
     if (error.response && error.response.data && error.response.data.message) {
       errorMessage = error.response.data.message;
     } else {
-      errorMessage = '登录失败，请稍后重试';
+      errorMessage = '用户名或密码错误，请重试';
     }
     throw new Error(errorMessage);
   }

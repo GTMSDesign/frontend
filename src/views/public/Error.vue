@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>没该页面</h1>
+      <h1>ERROR!</h1>
     </div>
   </template>
   

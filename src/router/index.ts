@@ -203,12 +203,14 @@ const router = createRouter({
                 {
                     path:PATH.Launch_Session.path,
                     component:LaunchSession,
-                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
+                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth},
+                    name: 'TeacherLaunchSession'
                 },
                 {
                     path:PATH.Response_Session.path,
                     component:ResponseSession,
-                    meta:{requiresAuth:PATH.Response_Session.requiresAuth}
+                    meta:{requiresAuth:PATH.Response_Session.requiresAuth},
+                    name: 'TeacherResponseSession'
                 }
             ]
         },   
@@ -226,12 +228,14 @@ const router = createRouter({
                 {
                     path:PATH.Launch_Session.path,
                     component:LaunchSession,
-                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
+                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth},
+                    name: 'StudentLaunchSession'
                 },
                 {
                     path:PATH.Response_Session.path,
                     component:ResponseSession,
-                    meta:{requiresAuth:PATH.Response_Session.requiresAuth}
+                    meta:{requiresAuth:PATH.Response_Session.requiresAuth},
+                    name: 'StudentResponseSession'
                 }
             ]
         }

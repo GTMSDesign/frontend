@@ -14,9 +14,30 @@
                     background-color="#73116f" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
                     <!-- Iterate over menuItems array -->
                     <template v-for="(menuItem, index) in menuItems" :key="index">
-                        <el-tooltip :content="menuItem.tooltip" effect="dark" placement="right">
+                        <el-sub-menu v-if="menuItem.submenu" :index="index" :default-active="defaultActive">
+                            <template #title>
+                                <span class="menu-item">
+                                    <el-icon>
+                                        <Edit />
+                                    </el-icon>
+                                    {{ menuItem.text }}
+                                </span>
+                            </template>
+                            <!-- Iterate over submenu items -->
+                            <template v-for="(subItem, subIndex) in menuItem.items" :key="subIndex">
+                                <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
+                                    <el-menu-item :index="subItem.index" class="menu-item">
+                                        <el-icon>
+                                            <Edit />
+                                        </el-icon>
+                                        {{ subItem.text }}
+                                    </el-menu-item>
+                                </el-tooltip>
+                            </template>
+                        </el-sub-menu>
+                        <el-tooltip v-else :content="menuItem.tooltip" effect="dark" placement="right">
                             <el-menu-item :index="menuItem.index" class="menu-item">
-                                <el-icon class="menu-icon">
+                                <el-icon>
                                     <Edit />
                                 </el-icon>
                                 {{ menuItem.text }}
@@ -41,15 +62,29 @@ import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
 
 // Declare array to store menu items
 const menuItems = ref([
-    { index: '/thesisStatus', tooltip: '论文状态', text: '学生' },
+    {
+        index: '/allThesisStudent',
+        tooltip: '论文管理',
+        text: '论文管理',
+
+    },
+    {
+        index: '1',
+        text: '会话',
+        submenu: true,
+        items: [
+            { index: { name: 'StudentLaunchSession' }, tooltip: '发起会话', text: '发起会话' },
+            { index: { name: 'StudentResponseSession' }, tooltip: '响应会话', text: '响应会话' },
+        ],
+    }
 ]);
 
 // Default active menu item
-const defaultActive = ref('/thesisStatus');
+const defaultActive = ref('/allThesisStudent');
 
 // Handle menu selection
 const handleMenuSelect = (index: string) => {
@@ -68,9 +103,9 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 const router = useRouter();
 
-onBeforeMount(() => {
+onMounted(() => {
     // Update defaultActive when the page component is mounted
-    defaultActive.value = router.currentRoute.value.path;
+    router.push(defaultActive.value);
 });
 
 </script>

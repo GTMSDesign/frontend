@@ -60,7 +60,7 @@ import Header from '@/components/public/header.vue';
 import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
-import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
 
 // Default active menu item
 const defaultActive = ref('/informationManagement');
@@ -80,8 +80,8 @@ const menuItems = ref([
         items: [
             { index: '/allThesisRegistrar', tooltip: '所有论文展示', text: '所有论文展示' },
             { index: '/plagiarismCheck', tooltip: '检测重复率', text: '检测重复率' },
-            { index: '/generateEvaluation', tooltip: '安排评审', text: '安排评审' },
-            { index: '/arrangeReview', tooltip: '安排答辩', text: '安排答辩' },
+            { index: '/arrangeReview', tooltip: '安排评审', text: '安排评审' },
+            { index: '/arrangeDefense', tooltip: '安排答辩', text: '安排答辩' },
             { index: '/arrangePrinting', tooltip: '安排印刷', text: '安排印刷' },
             { index: '/generateEvaluation', tooltip: '三个一评价', text: '三个一评价' },
         ],
@@ -111,9 +111,9 @@ const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
 
-onBeforeMount(() => {
+onMounted(() => {
     // Update defaultActive when the page component is mounted
-    defaultActive.value = router.currentRoute.value.path;
+    router.push(defaultActive.value);
 });
 </script>
 

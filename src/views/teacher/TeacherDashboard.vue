@@ -6,7 +6,7 @@
             <el-container class="main-container">
                 <!-- Sidebar -->
                 <el-menu :router="true" :default-active="defaultActive" @select="handleMenuSelect"
-                    background-color="#73116f" :collapse="isCollapse" :unique-opened="true">
+                    background-color="#73116f" :collapse="isCollapse" :unique-opened="true" :default-openeds="[0]">
                     <!-- Iterate over menuItems array -->
                     <template v-for="(menuItem, index) in menuItems" :key="index">
                         <el-sub-menu v-if="menuItem.submenu" :index="index" :default-active="defaultActive">
@@ -57,7 +57,7 @@ import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
 
 // Declare array to store menu items
 const menuItems = ref([
@@ -80,8 +80,8 @@ const menuItems = ref([
         text: '会话',
         submenu: true,
         items: [
-            { index: '/launchSession', tooltip: '发起会话', text: '发起会话' },
-            { index: '/responseSession', tooltip: '响应会话', text: '响应会话' },
+            { index: { name: 'TeacherLaunchSession' }, tooltip: '发起会话', text: '发起会话' },
+            { index: { name: 'TeacherResponseSession' }, tooltip: '响应会话', text: '响应会话' },
         ],
     },
     {
@@ -116,11 +116,10 @@ const isCollapse = ref(false);
 
 const router = useRouter();
 
-onBeforeMount(() => {
+onMounted(() => {
     // Update defaultActive when the page component is mounted
-    defaultActive.value = router.currentRoute.value.path;
+    router.push(defaultActive.value);
 });
-
 </script>
 
 <style scoped>

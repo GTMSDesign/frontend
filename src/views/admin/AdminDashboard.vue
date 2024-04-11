@@ -36,7 +36,7 @@ import Header from '@/components/public/header.vue'
 import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
 
 // Declare array to store menu items
 const menuItems = ref([
@@ -64,9 +64,9 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 const router = useRouter();
 
-onBeforeMount(() => {
+onMounted(() => {
     // Update defaultActive when the page component is mounted
-    defaultActive.value = router.currentRoute.value.path;
+    router.push(defaultActive.value);
 });
 
 </script>

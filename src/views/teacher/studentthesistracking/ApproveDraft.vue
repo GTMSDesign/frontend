@@ -1,7 +1,8 @@
 <template>
-  <TeacherDashboard />
+  <div>
+    <h1>Hello, approveDraft!</h1>
+  </div>
 </template>
 
-<script setup>
-import TeacherDashboard from '@/views/teacher/TeacherDashboard.vue';
+<script>
 </script>
