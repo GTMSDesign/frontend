@@ -80,8 +80,8 @@ const menuItems = ref([
         text: '会话',
         submenu: true,
         items: [
-            { index: '/initiateConversation', tooltip: '发起会话', text: '发起会话' },
-            { index: '/respondConversation', tooltip: '响应会话', text: '响应会话' },
+            { index: '/launchSession', tooltip: '发起会话', text: '发起会话' },
+            { index: '/responseSession', tooltip: '响应会话', text: '响应会话' },
         ],
     },
     {

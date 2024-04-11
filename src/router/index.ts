@@ -199,6 +199,16 @@ const router = createRouter({
                     path: PATH.Review_Management.path,
                     component: ReviewManagement,
                     meta: { requiresAuth: PATH.Review_Management.requiresAuth }
+                },
+                {
+                    path:PATH.Launch_Session.path,
+                    component:LaunchSession,
+                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
+                },
+                {
+                    path:PATH.Response_Session.path,
+                    component:ResponseSession,
+                    meta:{requiresAuth:PATH.Response_Session.requiresAuth}
                 }
             ]
         },   
@@ -206,23 +216,24 @@ const router = createRouter({
         {
             path: PATH.Student_Dashboard.path,
             component: StudentDashboard,
-            meta: { requiresAuth: PATH.Student_Dashboard.requiresAuth }
-        },
-        {
-            path: PATH.AllThesis_Student.path,
-            component: AllThesisStudent,
-            meta: { requiresAuth: PATH.AllThesis_Student.requiresAuth}
-        },
-        //会话
-        {
-            path:PATH.Launch_Session.path,
-            component:LaunchSession,
-            meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
-        },
-        {
-            path:PATH.Response_Session.path,
-            component:ResponseSession,
-            meta:{requiresAuth:PATH.Response_Session.requiresAuth}
+            meta: { requiresAuth: PATH.Student_Dashboard.requiresAuth },
+            children:[
+                {
+                    path: PATH.AllThesis_Student.path,
+                    component: AllThesisStudent,
+                    meta: { requiresAuth: PATH.AllThesis_Student.requiresAuth}
+                },
+                {
+                    path:PATH.Launch_Session.path,
+                    component:LaunchSession,
+                    meta:{requiresAuth:PATH.Launch_Session.requiresAuth}
+                },
+                {
+                    path:PATH.Response_Session.path,
+                    component:ResponseSession,
+                    meta:{requiresAuth:PATH.Response_Session.requiresAuth}
+                }
+            ]
         }
     ]
 });
