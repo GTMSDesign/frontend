@@ -25,7 +25,9 @@ export const login = async (username:string, password:string, captcha:string) =>
       }
     });
 
-    console.log(response);
+    console.log(response.data.result);
+    sessionStorage.setItem("token",response.data.result.token);
+    sessionStorage.setItem("role",response.data.result.role.toString());
     return response.data;
   } catch (error:any) {
     if (error.response && error.response.data && error.response.data.message) {

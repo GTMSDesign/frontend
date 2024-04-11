@@ -7,8 +7,7 @@ import {ROLE,PATH} from "../../common/const";
 export default {
     beforeMount() {
         //不同角色访问不同首页
-        //let role = sessionStorage.getItem("role");
-        let role = "TEACHER"
+        let role = sessionStorage.getItem("role");
         if(role === ROLE.ADMIN){
             this.$router.replace(PATH.admin_Dashboard.path);
         }else if(role === ROLE.REGISTRAR){

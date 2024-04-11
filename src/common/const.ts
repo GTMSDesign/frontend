@@ -1,9 +1,9 @@
 
 export const ROLE = {
-    ADMIN:"ADMIN",//系统管理员
-    REGISTRAR:"REGISTRAR",//教务员
-    TEACHER:"TEACHER",//老师
-    STUDENT:"STUDENT"//学生
+    ADMIN:"ROLE_ADMIN",//系统管理员
+    REGISTRAR:"ROLE_REGISTRAR",//教务员
+    TEACHER:"ROLE_TEACHER",//老师
+    STUDENT:"ROLE_STUDENT"//学生
 }
 
 export const PATH = {

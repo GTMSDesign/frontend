@@ -68,8 +68,8 @@ const handleCommand = (command: string | number | object) => {
 
   function handleLogout() {
     // 防止退出后通过浏览器后退按钮返回页面
-    // TODO
     // 登出
+    sessionStorage.clear();
     router.replace("/")
   }
 }

@@ -230,10 +230,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     console.log(to.path);
-    //let token = sessionStorage.getItem("token");
-    //let role = sessionStorage.getItem("role");
-    let token = "y"
-    let role = "TEACHER"
+    let token = sessionStorage.getItem("token");
+    let role = sessionStorage.getItem("role");
     if (to.path === "/login" || to.path === "/error") {
         next();
     } else if (to.path === "/dashboard") {
