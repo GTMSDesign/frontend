@@ -8,11 +8,6 @@ const instance = axios.create({
 export const login = async (username:string, password:string, captcha:string) => {
   let errorMessage = ''; // 存储错误消息
 
-  // 检查表单字段是否为空
-  if (!username || !password || !captcha) {
-    errorMessage = '请输入用户名、密码和验证码';
-    throw new Error(errorMessage);
-  }
 
   try {
     const formData = new FormData();

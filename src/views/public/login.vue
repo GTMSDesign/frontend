@@ -90,6 +90,7 @@ const handleLogin = async () => {
     // 登录成功
     router.replace('/dashboard')
   } catch (error) {
+    refreshCode();
     errorMessage.value = error.message; // 显示错误消息
   }
 };

@@ -15,7 +15,7 @@
                             <template #title>
                                 <span class="menu-item">
                                     <el-icon class="menu-icon">
-                                        <Edit />
+                                        <ChatRound />
                                     </el-icon>
                                     {{ menuItem.text }}
                                 </span>
@@ -25,7 +25,7 @@
                                 <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
                                     <el-menu-item :index="subItem.index" class="menu-item">
                                         <el-icon class="menu-icon">
-                                            <Edit />
+                                            <Position />
                                         </el-icon>
                                         {{ subItem.text }}
                                     </el-menu-item>
@@ -61,6 +61,7 @@ import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted } from 'vue';
+import { ChatRound } from '@element-plus/icons-vue';
 
 // Default active menu item
 const defaultActive = ref('/informationManagement');
@@ -74,6 +75,12 @@ const menuItems = ref([
         tooltip: '信息管理',
     },
     {
+        index: '/advisorAssignment',
+        text: '导师分配',
+        icon: 'el-icon-s-data',
+        tooltip: '导师分配',
+    },
+    {
         index: '1',
         text: '论文管理',
         submenu: true,
@@ -85,13 +92,7 @@ const menuItems = ref([
             { index: '/arrangePrinting', tooltip: '安排印刷', text: '安排印刷' },
             { index: '/generateEvaluation', tooltip: '三个一评价', text: '三个一评价' },
         ],
-    },
-    {
-        index: '/advisorAssignment',
-        text: '导师分配',
-        icon: 'el-icon-s-data',
-        tooltip: '导师分配',
-    },
+    }
 ]);
 
 // Handle menu selection

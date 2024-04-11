@@ -13,7 +13,7 @@
                             <template #title>
                                 <span class="menu-item">
                                     <el-icon>
-                                        <Edit />
+                                        <Search />
                                     </el-icon>
                                     {{ menuItem.text }}
                                 </span>
@@ -23,7 +23,7 @@
                                 <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
                                     <el-menu-item :index="subItem.index" class="menu-item">
                                         <el-icon>
-                                            <Edit />
+                                            <EditPen />
                                         </el-icon>
                                         {{ subItem.text }}
                                     </el-menu-item>
@@ -58,6 +58,7 @@ import Footer from '@/components/public/footer.vue'
 import { RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
+import { EditPen } from '@element-plus/icons-vue';
 
 // Declare array to store menu items
 const menuItems = ref([

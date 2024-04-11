@@ -12,7 +12,7 @@
                         <el-tooltip :content="menuItem.tooltip" effect="dark" placement="right">
                             <el-menu-item :index="menuItem.index" class="menu-item">
                                 <el-icon>
-                                    <Edit />
+                                    <Setting />
                                 </el-icon>
                                 {{ menuItem.text }}
                             </el-menu-item>
