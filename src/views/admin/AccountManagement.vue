@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Hello, accountManagement!</h1>
+      <el-empty description="description" />
     </div>
   </template>
   
