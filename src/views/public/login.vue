@@ -88,6 +88,7 @@ const handleLogin = async () => {
     errorMessage.value = ''; // 清空错误消息
     await login(formData.value.username, formData.value.password, formData.value.captcha);
     // 登录成功
+    sessionStorage.setItem("account",formData.value.username); // 保存登录的id
     router.replace('/dashboard')
   } catch (error) {
     refreshCode();

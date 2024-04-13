@@ -4,9 +4,9 @@
     <el-form-item label="标题">
       <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
-    <el-form-item label="指导老师">
+    <!-- <el-form-item label="指导老师">
       <el-input v-model="search.teacher_name" placeholder="Type to search" clearable :prefix-icon="Search" />
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="学生">
       <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
@@ -30,18 +30,19 @@
     <el-table-column label="操作" align="center">
       <template #default="scope">
         <el-button size="small" type="danger" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-        <el-button size="small" @click="handleDelete(scope.$index, scope.row)">下载</el-button>
+        <!-- <el-button size="small" @click="handleDelete(scope.$index, scope.row)">下载</el-button> -->
       </template>
     </el-table-column>
   </el-table>
 </template>
 
-<script lang="ts" setup>
-import { computed, ref, reactive} from 'vue'
-import { allThesisTeacher } from '@/services/teacher';
-import { Search } from '@element-plus/icons-vue'
 
-const loading = ref(true)
+<!-- YourComponent.vue -->
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { allThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { Search } from '@element-plus/icons-vue'
 
 interface Thesis {
   title: string
@@ -54,13 +55,31 @@ interface Thesis {
   defense_times: string
 }
 
+const loading = ref(true)
 const search = ref({
   title: '',
   teacher_name: '',
   student_name: '',
 });
+
+const fetchData = async () => {
+  try {
+    const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
+    const data = await allThesisTeacher(account); // 调用获取教师相关论文的方法，并传入参数
+    tableData.value = data; // 更新 tableData
+    loading.value = false; // 数据加载完成，loading 状态设为 false
+  } catch (error) {
+    console.error(error);
+    // 处理错误
+  }
+}
+
+fetchData(); // 调用获取数据的函数
+
+const tableData = ref<Thesis[]>([]); // 初始化为空，后续会从后端获取
+
 const filterTableData = computed(() =>
-  tableData.filter(
+  tableData.value.filter(
     (data) =>
       !search.value ||
       data.title.toLowerCase().includes(search.value.title.toLowerCase()) &&
@@ -68,54 +87,15 @@ const filterTableData = computed(() =>
       data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase())
   )
 )
+
 const handleEdit = (index: number, row: Thesis) => {
   console.log(index, row)
 }
+
 const handleDelete = (index: number, row: Thesis) => {
   console.log(index, row)
 }
-
-const tableData: Thesis[] = [
-  {
-    title: '原神高等元素论研究1',
-    thesis_id: '1141',
-    student_name: '原神高手',
-    student_id: '260398640',
-    teacher_name: '米哈游1',
-    teacher_id: '514',
-    status: '初步定稿',
-    defense_times: '0',
-  },
-  {
-    title: '原神高等元素论研究2',
-    thesis_id: '1142',
-    student_name: '原神高手',
-    student_id: '260398640',
-    teacher_name: '米哈游2',
-    teacher_id: '514',
-    status: '初步定稿',
-    defense_times: '0',
-  }, 
-  {
-    title: '原神高等元素论研究1',
-    thesis_id: '114',
-    student_name: '原神高手3',
-    student_id: '260398640',
-    teacher_name: '米哈游3',
-    teacher_id: '514',
-    status: '初步定稿',
-    defense_times: '0',
-  }, 
-  {
-    title: '原神高等元素论研究',
-    thesis_id: '114',
-    student_name: '原神高手',
-    student_id: '260398640',
-    teacher_name: '米哈游1',
-    teacher_id: '514',
-    status: '初步定稿',
-    defense_times: '0',
-  }
-]
 </script>
+
+
 <style scoped></style>
