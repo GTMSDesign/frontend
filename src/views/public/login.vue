@@ -161,6 +161,10 @@ onMounted(() => {
   /* 调整图片与标题之间的间距 */
 }
 
+.login-title{
+  color: #980099;
+}
+
 .title-wrapper {
   flex: 1;
   /* 让标题占据剩余空间 */
@@ -174,7 +178,7 @@ onMounted(() => {
 .login-box {
   width: 350px;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 20px;
 }
 
@@ -198,18 +202,18 @@ onMounted(() => {
   height: 40px;
   margin: 0 auto;
   font-weight: bold;
-  background-color: #409EFF;
+  background-color: #980099;
   /* 默认背景色 */
   color: #FFFFFF;
   /* 默认文本颜色 */
-  border-color: #409EFF;
+  border-color: #980099;
   /* 默认边框颜色 */
 }
 
 .login-button:hover {
-  background-color: #980099;
+  background-color: #409EFF;
   /* 鼠标悬停时的背景色 */
-  border-color: #980099;
+  border-color: #409EFF;
   /* 鼠标悬停时的边框颜色 */
 }
 </style>
