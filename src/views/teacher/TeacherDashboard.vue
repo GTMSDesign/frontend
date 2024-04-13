@@ -2,7 +2,7 @@
     <div id="app">
         <el-container class="app-container">
             <!-- Header -->
-            <Header />
+            <Header></Header>
             <el-container class="main-container">
                 <!-- Sidebar -->
                 <el-menu :router="true" :default-active="defaultActive" @select="handleMenuSelect"
@@ -43,10 +43,10 @@
                 <!-- Main content -->
                 <el-main class="main-content">
                     <!-- Router view -->
-                    <router-view />
+                    <router-view></router-view>
                 </el-main>
                 <!-- Footer -->
-                <Footer />
+                <Footer></Footer>
             </el-container>
         </el-container>
     </div>
@@ -119,7 +119,7 @@ const router = useRouter();
 
 onMounted(() => {
     // Update defaultActive when the page component is mounted
-    router.push(defaultActive.value);
+    //router.push(defaultActive.value);
 });
 </script>
 

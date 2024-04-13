@@ -26,5 +26,6 @@ import { ref } from 'vue';
     padding: 10px 0;
     box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.1);
     /* 添加阴影效果 */
+    z-index: 9;
 }
 </style>
