@@ -23,9 +23,7 @@
     </el-table-column>
     <el-table-column label="答辩次数" prop="defense_times" width="110" sortable></el-table-column>
     <el-table-column label="操作" align="center">
-      <template #default="scope">
-        <el-button size="small" type="danger" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-      </template>
+      <ThesisInfo />
     </el-table-column>
   </el-table>
 </template>
@@ -34,6 +32,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { allThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { Search } from '@element-plus/icons-vue'
+import ThesisInfo from '@/views/public/thesisInfo.vue'
 
 interface Thesis {
   title: string
@@ -85,13 +84,9 @@ const filterTableData = computed(() =>
 )
 
 // 处理编辑事件
-const handleEdit = (index: number, row: Thesis) => {
-  console.log(index, row)
-}
-
-// 处理删除事件
-const handleDelete = (index: number, row: Thesis) => {
-  console.log(index, row)
+const dialogVisible = ref(false); // 控制 Dialog 显示状态
+const thesisInfo = () => {
+  dialogVisible.value = true
 }
 </script>
 
