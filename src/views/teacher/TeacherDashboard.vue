@@ -119,7 +119,7 @@ const router = useRouter();
 
 onMounted(() => {
     // Update defaultActive when the page component is mounted
-    //router.push(defaultActive.value);
+    router.push(defaultActive.value);
 });
 </script>
 

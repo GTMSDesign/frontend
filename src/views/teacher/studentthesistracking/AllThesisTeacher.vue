@@ -1,20 +1,14 @@
 <template>
-
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="标题">
       <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
-    <!-- <el-form-item label="指导老师">
-      <el-input v-model="search.teacher_name" placeholder="Type to search" clearable :prefix-icon="Search" />
-    </el-form-item> -->
     <el-form-item label="学生">
       <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 
-
-  <el-table :data="filterTableData" style="width: 100%" stripe height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }">
+  <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550" :header-cell-style="{ backgroundColor: '#E9D0F3' }">
     <el-table-column label="论文标题" prop="title"></el-table-column>
     <el-table-column label="论文ID" prop="thesis_id"></el-table-column>
     <el-table-column label="学生姓名" prop="student_name"></el-table-column>
@@ -30,17 +24,13 @@
     <el-table-column label="操作" align="center">
       <template #default="scope">
         <el-button size="small" type="danger" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-        <!-- <el-button size="small" @click="handleDelete(scope.$index, scope.row)">下载</el-button> -->
       </template>
     </el-table-column>
   </el-table>
 </template>
 
-
-<!-- YourComponent.vue -->
-
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { allThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { Search } from '@element-plus/icons-vue'
 
@@ -55,10 +45,10 @@ interface Thesis {
   defense_times: string
 }
 
+// 使用ref创建响应式变量
 const loading = ref(true)
 const search = ref({
   title: '',
-  teacher_name: '',
   student_name: '',
 });
 
@@ -74,28 +64,34 @@ const fetchData = async () => {
   }
 }
 
-fetchData(); // 调用获取数据的函数
+// 在组件挂载后加载数据
+onMounted(() => {
+  fetchData();
+});
 
-const tableData = ref<Thesis[]>([]); // 初始化为空，后续会从后端获取
+// 使用ref创建响应式变量
+const tableData = ref<Thesis[]>([]);
 
+// 计算属性，根据搜索条件过滤表格数据
 const filterTableData = computed(() =>
   tableData.value.filter(
     (data) =>
-      !search.value ||
+      !search.value.title ||
       data.title.toLowerCase().includes(search.value.title.toLowerCase()) &&
-      data.teacher_name.toLowerCase().includes(search.value.teacher_name.toLowerCase()) &&
+      !search.value.student_name ||
       data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase())
   )
 )
 
+// 处理编辑事件
 const handleEdit = (index: number, row: Thesis) => {
   console.log(index, row)
 }
 
+// 处理删除事件
 const handleDelete = (index: number, row: Thesis) => {
   console.log(index, row)
 }
 </script>
-
 
 <style scoped></style>
