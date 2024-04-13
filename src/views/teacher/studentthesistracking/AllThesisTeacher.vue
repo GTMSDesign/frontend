@@ -11,17 +11,17 @@
   <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
     :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'thesis_id', order: 'increncing' }">
     <el-table-column label="论文标题" prop="title" width="300"></el-table-column>
-    <el-table-column label="论文ID" prop="thesis_id" sortable></el-table-column>
-    <el-table-column label="学生姓名" prop="student_name"></el-table-column>
-    <el-table-column label="学生学号" prop="student_id" sortable></el-table-column>
-    <el-table-column label="导师姓名" prop="teacher_name"></el-table-column>
-    <el-table-column label="导师ID" prop="teacher_id"></el-table-column>
-    <el-table-column label="论文状态" prop="status">
+    <el-table-column label="论文ID" prop="thesis_id" sortable align="center"></el-table-column>
+    <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
+    <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
+    <el-table-column label="导师姓名" prop="teacher_name" align="center"></el-table-column>
+    <el-table-column label="导师ID" prop="teacher_id" align="center"></el-table-column>
+    <el-table-column label="论文状态" prop="status" align="center">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{ scope.row.status }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column label="答辩次数" prop="defense_times" width="110" sortable></el-table-column>
+    <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>
     <el-table-column label="操作" align="center">
       <ThesisInfo />
     </el-table-column>
@@ -83,11 +83,6 @@ const filterTableData = computed(() =>
   )
 )
 
-// 处理编辑事件
-const dialogVisible = ref(false); // 控制 Dialog 显示状态
-const thesisInfo = () => {
-  dialogVisible.value = true
-}
 </script>
 
 <style scoped></style>
