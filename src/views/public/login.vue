@@ -3,7 +3,14 @@
     <div class="background-image"></div>
     <div class="login-wrapper">
       <el-card class="login-box" shadow="hover">
-        <h2 style="text-align: center;">用户登录</h2>
+        <div class="title-logo-wrapper">
+          <div class="logo-wrapper">
+            <img src="https://authserver.nju.edu.cn/authserver/custom/images/login-logo.png" alt="登录Logo">
+          </div>
+          <div class="title-wrapper">
+            <h2 class="login-title">用户登录</h2>
+          </div>
+        </div>
         <div class="split"></div>
         <el-form :model="formData" :rules="rules" ref="formRef" label-position="top"
           @submit.native.prevent="handleLogin">
@@ -88,7 +95,7 @@ const handleLogin = async () => {
     errorMessage.value = ''; // 清空错误消息
     await login(formData.value.username, formData.value.password, formData.value.captcha);
     // 登录成功
-    sessionStorage.setItem("account",formData.value.username); // 保存登录的id
+    sessionStorage.setItem("account", formData.value.username); // 保存登录的id
     router.replace('/dashboard')
   } catch (error) {
     refreshCode();
@@ -142,15 +149,37 @@ onMounted(() => {
   z-index: 1;
 }
 
+.title-logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo-wrapper {
+  flex: 0 0 auto;
+  /* 不要让logo动态伸缩 */
+  margin-right: 20px;
+  /* 调整图片与标题之间的间距 */
+}
+
+.title-wrapper {
+  flex: 1;
+  /* 让标题占据剩余空间 */
+}
+
+.logo-wrapper img {
+  width: 150px;
+  height: auto;
+}
+
 .login-box {
-  width: 300px;
+  width: 350px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
 }
 
 .captchaForm {
-  width: 60%;
+  width: 67%;
 }
 
 .split {
