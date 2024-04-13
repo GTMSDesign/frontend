@@ -2,13 +2,13 @@
 
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="标题">
-      <el-input v-model="search.title" placeholder="Type to search" clearable />
+      <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item label="指导老师">
-      <el-input v-model="search.teacher_name" placeholder="Type to search" clearable />
+      <el-input v-model="search.teacher_name" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item label="学生">
-      <el-input v-model="search.student_name" placeholder="Type to search" clearable />
+      <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 
@@ -27,7 +27,7 @@
       </template>
     </el-table-column>
     <el-table-column label="答辩次数" prop="defense_times"></el-table-column>
-    <el-table-column align="center">
+    <el-table-column label="操作" align="center">
       <template #default="scope">
         <el-button size="small" type="danger" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
         <el-button size="small" @click="handleDelete(scope.$index, scope.row)">下载</el-button>
@@ -39,6 +39,7 @@
 <script lang="ts" setup>
 import { computed, ref, reactive} from 'vue'
 import { allThesisTeacher } from '@/services/teacher';
+import { Search } from '@element-plus/icons-vue'
 
 const loading = ref(true)
 
