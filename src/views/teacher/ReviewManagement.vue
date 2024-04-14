@@ -32,7 +32,10 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">Query</el-button>
+              <el-button type="primary" @click="updateFilterTableData"
+                >查询</el-button
+              >
+              <el-button type="default" @click="resetSearch">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -40,7 +43,7 @@
 
       <div class="table">
         <el-table
-          :data="tableData"
+          :data="filterTableData"
           style="width: 100%"
           height="400"
           :header-cell-style="{ backgroundColor: '#E9D0F3' }"
@@ -187,6 +190,7 @@ interface Thesis {
   status: string;
 }
 const tableData = ref<Thesis[]>([]);
+const filterTableData = ref<Thesis[]>([]);
 const formInline = reactive({
   title: "",
   teacher: "",
@@ -195,16 +199,40 @@ const formInline = reactive({
 onMounted(() => {
   fetchData();
 });
+const resetSearch = () => {
+  formInline.title = "";
+  formInline.teacher = "";
+  formInline.student = "";
+  updateFilterTableData(); // 再次调用更新函数以应用重置
+};
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem("account") || ""; // 获取 sessionStorage 中的 account
     const data = await allReviewThesis(account); // 调用获取教师相关论文的方法，并传入参数
     tableData.value = data; // 更新 tableData
+    updateFilterTableData();
   } catch (error) {
     console.error(error);
     // 处理错误
   }
 };
+function updateFilterTableData() {
+  filterTableData.value = tableData.value.filter((item) => {
+    return (
+      (formInline.title === "" ||
+        item.title.toLowerCase().includes(formInline.title.toLowerCase())) &&
+      (formInline.teacher === "" ||
+        item.teacherName
+          .toLowerCase()
+          .includes(formInline.teacher.toLowerCase())) &&
+      (formInline.student === "" ||
+        item.studentName
+          .toLowerCase()
+          .includes(formInline.student.toLowerCase()))
+    );
+  });
+  console.log(filterTableData);
+}
 const handleExceed: UploadProps["onExceed"] = (files) => {
   upload.value!.clearFiles();
   const file = files[0] as UploadRawFile;
