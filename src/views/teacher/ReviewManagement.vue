@@ -12,21 +12,21 @@
             <el-form-item label="标题">
               <el-input
                 v-model="formInline.title"
-                placeholder="Approved by"
+                placeholder="待输入"
                 clearable
               />
             </el-form-item>
             <el-form-item label="指导老师">
               <el-input
                 v-model="formInline.teacher"
-                placeholder="Approved by"
+                placeholder="待输入"
                 clearable
               />
             </el-form-item>
             <el-form-item label="学生">
               <el-input
                 v-model="formInline.student"
-                placeholder="Approved by"
+                placeholder="待输入"
                 clearable
               />
             </el-form-item>
