@@ -1,34 +1,57 @@
 <template>
-  <el-upload class="upload-demo" action="#" :http-request="uploadFile" :on-success="handleSuccess"
-    :before-upload="beforeUpload">
-    <el-button size="small" type="primary">点击上传</el-button>
+  <el-upload
+    v-model:file-list="fileList"
+    ref="upload"
+    class="upload-demo"
+    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+    :limit="1"
+    :on-exceed="handleExceed"
+    :auto-upload="false"
+    drag
+  >
+    <template #trigger>
+      <div class="el-upload__text">
+        Drop file here or <em>click to select file</em>
+      </div>
+    </template>
+    <el-button class="ml-3" type="success" @click="submitUpload">
+      upload to server
+    </el-button>
+    <template #tip>
+      <div class="el-upload__tip text-red">
+        limit 1 file, new file will cover the old file
+      </div>
+    </template>
   </el-upload>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import ObsClient from 'esdk-obs-browserjs/src/obs'
+import { ref } from 'vue'
+import { genFileId } from 'element-plus'
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile } from 'element-plus'
 
-const uploadObs = () => {
-  // 创建ObsClient实例
-  const obsClient = new ObsClient({
-    access_key_id: 'LRJMKGBXMMTHZVAQHDZU', // 你的ak
-    secret_access_key: 'JboaeRrJMOOF0Hf6bwxjLs2nke1obvZjZty04dUn', // 你的sk
-    server: 'obs.cn-east-3.myhuaweicloud.com' // 你的endPoint
-  });
+const fileList = ref<UploadUserFile[]>([
+  {
+    name: 'element-plus-logo.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+  {
+    name: 'element-plus-logo2.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+])
 
-  obsClient.putObject({
-    Bucket: 'marweey', // 桶名
-    Key: `${path.value}开题报告.doc`, // 路径 + 文件名
-    SourceFile: (document.getElementById('input-file') as HTMLInputElement).files![0]
-  }, (err: any, result: any) => {
-    if (err) {
-      console.error('Error-->' + err);
-    } else {
-      console.log('Status-->' + result.CommonMsg.Status);
-    }
-  });
-};
+const upload = ref<UploadInstance>()
 
-const path = ref<string>('marweey/GTMSFile');
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value!.handleStart(file)
+}
+
+const submitUpload = () => {
+  upload.value!.submit()
+}
+
 </script>
