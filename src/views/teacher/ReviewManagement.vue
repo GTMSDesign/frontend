@@ -11,21 +11,21 @@
           >
             <el-form-item label="标题">
               <el-input
-                v-model="formInline.user"
+                v-model="formInline.title"
                 placeholder="Approved by"
                 clearable
               />
             </el-form-item>
             <el-form-item label="指导老师">
               <el-input
-                v-model="formInline.user"
+                v-model="formInline.teacher"
                 placeholder="Approved by"
                 clearable
               />
             </el-form-item>
             <el-form-item label="学生">
               <el-input
-                v-model="formInline.user"
+                v-model="formInline.student"
                 placeholder="Approved by"
                 clearable
               />
@@ -53,18 +53,18 @@
           ></el-table-column>
           <el-table-column
             label="论文ID"
-            prop="thesis_id"
+            prop="thesisId"
             align="center"
           ></el-table-column>
 
           <el-table-column
             label="学生姓名"
-            prop="student_name"
+            prop="studentName"
             align="center"
           ></el-table-column>
           <el-table-column
             label="导师姓名"
-            prop="teacher_name"
+            prop="teacherName"
             align="center"
           ></el-table-column>
           <el-table-column label="论文状态" prop="status" align="center">
@@ -161,7 +161,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import type {
   FormProps,
   UploadInstance,
@@ -169,11 +169,42 @@ import type {
   UploadRawFile,
 } from "element-plus";
 import { genFileId } from "element-plus";
+import { allReviewThesis } from "@/services/teacher";
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const labelPosition = ref<FormProps["labelPosition"]>("left");
 const upload = ref<UploadInstance>();
-
+const form = reactive({
+  studentReview: "",
+  teacherReview: "",
+  conclusion: "",
+});
+interface Thesis {
+  title: string;
+  thesisId: string;
+  studentName: string;
+  teacherName: string;
+  status: string;
+}
+const tableData = ref<Thesis[]>([]);
+const formInline = reactive({
+  title: "",
+  teacher: "",
+  student: "",
+});
+onMounted(() => {
+  fetchData();
+});
+const fetchData = async () => {
+  try {
+    const account = sessionStorage.getItem("account") || ""; // 获取 sessionStorage 中的 account
+    const data = await allReviewThesis(account); // 调用获取教师相关论文的方法，并传入参数
+    tableData.value = data; // 更新 tableData
+  } catch (error) {
+    console.error(error);
+    // 处理错误
+  }
+};
 const handleExceed: UploadProps["onExceed"] = (files) => {
   upload.value!.clearFiles();
   const file = files[0] as UploadRawFile;
@@ -188,155 +219,9 @@ const submitUpload = () => {
 const download = () => {
   console.log("click");
 };
-const form = reactive({
-  studentReview: "",
-  teacherReview: "",
-  conclusion: "",
-});
-const formInline = reactive({
-  user: "",
-  region: "",
-  date: "",
-});
-
 const onSubmit = () => {
   console.log("submit!");
 };
-const tableData = [
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-  {
-    title: "高等元素论",
-    thesis_id: "11408",
-    student_name: "牢大",
-    teacher_name: "坤坤",
-    status: "待评审",
-  },
-];
 </script>
 
 <style>
