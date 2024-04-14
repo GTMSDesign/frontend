@@ -36,6 +36,17 @@ interface ReviewVO {
   teacherName: string;
   status: string;
 }
+
+interface TeacherInf {
+  teacherId: string
+  teacherName: string
+  phone: string
+  officePhone: string
+  email: string
+  title: string
+  education: string
+  category: string
+}
 export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
   let errorMessage = ""; // 存储错误消息
 
@@ -63,6 +74,56 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
     throw new Error(errorMessage); // 抛出错误
   }
 };
+
+export const teacherInformation = async (teacherId: string): Promise<TeacherInf> => {
+  let errorMessage = ''; // 存储错误消息
+  try {
+      const response = await instance.get('/teacher/getTeacherById',{
+          headers :{
+              'token': sessionStorage.getItem('token')
+          },
+          params: {teacherId}
+      });
+      return response.data.result;
+  } catch (error) {
+      errorMessage = 'Failed to fetch teacher theses data'; // 设置错误消息
+      throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const updatePhone = async (phone: string,account: string): Promise<void> => {
+  console.log(phone)
+  try {
+    const formData = new FormData();
+    formData.append('phone', phone);
+    formData.append('account', account);
+
+    const response = await instance.post('/teacher/updatePhone',formData,{
+      headers :{
+        'token': sessionStorage.getItem('token')
+      },
+    });
+  } catch (error) {
+    throw new Error("Failed to fetch review thesis data");
+  }
+}
+
+export const updateEmail = async (email: string,account: string): Promise<void> => {
+  try {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('account', account);
+    const response = await instance.post('/teacher/updateEmail',formData,{
+      headers :{
+        'token': sessionStorage.getItem('token')
+      },
+    });
+  } catch (error) {
+    throw new Error("Failed to fetch review thesis data");
+  }
+}
+
+
 
 export const allReviewThesis = async (account: string): Promise<ReviewVO[]> => {
   try {

@@ -1,85 +1,94 @@
 <template>
-  <!-- <el-button plain @click="dialogVisible = true">
-    Click to open the Dialog
-  </el-button> -->
   <el-dropdown @command="handleCommand" size="large">
     <el-dropdown-item command="editProfile">个人中心</el-dropdown-item>
   </el-dropdown>
 
-  <el-dialog v-model="dialogVisible" title="Tips" width="60%" :before-close="handleClose" center :append-to-body="true">
-    <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
-      class="demo-ruleForm" :size="formSize" status-icon>
-      <el-form-item label="Activity name" prop="name">
-        <el-input v-model="ruleForm.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="Activity zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity count" prop="count">
-        <el-select-v2 v-model="ruleForm.count" placeholder="Activity count" :options="options" />
-      </el-form-item>
-      <el-form-item label="Activity time" required>
-        <el-col :span="11">
-          <el-form-item prop="date1">
-            <el-date-picker v-model="ruleForm.date1" type="date" label="Pick a date" placeholder="Pick a date"
-              style="width: 100%" />
-          </el-form-item>
-        </el-col>
-        <el-col class="text-center" :span="2">
-          <span class="text-gray-500">-</span>
-        </el-col>
-        <el-col :span="11">
-          <el-form-item prop="date2">
-            <el-time-picker v-model="ruleForm.date2" label="Pick a time" placeholder="Pick a time"
-              style="width: 100%" />
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery" prop="delivery">
-        <el-switch v-model="ruleForm.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type" prop="type">
-        <el-checkbox-group v-model="ruleForm.type">
-          <el-checkbox value="Online activities" name="type">
-            Online activities
-          </el-checkbox>
-          <el-checkbox value="Promotion activities" name="type">
-            Promotion activities
-          </el-checkbox>
-          <el-checkbox value="Offline activities" name="type">
-            Offline activities
-          </el-checkbox>
-          <el-checkbox value="Simple brand exposure" name="type">
-            Simple brand exposure
-          </el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources" prop="resource">
-        <el-radio-group v-model="ruleForm.resource">
-          <el-radio value="Sponsorship">Sponsorship</el-radio>
-          <el-radio value="Venue">Venue</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form" prop="desc">
-        <el-input v-model="ruleForm.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm(ruleFormRef)">
-          Create
-        </el-button>
-        <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
-      </el-form-item>
-    </el-form>
+  <el-dialog v-model="dialogVisible" title="个人信息" width="60%" :before-close="handleClose" :style="{ top: '0', left: '0' }" :append-to-body="true">
+  <el-form ref="ruleFormRef" :model="data" :rules="rules" label-width="auto" class="demo-ruleForm" :size="formSize" status-icon>
 
+      <!-- First row -->
+      <el-row>
+        <el-col :span="8" style="margin-right: 20px;">
+          <el-form-item label="姓名" prop="teacher_name">
+            <el-input v-model="data.teacherName" disabled="true" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="职工号" prop="teacher_id">
+            <el-input v-model="data.teacherId" disabled="true"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- Second row -->
+      <el-row>
+        <el-col :span="8" style="margin-right: 20px;">
+          <el-form-item label="电话" prop="phone">
+            <el-input v-model.lazy="data.phone" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="办公室电话" prop="office_phone">
+            <el-input v-model="data.officePhone" disabled="true" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- Third row -->
+      <el-row>
+        <el-col :span="8" style="margin-right: 20px;">
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="data.email" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="类别" prop="category">
+            <el-input v-model="data.category" disabled="true" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- Fourth row -->
+      <el-row>
+        <el-col :span="8" style="margin-right: 20px;">
+          <el-form-item label="学历" prop="education">
+            <el-input v-model="data.education" disabled="true"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="职称" prop="title">
+            <el-input v-model="data.title" disabled="true" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- Button row -->
+      <el-form-item class="button-container">
+        <el-button type="primary" class="save-button" @click="submitForm(ruleFormRef)">
+          保存修改
+        </el-button>
+      </el-form-item>
+
+    </el-form>
   </el-dialog>
 </template>
 
+
+<style>
+  .button-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .save-button {
+    background-color: #8a2be2; /* Purple */
+  }
+</style>
+
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { teacherInformation, updateEmail, updatePhone } from '@/services/teacher'
 
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
@@ -87,55 +96,89 @@ const handleCommand = (command: string | number | object) => {
 }
 
 const handleClose = (done: () => void) => {
-  // ElMessageBox.confirm('Are you sure to close this dialog?')
-  //   .then(() => {
-  //     done()
-  //   })
-  //   .catch(() => {
-  //     // catch error
-  //   })
+  resetForm(ruleFormRef.value);
+  fetchData();
   done()
 }
 
 interface RuleForm {
-  name: string
-  region: string
-  count: string
-  date1: string
-  date2: string
-  delivery: boolean
-  type: string[]
-  resource: string
-  desc: string
+    teacherId: string
+    teacherName: string
+    phone: string//可编辑
+    officePhone: string
+    email: string//可编辑
+    title: string
+    education: string
+    category: string
 }
+
+const data = ref<RuleForm>();
+const fetchData = async () => {
+  try {
+    const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
+    const result = await teacherInformation(account); 
+    data.value = result; // 更新 tableData
+  } catch (error) {
+    console.error(error);
+    // 处理错误
+  }
+}
+
+
+// 在组件挂载后加载数据
+onMounted(() => {
+  fetchData();
+});
+
+
 
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
-  name: 'Hello',
-  region: '',
-  count: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+  teacherId: '',
+  teacherName: '',
+  phone: '',
+  officePhone: '',
+  email: '',
+  title: '',
+  education: '',
+  category: ''
 })
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [
+  teacherId: [
     { required: true, message: 'Please input Activity name', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
   ],
-  region: [
+  teacherName: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  ],
+  phone: [
+    { required: true, message: 'Please input Phone', trigger: 'blur' },
+  ],
+  officePhone: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  ],
+  email: [
+    { required: true, message: 'Please input Email', trigger: 'blur' },
+  ],
+  title: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  ],
+  education: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  ],
+  category: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  ],
+
+  /** teacher_name: [
     {
       required: true,
       message: 'Please select Activity zone',
       trigger: 'change',
     },
   ],
-  count: [
+  phone: [
     {
       required: true,
       message: 'Please select Activity count',
@@ -175,27 +218,35 @@ const rules = reactive<FormRules<RuleForm>>({
   ],
   desc: [
     { required: true, message: 'Please input activity form', trigger: 'blur' },
-  ],
+  ],**/
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      updateData();
+      console.log(data.value.phone)
     } else {
       console.log('error submit!', fields)
     }
   })
 }
 
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
+const updateData = async () => {
+  try {
+    const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
+    await updatePhone(data.value.phone,account); 
+    await updateEmail(data.value.email,account);
+  } catch (error) {
+    console.error(error);
+    // 处理错误
+  }
 }
 
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-  value: `${idx + 1}`,
-  label: `${idx + 1}`,
-}))
+const resetForm = (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    formEl.resetFields()
+  }
+
 </script>
