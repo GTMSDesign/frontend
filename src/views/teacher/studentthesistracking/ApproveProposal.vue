@@ -74,7 +74,7 @@
       sortable
       align="center"
     ></el-table-column>
-    <el-table-column label="操作" align="center">
+    <el-table-column label="操作" align="center" #default="scope">
       <el-button link type="primary" size="small" @click="download"
         >下载</el-button
       >
@@ -82,12 +82,12 @@
         link
         type="primary"
         size="small"
-        @click="dialogFormVisible = true"
+        @click="handleReviewButtonClick(scope.row.thesis_id)"
         >提交审批</el-button
       >
     </el-table-column>
   </el-table>
-  <el-dialog v-model="dialogFormVisible" title="提交评审" width="40%" center>
+  <el-dialog v-model="dialogFormVisible" title="提交审批" width="40%" center>
     <el-form :model="form" :label-position="labelPosition">
       <el-form-item label="评审结论" :label-width="formLabelWidth">
         <el-select
@@ -123,9 +123,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          提交
-        </el-button>
+        <el-button type="primary" @click="submit"> 提交 </el-button>
       </div>
     </template>
   </el-dialog>
@@ -133,7 +131,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from "vue";
-import { getThesisByStatus } from "@/services/teacher"; // 导入获取教师相关论文的方法
+import { reviewProposal, getThesisByStatus } from "@/services/teacher"; // 导入获取教师相关论文的方法
 import { Search } from "@element-plus/icons-vue";
 import type {
   FormProps,
@@ -165,6 +163,7 @@ const search = ref({
   student_name: "",
 });
 const dialogFormVisible = ref(false);
+const currentThesisId = ref("");
 const labelPosition = ref<FormProps["labelPosition"]>("left");
 const upload = ref<UploadInstance>();
 const handleExceed: UploadProps["onExceed"] = (files) => {
@@ -175,7 +174,12 @@ const handleExceed: UploadProps["onExceed"] = (files) => {
 };
 const cancel = () => {
   dialogFormVisible.value = false;
+  currentThesisId.value = "";
   form.conclusion = "";
+};
+const handleReviewButtonClick = (thesisId: string) => {
+  currentThesisId.value = thesisId;
+  dialogFormVisible.value = true;
 };
 const fetchData = async () => {
   try {
@@ -199,13 +203,19 @@ const tableData = ref<Thesis[]>([]);
 const download = () => {
   console.log("click");
 };
-const submit = () => {
+const submit = async () => {
   //提交结论
-
+  try {
+    await reviewProposal(currentThesisId.value, form.conclusion);
+    await fetchData();
+  } catch (error) {
+    console.log(error);
+  }
   //发送邮件
 
   //关闭对话框
   dialogFormVisible.value = false;
+  currentThesisId.value = "";
   form.conclusion = "";
 };
 const filterTableData = computed(() =>

@@ -80,6 +80,27 @@ export const allReviewThesis = async (account: string): Promise<ReviewVO[]> => {
   }
 };
 
+export const reviewProposal = async (
+  thesisId: string,
+  result: string
+): Promise<void> => {
+  try {
+    // 发起 POST 请求
+    await instance.post("/teacher/reviewProposal", null, {
+      params: {
+        thesisId,
+        result,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to review proposal");
+  }
+};
+
 export const getThesisByStatus = async (
   account: string,
   status: string
