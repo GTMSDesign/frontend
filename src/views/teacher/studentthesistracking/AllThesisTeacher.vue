@@ -74,12 +74,9 @@ const tableData = ref<Thesis[]>([]);
 
 // 计算属性，根据搜索条件过滤表格数据
 const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value.title ||
-      data.title.toLowerCase().includes(search.value.title.toLowerCase()) &&
-      !search.value.student_name ||
-      data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase())
+  tableData.value.filter(data =>
+    (!search.value.title || data.title.toLowerCase().includes(search.value.title.toLowerCase())) &&
+    (!search.value.student_name || data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase()))
   )
 )
 
