@@ -38,14 +38,14 @@ interface ReviewVO {
 }
 
 interface TeacherInf {
-  teacherId: string
-  teacherName: string
-  phone: string
-  officePhone: string
-  email: string
-  title: string
-  education: string
-  category: string
+  teacherId: string;
+  teacherName: string;
+  phone: string;
+  officePhone: string;
+  email: string;
+  title: string;
+  education: string;
+  category: string;
 }
 export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
   let errorMessage = ""; // 存储错误消息
@@ -75,55 +75,86 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
   }
 };
 
-export const teacherInformation = async (teacherId: string): Promise<TeacherInf> => {
-  let errorMessage = ''; // 存储错误消息
+export const teacherInformation = async (
+  teacherId: string
+): Promise<TeacherInf> => {
+  let errorMessage = ""; // 存储错误消息
   try {
-      const response = await instance.get('/teacher/getTeacherById',{
-          headers :{
-              'token': sessionStorage.getItem('token')
-          },
-          params: {teacherId}
-      });
-      return response.data.result;
+    const response = await instance.get("/teacher/getTeacherById", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { teacherId },
+    });
+    return response.data.result;
   } catch (error) {
-      errorMessage = 'Failed to fetch teacher theses data'; // 设置错误消息
-      throw new Error(errorMessage); // 抛出错误
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
   }
 };
 
-export const updatePhone = async (phone: string,account: string): Promise<void> => {
-  console.log(phone)
+export const updatePhone = async (
+  phone: string,
+  account: string
+): Promise<void> => {
+  console.log(phone);
   try {
     const formData = new FormData();
-    formData.append('phone', phone);
-    formData.append('account', account);
+    formData.append("phone", phone);
+    formData.append("account", account);
 
-    const response = await instance.post('/teacher/updatePhone',formData,{
-      headers :{
-        'token': sessionStorage.getItem('token')
+    const response = await instance.post("/teacher/updatePhone", formData, {
+      headers: {
+        token: sessionStorage.getItem("token"),
       },
     });
   } catch (error) {
     throw new Error("Failed to fetch review thesis data");
   }
-}
+};
 
-export const updateEmail = async (email: string,account: string): Promise<void> => {
+export const updateEmail = async (
+  email: string,
+  account: string
+): Promise<void> => {
   try {
     const formData = new FormData();
-    formData.append('email', email);
-    formData.append('account', account);
-    const response = await instance.post('/teacher/updateEmail',formData,{
-      headers :{
-        'token': sessionStorage.getItem('token')
+    formData.append("email", email);
+    formData.append("account", account);
+    const response = await instance.post("/teacher/updateEmail", formData, {
+      headers: {
+        token: sessionStorage.getItem("token"),
       },
     });
   } catch (error) {
     throw new Error("Failed to fetch review thesis data");
   }
-}
+};
 
-
+export const sendAttachmentMail = async (
+  userId: string,
+  subject: string,
+  body: string,
+  attach: File
+): Promise<void> => {
+  try {
+    const data = new FormData();
+    data.append("userId", userId);
+    data.append("subject", subject);
+    data.append("body", body);
+    data.append("attach", attach);
+    console.log(attach);
+    console.log(data.get("attach"));
+    const response = await instance.post("/email/sendAttachmentMail", data, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to send email");
+  }
+};
 
 export const allReviewThesis = async (account: string): Promise<ReviewVO[]> => {
   try {

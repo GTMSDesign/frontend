@@ -82,7 +82,7 @@
         link
         type="primary"
         size="small"
-        @click="handleReviewButtonClick(scope.row.thesis_id)"
+        @click="handleReviewButtonClick(scope.row)"
         >提交审批</el-button
       >
     </el-table-column>
@@ -102,11 +102,11 @@
       <el-form-item label="上传附表" :label-width="formLabelWidth">
         <el-upload
           ref="upload"
-          class="upload-demo"
           action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
           :limit="1"
           :on-exceed="handleExceed"
           :auto-upload="false"
+          :on-change="change"
         >
           <template #trigger>
             <el-button type="success">select file</el-button>
@@ -131,7 +131,11 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from "vue";
-import { reviewProposal, getThesisByStatus } from "@/services/teacher"; // 导入获取教师相关论文的方法
+import {
+  sendAttachmentMail,
+  reviewProposal,
+  getThesisByStatus,
+} from "@/services/teacher"; // 导入获取教师相关论文的方法
 import { Search } from "@element-plus/icons-vue";
 import type {
   FormProps,
@@ -152,6 +156,19 @@ interface Thesis {
   proposal_url: string;
   thesis_url: string;
 }
+interface CurrentRow {
+  thesisId: string;
+  studentId: string;
+  selectFile: File | null; // `selectFile` 可以是 File 类型或者 null
+}
+interface UploadFile {
+  name: string; // 文件名
+  size: number; // 文件大小
+  uid: number; // 唯一标识
+  status: string; // 上传状态，如 'ready', 'uploading', 'done', 'error'
+  raw: File; // 原始文件对象
+  percentage?: number; // 上传进度百分比
+}
 const formLabelWidth = "100px";
 const form = reactive({
   conclusion: "",
@@ -163,7 +180,12 @@ const search = ref({
   student_name: "",
 });
 const dialogFormVisible = ref(false);
-const currentThesisId = ref("");
+const currentrow = ref<CurrentRow>({
+  thesisId: "",
+  studentId: "",
+  selectFile: null, // 初始值为 null
+});
+
 const labelPosition = ref<FormProps["labelPosition"]>("left");
 const upload = ref<UploadInstance>();
 const handleExceed: UploadProps["onExceed"] = (files) => {
@@ -174,11 +196,21 @@ const handleExceed: UploadProps["onExceed"] = (files) => {
 };
 const cancel = () => {
   dialogFormVisible.value = false;
-  currentThesisId.value = "";
+  currentrow.value.thesisId = "";
+  currentrow.value.studentId = "";
+  currentrow.value.selectFile = null;
+  upload.value!.clearFiles();
   form.conclusion = "";
 };
-const handleReviewButtonClick = (thesisId: string) => {
-  currentThesisId.value = thesisId;
+
+const change = (file: UploadFile) => {
+  currentrow.value.selectFile = file.raw;
+  console.log(file);
+  console.log(file.raw);
+};
+const handleReviewButtonClick = (row: Thesis) => {
+  currentrow.value.thesisId = row.thesis_id;
+  currentrow.value.studentId = row.student_id;
   dialogFormVisible.value = true;
 };
 const fetchData = async () => {
@@ -189,7 +221,6 @@ const fetchData = async () => {
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
     console.error(error);
-    // 处理错误
   }
 };
 
@@ -203,20 +234,33 @@ const tableData = ref<Thesis[]>([]);
 const download = () => {
   console.log("click");
 };
+
 const submit = async () => {
+  if (currentrow.value.selectFile === null) {
+    alert("Please select a file.");
+    return;
+  } else if (form.conclusion === "") {
+    alert("Please select a conclusion");
+    return;
+  }
   //提交结论
   try {
-    await reviewProposal(currentThesisId.value, form.conclusion);
+    await reviewProposal(currentrow.value.thesisId, form.conclusion);
     await fetchData();
   } catch (error) {
     console.log(error);
   }
   //发送邮件
+  if (form.conclusion === "不通过") {
+    await sendAttachmentMail(
+      currentrow.value.studentId,
+      "关于开题报告审批结果",
+      " 同学您的开题审批结果为不通过，详细信息请查看附件",
+      currentrow.value.selectFile
+    );
+  }
 
-  //关闭对话框
-  dialogFormVisible.value = false;
-  currentThesisId.value = "";
-  form.conclusion = "";
+  cancel();
 };
 const filterTableData = computed(() =>
   tableData.value.filter(
