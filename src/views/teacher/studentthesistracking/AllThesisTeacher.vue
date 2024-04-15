@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="标题">
       <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
@@ -26,6 +27,7 @@
       <ThesisInfo />
     </el-table-column>
   </el-table>
+</div>
 </template>
 
 <script setup lang="ts">

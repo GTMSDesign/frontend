@@ -1,42 +1,34 @@
 <template>
-  <el-upload
-    v-model:file-list="fileList"
-    :headers="Headers"
-    ref="upload"
-    class="upload-demo"
-    action="http://localhost:8080/teacher/upload"
-    :limit="5"
-    accept=".doc, .docx"
-    :on-exceed="handleExceed"
-    :on-success="handleSuccess"
-    :on-error="handleError"
-    :on-remove="handleRemove"
-    :auto-upload="false"
-    drag
-  >
+  <el-upload v-model:file-list="fileList" :headers="Headers" ref="upload" class="upload-demo"
+    action="http://localhost:8080/thesis/upload" :limit="5" accept=".doc, .docx" :on-exceed="handleExceed"
+    :on-success="handleSuccess" :on-error="handleError" :on-remove="handleRemove" :auto-upload="false" drag :data="uploadForm">
     <template #trigger>
       <div class="el-upload__text">
-        Drop file here or <em>click to select file</em>
+        拖拽文件到此或<em>点击选择文件</em>
       </div>
     </template>
     <el-button class="ml-3" type="success" @click="submitUpload">
-      upload to server
+      确认提交
     </el-button>
     <template #tip>
-        limit doc/docx file
+      仅限 doc/docx 文件，多次上传会覆盖先前文件
     </template>
   </el-upload>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile } from 'element-plus'
-import { RefSymbol } from '@vue/reactivity';
 
 const Headers = {
-        token: sessionStorage.getItem('token')
-      }
+  token: sessionStorage.getItem('token')
+}
+
+const uploadForm = reactive({
+    thesis_id: "20240001",
+    type: "defense2"
+})
 
 const fileList = ref<UploadUserFile[]>([
   // {
@@ -58,23 +50,19 @@ const submitUpload = () => {
   upload.value!.submit()
 }
 
-const handleSuccess = (response:any) => {
+const handleSuccess = (response: any) => {
   // fileList.value.push({
   //   name:'temp',
   //   url: response.result,
   // })
-  ElMessage.success('Upload succeeded') // 显示上传成功提示
+  ElMessage.success('上传成功') // 显示上传成功提示
 }
 
 const handleRemove = () => {
-  // fileList.value.push({
-  //   name:'temp',
-  //   url: response.result,
-  // })
-  ElMessage.success('succeeded') // 显示上传成功提示
+  ElMessage.success('移除成功') // 显示上传成功提示
 }
 
 const handleError = () => {
-  ElMessage.error('Upload failed') // 显示上传失败提示
+  ElMessage.error('上传失败') // 显示上传失败提示
 }
 </script>
