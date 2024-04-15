@@ -8,7 +8,8 @@
   <el-button type="primary" plain @click="handleCommand">详情</el-button>
 
   <el-dialog v-model="dialogVisible" title="上传文件" width="60%" :before-close="handleClose" center :append-to-body="true">
-      <Upload />
+    <Upload id="100001" type="resolution" />
+    <Download id="20240001" type="opinion" />
   </el-dialog>
 </template>
 
@@ -16,6 +17,7 @@
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Upload from '@/components/public/upload.vue'
+import Download from '@/components/public/download.vue'
 
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
