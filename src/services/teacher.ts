@@ -86,6 +86,7 @@ export const teacherInformation = async (
       },
       params: { teacherId },
     });
+    sessionStorage.setItem('name',response.data.result.teacherName)
     return response.data.result;
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息

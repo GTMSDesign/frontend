@@ -12,7 +12,7 @@
         <el-icon color="#ffffff" size="20px"> <!-- 增大图标的大小 -->
           <User />
         </el-icon>
-        <span class="username" style="font-size: 16px;">姓名</span> <!-- 增大姓名的字体大小 -->
+        <span class="username" style="font-size: 16px;">{{name}}</span> <!-- 增大姓名的字体大小 -->
         <el-icon color="#ffffff" size="16px"> <!-- 增大箭头的大小 -->
           <ArrowDownBold />
         </el-icon>
@@ -35,6 +35,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import EditProfile from '@/views/public/editProfile.vue'
 
 const router = useRouter()
+
+const name =  sessionStorage.getItem('name')
 
 const handleCommand = (command: string | number | object) => {
   switch (command) {
