@@ -142,6 +142,8 @@
         {{ tableData?.opinion }}
       </el-descriptions-item>
 
+    </el-descriptions>
+    <el-descriptions class="margin-top" :column="3" :size="size" border>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
@@ -179,8 +181,8 @@
       </el-descriptions-item>
     </el-descriptions>
 
-    <Upload id="20240001" type="opinion" />
-    <Download id="20240001" type="opinion" />
+    <!-- <Upload id="20240001" type="opinion" />
+    <Download id="20240001" type="opinion" /> -->
   </el-dialog>
 </template>
 
