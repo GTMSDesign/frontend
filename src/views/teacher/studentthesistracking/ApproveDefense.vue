@@ -84,9 +84,7 @@
       <el-button link type="primary" size="small" @click="download"
         >下载论文</el-button
       >
-      <el-button link type="primary" size="small" @click="download"
-        >评审意见</el-button
-      >
+      <reviewOpinion :thesisId="scope.row.thesis_id"></reviewOpinion>
       <el-button
         link
         type="primary"
@@ -130,6 +128,7 @@
 </template>
 
 <script setup lang="ts">
+import reviewOpinion from "@/views/public/reviewOpinion.vue";
 import { reactive, ref, computed, onMounted } from "vue";
 import { approveDefence, getThesisByStatus } from "@/services/teacher"; // 导入获取教师相关论文的方法
 import { Search } from "@element-plus/icons-vue";

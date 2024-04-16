@@ -1,6 +1,7 @@
 // teacherService.ts
 
 import axios from "axios";
+import { ca } from "element-plus/es/locales.mjs";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080", // 替换成您的后端 API 地址
@@ -47,6 +48,32 @@ interface TeacherInf {
   education: string;
   category: string;
 }
+interface reviewMessage {
+  externalToStudent: string;
+  internalToStudent: string;
+  externalToTeacher: string;
+  internalToTeacher: string;
+}
+export const getReviewByThesisId = async (
+  thesisId: string,
+  role: string
+): Promise<reviewMessage> => {
+  try {
+    const response = await instance.get("/review/getReviewByThesisId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: {
+        thesisId,
+        role,
+      },
+    });
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to fetch Review by thesisId"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
 export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
   let errorMessage = ""; // 存储错误消息
 
