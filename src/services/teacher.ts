@@ -30,6 +30,20 @@ interface Thesis {
   status: string;
   defense_times: string;
 }
+
+interface ThesisDetail {
+  title: string;
+  thesisId: string;
+  studentName: string;
+  studentId: string;
+  teacherName: string;
+  teacherId: string;
+  status: string;
+  defenseTimes: string;
+  comment: string;
+  opinion: string;
+}
+
 interface ReviewVO {
   title: string;
   thesisId: string;
@@ -85,20 +99,27 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
       params: { account }, // 传递参数到后端
     });
     const data = response.data.result; // 获取 result 字段
-    const theses: Thesis[] = data.map((item: any) => ({
-      title: item.title,
-      thesis_id: item.thesisId,
-      student_name: item.studentName,
-      student_id: item.studentId,
-      teacher_name: item.teacherName,
-      teacher_id: item.teacherId,
-      status: item.status,
-      defense_times: item.defenseTimes,
-    }));
-    return theses; // 返回处理后的数据
+    console.log(data)
+    return data; // 返回处理后的数据
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const getThesisDetail = async (thesis_id: string): Promise<ThesisDetail> => {
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/thesis/getThesisByThesisId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesis_id },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    throw new Error("Failed to fetch detailed thesis data");
   }
 };
 

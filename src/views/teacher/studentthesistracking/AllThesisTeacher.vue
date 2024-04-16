@@ -24,7 +24,9 @@
     </el-table-column>
     <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>
     <el-table-column label="操作" align="center">
-      <ThesisInfo />
+      <template #default="{ row }">
+        <ThesisInfo :thesis_id="row.thesis_id" />
+      </template>
     </el-table-column>
   </el-table>
 </div>
@@ -58,7 +60,17 @@ const fetchData = async () => {
   try {
     const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
     const data = await allThesisTeacher(account); // 调用获取教师相关论文的方法，并传入参数
-    tableData.value = data; // 更新 tableData
+    const theses: Thesis[] = data.map((item: any) => ({
+      title: item.title,
+      thesis_id: item.thesisId,
+      student_name: item.studentName,
+      student_id: item.studentId,
+      teacher_name: item.teacherName,
+      teacher_id: item.teacherId,
+      status: item.status,
+      defense_times: item.defenseTimes,
+    }));
+    tableData.value = theses; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
     console.error(error);

@@ -5,6 +5,8 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { Download } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+
 
 // 定义 Download 组件
 const props = defineProps({
@@ -23,8 +25,12 @@ const downloadFile = async () => {
                 type: props.type
             },
         });
-        console.log(response.data.result)
-        window.open(response.data.result);
+        console.log(response.data.result);
+        if (response.data.result === "Error") {
+            ElMessage.error('该文件还未被上传');
+        } else {
+            window.open(response.data.result);
+        }
 
         // // 解码 base64 字符串为字节数组
         // const byteArray = atob(response.data.result.body);
