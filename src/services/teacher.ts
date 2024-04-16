@@ -86,7 +86,7 @@ export const teacherInformation = async (
       },
       params: { teacherId },
     });
-    sessionStorage.setItem('name',response.data.result.teacherName)
+    sessionStorage.setItem("name", response.data.result.teacherName);
     return response.data.result;
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
@@ -156,7 +156,21 @@ export const sendAttachmentMail = async (
     throw new Error("Faild to send email");
   }
 };
-
+export const approveDefence = async (thesisId: string): Promise<void> => {
+  try {
+    const response = await instance.post("/teacher/approveDefence", null, {
+      params: {
+        thesisId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to approve Defence");
+  }
+};
 export const allReviewThesis = async (account: string): Promise<ReviewVO[]> => {
   try {
     // 发起 GET 请求

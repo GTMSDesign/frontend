@@ -74,7 +74,13 @@
       sortable
       align="center"
     ></el-table-column>
-    <el-table-column label="操作" align="center" #default="scope">
+    <el-table-column
+      label="操作"
+      align="center"
+      #default="scope"
+      fixed="right"
+      width="150px"
+    >
       <el-button link type="primary" size="small" @click="download"
         >下载</el-button
       >
@@ -88,7 +94,25 @@
     </el-table-column>
   </el-table>
   <el-dialog v-model="dialogFormVisible" title="提交审批" width="40%" center>
+    <hr size="4" color="#faf8f8" />
     <el-form :model="form" :label-position="labelPosition">
+      <el-form-item label="论文ID" :label-width="formLabelWidth">
+        <el-input v-model="currentrow.thesisId" style="width: auto" disabled />
+      </el-form-item>
+      <el-form-item label="论文标题" :label-width="formLabelWidth">
+        <el-input
+          v-model="currentrow.thesisName"
+          style="width: auto"
+          disabled
+        />
+      </el-form-item>
+      <el-form-item label="学生姓名" :label-width="formLabelWidth">
+        <el-input
+          v-model="currentrow.studentName"
+          style="width: auto"
+          disabled
+        />
+      </el-form-item>
       <el-form-item label="评审结论" :label-width="formLabelWidth">
         <el-select
           v-model="form.conclusion"
@@ -158,6 +182,8 @@ interface Thesis {
 }
 interface CurrentRow {
   thesisId: string;
+  thesisName: String;
+  studentName: String;
   studentId: string;
   selectFile: File | null; // `selectFile` 可以是 File 类型或者 null
 }
@@ -182,7 +208,9 @@ const search = ref({
 const dialogFormVisible = ref(false);
 const currentrow = ref<CurrentRow>({
   thesisId: "",
+  thesisName: "",
   studentId: "",
+  studentName: "",
   selectFile: null, // 初始值为 null
 });
 
@@ -197,7 +225,9 @@ const handleExceed: UploadProps["onExceed"] = (files) => {
 const cancel = () => {
   dialogFormVisible.value = false;
   currentrow.value.thesisId = "";
+  currentrow.value.thesisName = "";
   currentrow.value.studentId = "";
+  currentrow.value.studentName = "";
   currentrow.value.selectFile = null;
   upload.value!.clearFiles();
   form.conclusion = "";
@@ -210,7 +240,9 @@ const change = (file: UploadFile) => {
 };
 const handleReviewButtonClick = (row: Thesis) => {
   currentrow.value.thesisId = row.thesis_id;
+  currentrow.value.thesisName = row.title;
   currentrow.value.studentId = row.student_id;
+  currentrow.value.studentName = row.student_name;
   dialogFormVisible.value = true;
 };
 const fetchData = async () => {
@@ -277,4 +309,9 @@ const filterTableData = computed(() =>
 
 <style scoped>
 /* Add any necessary styles */
+
+.hr-dashed {
+  border: 0;
+  border-top: 1px dashed #a2a9b6;
+}
 </style>
