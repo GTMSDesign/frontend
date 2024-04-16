@@ -8,7 +8,7 @@
   <el-button type="primary" plain @click="handleCommand">详情</el-button>
 
   <el-dialog v-model="dialogVisible" title="上传文件" width="60%" :before-close="handleClose" center :append-to-body="true">
-    <Upload id="100001" type="resolution" />
+    <Upload id="20240001" type="opinion" />
     <Download id="20240001" type="opinion" />
   </el-dialog>
 </template>
