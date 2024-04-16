@@ -270,4 +270,33 @@ export const getThesisByStatus = async (
     throw new Error(errorMessage); // 抛出错误
   }
 };
+
+export const saveThesisDefense = async (
+  thesisId: string,
+  state: string,
+  defenseRemarks: string,
+  defenseUrl: string,
+  review: string): Promise<void> =>  {
+  let errorMessage = ''; // 存储错误消息
+  try {
+    const formData = new FormData();
+    formData.append("thesisId", thesisId);
+    formData.append("state", state);
+    formData.append("defenseRemarks", defenseRemarks);
+    formData.append("defenseUrl", defenseUrl);
+    formData.append("review", review);
+    const respond = await instance.post("/thesisDefense/preliminaryResolution", formData, {
+      // params: {
+      //   thesisId, result, desc, descUrl, evaluation
+      // },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+    console.log(respond)
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to review proposal");
+  }
+};
 export default instance;
