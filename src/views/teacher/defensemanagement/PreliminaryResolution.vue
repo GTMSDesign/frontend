@@ -9,19 +9,19 @@
     :size="formSize"
     status-icon
   >
-    <el-form-item label="论文题目" prop="name">
-      <el-input v-model="ruleForm.name" />
+  <el-form-item label="论文题目" prop="thesisId">
+      <el-input v-model="ruleForm.thesisId" />
     </el-form-item>
-    <el-form-item label="答辩结果" prop="result">
-      <el-segmented v-model="ruleForm.result"  />
+    <el-form-item label="答辩结果" prop="state">
+      <el-segmented v-model="ruleForm.state"  />
       <el-radio-group v-model="radio2">
         <el-radio-button label="通过" value="pass" />
         <el-radio-button label="暂缓通过" value="delay" />
         <el-radio-button label="不通过" value="fail" />
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="答辩附言" prop="desc">
-      <el-input v-model="ruleForm.desc" rows="8" type="textarea" />
+    <el-form-item label="答辩附言" prop="defenseRemarks">
+      <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
     </el-form-item>
     <el-form-item label="答辩附件" prop="csv">
       <el-upload
@@ -38,8 +38,8 @@
       <el-button type="primary">Click to upload</el-button>
       </el-upload>
     </el-form-item>
-    <el-form-item label="三个一评价" prop="evaluation">
-      <el-input v-model="ruleForm.evaluation" rows="5" type="textarea" />
+    <el-form-item label="三个一评价" prop="review">
+      <el-input v-model="ruleForm.review" rows="5" type="textarea" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)">提 交</el-button>
@@ -53,35 +53,43 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { UploadProps, UploadUserFile} from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
-const radio2 = ref('New York')
+import { saveThesisDefense } from '@/services/teacher'
+const radio2 = ref('通过')
 
 interface RuleForm {
-  name: string
-  result: string
-  desc: string
-  evaluation: string
-
+  thesisId: string
+  state: string
+  defenseRemarks: string
+  defenseUrl: string
+  review: string
 }
 
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
-  name: 'Hello',
-  result: '',
-  desc: '',
-  evaluation:'',
+  thesisId: '555',
+  state: '',
+  defenseRemarks: '',
+  defenseUrl: '',
+  review: '',
 })
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [
+  thesisId: [
     { required: true, message: '请输入论文名称', trigger: 'blur' },
   ],
-  desc: [
+  defenseRemarks: [
     { required: true, message: '请输入答辩附言', trigger: 'blur' },
   ],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
+  try {
+    console.log(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
+    await saveThesisDefense(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
+  } catch (error) {
+    console.log(error);
+  }
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
