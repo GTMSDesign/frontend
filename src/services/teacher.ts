@@ -7,6 +7,12 @@ const instance = axios.create({
   baseURL: "http://localhost:8080", // 替换成您的后端 API 地址
   timeout: 5000, // 设置超时时间
 });
+interface rule {
+  reviewItem: string;
+  reviewElement: string;
+  maxScore: number;
+  actualScore: number;
+}
 interface Paper {
   title: string;
   thesis_id: string;
@@ -68,6 +74,53 @@ interface reviewMessage {
   externalToTeacher: string;
   internalToTeacher: string;
 }
+
+export const submitReview = async (
+  thesisId: string,
+  score: number,
+  teacherId: string,
+  comment: string,
+  advice: string
+): Promise<void> => {
+  try {
+    const reviewData = {
+      thesisId: thesisId,
+      score: score,
+      teacherId: teacherId,
+      comment: comment,
+      advice: advice,
+    };
+    await instance.post("/review/submitReview", reviewData, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+  } catch (error) {
+    let errorMessage = "Failed to submit review"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const getReviewRules = async (): Promise<rule[]> => {
+  try {
+    const response = await instance.get("/review/getReviewRules", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    const rulesWithDefaults = response.data.result.map((rule: any) => ({
+      reviewItem: rule.reviewItem,
+      reviewElement: rule.reviewElement,
+      maxScore: rule.maxScore,
+      actualScore: rule.actualScore ?? 0, // 使用 nullish coalescing 操作符设置默认值
+    }));
+    return rulesWithDefaults;
+  } catch (error) {
+    let errorMessage = "Failed to fetch rules"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export const getReviewByThesisId = async (
   thesisId: string,
   role: string
@@ -99,7 +152,7 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
       params: { account }, // 传递参数到后端
     });
     const data = response.data.result; // 获取 result 字段
-    console.log(data)
+    console.log(data);
     return data; // 返回处理后的数据
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
@@ -107,7 +160,9 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
   }
 };
 
-export const getThesisDetail = async (thesis_id: string): Promise<ThesisDetail> => {
+export const getThesisDetail = async (
+  thesis_id: string
+): Promise<ThesisDetail> => {
   try {
     // 发起 GET 请求
     const response = await instance.get("/thesis/getThesisByThesisId", {
@@ -297,8 +352,9 @@ export const saveThesisDefense = async (
   state: string,
   defenseRemarks: string,
   defenseUrl: string,
-  review: string): Promise<void> =>  {
-  let errorMessage = ''; // 存储错误消息
+  review: string
+): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
   try {
     const formData = new FormData();
     formData.append("thesisId", thesisId);
@@ -306,15 +362,19 @@ export const saveThesisDefense = async (
     formData.append("defenseRemarks", defenseRemarks);
     formData.append("defenseUrl", defenseUrl);
     formData.append("review", review);
-    const respond = await instance.post("/thesisDefense/preliminaryResolution", formData, {
-      // params: {
-      //   thesisId, result, desc, descUrl, evaluation
-      // },
-      headers: {
-        token: sessionStorage.getItem("token"), // 确保发送 token
-      },
-    });
-    console.log(respond)
+    const respond = await instance.post(
+      "/thesisDefense/preliminaryResolution",
+      formData,
+      {
+        // params: {
+        //   thesisId, result, desc, descUrl, evaluation
+        // },
+        headers: {
+          token: sessionStorage.getItem("token"), // 确保发送 token
+        },
+      }
+    );
+    console.log(respond);
   } catch (error) {
     // 处理错误，这里可以根据需要细化错误处理逻辑
     throw new Error("Failed to review proposal");

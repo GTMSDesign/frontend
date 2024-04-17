@@ -98,7 +98,7 @@ const fetchData = async () => {
   dialogFormVisible.value = true;
   try {
     const role = sessionStorage.getItem("role") || ""; // 获取 sessionStorage 中的 account
-    const data = await getReviewByThesisId(props.thesisId, role); // 调用获取教师相关论文的方法，并传入参数
+    const data = await getReviewByThesisId(props.thesisId!, role); // 调用获取教师相关论文的方法，并传入参数
     form.value = data;
     if (role === "ROLE_TEACHER") {
       teacher.value = true;
