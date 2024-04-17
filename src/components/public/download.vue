@@ -25,7 +25,6 @@ const downloadFile = async () => {
                 type: props.type
             },
         });
-        console.log(response.data.result);
         if (response.data.result === "Error") {
             ElMessage.error('该文件还未被上传');
         } else {
