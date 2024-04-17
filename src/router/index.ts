@@ -35,6 +35,7 @@ import PersonalInfo from "@/views/teacher/PersonalInfo.vue";
 import ReviewManagement from "@/views/teacher/ReviewManagement.vue";
 import teacherDashboard from "@/views/teacher/TeacherDashboard.vue";
 import DefenseResolution from "@/views/teacher/studentthesistracking/DefenseResolution.vue";
+import StudentList from "@/views/teacher/StudentList.vue"
 //学生
 import StudentDashboard from "@/views/student/StudentDashboard.vue";
 import AllThesisStudent from "@/views/student/AllThesisStudent.vue";
@@ -217,6 +218,11 @@ const router = createRouter({
                     path:PATH.Defense_Resolution.path,
                     component:DefenseResolution,
                     meta:{requiresAuth:PATH.Defense_Resolution.requiresAuth},
+                },
+                {
+                    path:PATH.Student_List.path,
+                    component:StudentList,
+                    meta:{requiresAuth:PATH.Student_List.requiresAuth},
                 }
             ]
         },   

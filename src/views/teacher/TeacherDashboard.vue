@@ -77,6 +77,12 @@ const menuItems = ref([
         ],
     },
     {
+        index:'/studentList',
+        tooltip: '学生信息查看',
+        text: '学生信息查看',
+
+    },
+    {
         index: '2',
         text: '会话',
         submenu: true,
