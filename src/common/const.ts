@@ -116,7 +116,7 @@ export const PATH = {
     },
     Student_List:{
         path:'/studentList',
-        requiresAuth:[ROLE_TEACHER]
+        requiresAuth:[ROLE.TEACHER]
     },
     //学生
     Student_Dashboard:{

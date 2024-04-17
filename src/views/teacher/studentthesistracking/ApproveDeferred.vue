@@ -115,7 +115,9 @@
         />
       </el-form-item>
       <el-form-item label="修改状态为" :label-width="formLabelWidth">
-        <el-input v-model="conclusion" style="width: auto" disabled />
+        <el-select v-model="conclusion" style="width: auto" placeholder="please select your zone">
+        <el-option label="暂缓通过后定稿" value="暂缓通过后定稿" />
+      </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -153,7 +155,7 @@ interface CurrentRow {
 }
 
 const formLabelWidth = "100px";
-const conclusion = "答辩前定稿";
+const conclusion = "暂缓通过";
 // 使用ref创建响应式变量
 const loading = ref(true);
 const search = ref({
