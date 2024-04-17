@@ -69,11 +69,35 @@ interface TeacherInf {
   category: string;
 }
 interface reviewMessage {
-  externalToStudent: string;
-  internalToStudent: string;
-  externalToTeacher: string;
-  internalToTeacher: string;
+  externalComment: string;
+  internalComment: string;
+  externalAdvice: string;
+  internalAdvice: string;
 }
+
+export const uploadFile = async (
+  attach: File,
+  id: string,
+  type: string
+): Promise<void> => {
+  try {
+    const data = new FormData();
+    data.append("file", attach);
+    data.append("id", id);
+    data.append("type", type);
+
+    console.log(attach);
+    console.log(data.get("attach"));
+    const response = await instance.post("/filetransfer/upload", data, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to upload file");
+  }
+};
 
 export const submitReview = async (
   thesisId: string,
@@ -143,8 +167,7 @@ export const getReviewRules = async (): Promise<rule[]> => {
 };
 
 export const getReviewByThesisId = async (
-  thesisId: string,
-  role: string
+  thesisId: string
 ): Promise<reviewMessage> => {
   try {
     const response = await instance.get("/review/getReviewByThesisId", {
@@ -153,7 +176,6 @@ export const getReviewByThesisId = async (
       },
       params: {
         thesisId,
-        role,
       },
     });
     return response.data.result;
@@ -331,7 +353,22 @@ export const reviewProposal = async (
     throw new Error("Failed to review proposal");
   }
 };
-
+export const approveDraft = async (thesisId: string): Promise<void> => {
+  try {
+    // 发起 POST 请求
+    await instance.post("/teacher/approveDraft", null, {
+      params: {
+        thesisId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to review proposal");
+  }
+};
 export const getThesisByStatus = async (
   account: string,
   status: string

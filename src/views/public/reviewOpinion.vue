@@ -4,60 +4,52 @@
   >
   <el-dialog v-model="dialogFormVisible" title="评审意见" width="50%" center>
     <hr size="4" color="#faf8f8" />
-    <el-scrollbar height="400px">
+    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+      <el-tab-pane label="内审老师的评价" name="first">User</el-tab-pane>
+      <el-tab-pane label="内审老师的建议" name="second">Config</el-tab-pane>
+      <el-tab-pane label="外审老师的评价" name="third">Role</el-tab-pane>
+      <el-tab-pane label="外审老师的建议" name="fourth">Task</el-tab-pane>
+    </el-tabs>
+    <!-- <el-scrollbar height="400px">
       <el-form :model="form" :label-position="labelPosition">
-        <el-form-item
-          label="内审老师给学生的意见"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="内审老师的评价" :label-width="formLabelWidth">
           <el-input
-            v-model="form.internalToStudent"
+            v-model="form.internalComment"
             style="width: 90%"
             :rows="6"
             type="textarea"
-            placeholder="Please input"
+            disabled
           />
         </el-form-item>
-        <el-form-item
-          label="外审老师给学生的意见"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="内审老师的建议" :label-width="formLabelWidth">
           <el-input
-            v-model="form.externalToStudent"
+            v-model="form.internalAdvice"
             style="width: 90%"
             :rows="6"
             type="textarea"
-            placeholder="Please input"
+            disabled
           />
         </el-form-item>
-        <el-form-item
-          label="内审老师给老师的意见"
-          v-if="teacher"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="外审老师的评价" :label-width="formLabelWidth">
           <el-input
-            v-model="form.internalToTeacher"
+            v-model="form.externalComment"
             style="width: 90%"
             :rows="6"
             type="textarea"
-            placeholder="Please input"
+            disabled
           />
         </el-form-item>
-        <el-form-item
-          label="外审老师给老师的意见"
-          v-if="teacher"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="外审老师的建议" :label-width="formLabelWidth">
           <el-input
-            v-model="form.externalToTeacher"
+            v-model="form.externalAdvice"
             style="width: 90%"
             :rows="6"
             type="textarea"
-            placeholder="Please input"
+            disabled
           />
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </el-scrollbar> -->
 
     <template #footer>
       <div class="dialog-footer">
@@ -70,39 +62,38 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from "vue";
-import type { FormProps } from "element-plus";
+import { ref } from "vue";
+import type { FormProps, TabsPaneContext } from "element-plus";
 import { getReviewByThesisId } from "@/services/teacher";
 import { defineProps } from "vue";
 const props = defineProps({ thesisId: String });
 const dialogFormVisible = ref(false);
-const teacher = ref(false);
 const formLabelWidth = "140px";
+const activeName = ref("first");
+
 const labelPosition = ref<FormProps["labelPosition"]>("top");
 interface reviewMessage {
-  externalToStudent: string;
-  internalToStudent: string;
-  externalToTeacher: string;
-  internalToTeacher: string;
+  externalComment: string;
+  internalComment: string;
+  externalAdvice: string;
+  internalAdvice: string;
 }
 const form = ref<reviewMessage>({
-  externalToStudent: "",
-  internalToStudent: "",
-  externalToTeacher: "",
-  internalToTeacher: "",
+  externalComment: "",
+  internalComment: "",
+  externalAdvice: "",
+  internalAdvice: "",
 });
-
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event);
+};
 const fetchData = async () => {
   console.log(props.thesisId);
 
   dialogFormVisible.value = true;
   try {
-    const role = sessionStorage.getItem("role") || ""; // 获取 sessionStorage 中的 account
-    const data = await getReviewByThesisId(props.thesisId!, role); // 调用获取教师相关论文的方法，并传入参数
+    const data = await getReviewByThesisId(props.thesisId!); // 调用获取教师相关论文的方法，并传入参数
     form.value = data;
-    if (role === "ROLE_TEACHER") {
-      teacher.value = true;
-    }
   } catch (error) {
     console.error(error);
     // 处理错误

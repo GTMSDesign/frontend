@@ -143,8 +143,8 @@
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from "vue";
 import {
-  sendAttachmentMail,
-  reviewProposal,
+  uploadFile,
+  approveDraft,
   getThesisByStatus,
   downloadFile,
 } from "@/services/teacher"; // 导入获取教师相关论文的方法
@@ -266,20 +266,16 @@ const submit = async () => {
   }
   //提交结论
   try {
-    await reviewProposal(currentrow.value.thesisId, conclusion);
+    await approveDraft(currentrow.value.thesisId);
+    await uploadFile(
+      currentrow.value.selectFile,
+      currentrow.value.thesisId,
+      "opinion"
+    );
     await fetchData();
   } catch (error) {
     console.log(error);
   }
-  //发送邮件
-  // if (conclusion === "不通过") {
-  //   await sendAttachmentMail(
-  //     currentrow.value.studentId,
-  //     "关于开题报告审批结果",
-  //     " 同学您的开题审批结果为不通过，详细信息请查看附件",
-  //     currentrow.value.selectFile
-  //   );
-  // }
 
   cancel();
 };
