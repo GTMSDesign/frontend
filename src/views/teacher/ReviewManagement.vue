@@ -84,7 +84,11 @@
             align="center"
           >
             <template #default="scope">
-              <el-button link type="primary" size="small" @click="download"
+              <el-button
+                link
+                type="primary"
+                size="small"
+                @click="download(scope.row)"
                 >下载</el-button
               >
               <el-button
@@ -191,6 +195,7 @@ import {
   allReviewThesis,
   getReviewRules,
   submitReview,
+  downloadFile,
 } from "@/services/teacher";
 const num = ref(1);
 const dialogFormVisible = ref(false);
@@ -289,8 +294,15 @@ function updateFilterTableData() {
   console.log(filterTableData);
 }
 
-const download = () => {
-  console.log("click");
+const download = async (row: Thesis) => {
+  console.log(row.thesisId);
+  const url = await downloadFile(row.thesisId, "thesis");
+  console.log(url);
+  const link = document.createElement("a");
+  link.href = url; // 设置下载链接
+  document.body.appendChild(link); // 将元素添加到文档中
+  link.click(); // 触发下载
+  document.body.removeChild(link); // 下载后移除元素
 };
 </script>
 

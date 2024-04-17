@@ -101,6 +101,27 @@ export const submitReview = async (
   }
 };
 
+export const downloadFile = async (
+  id: string,
+  type: string
+): Promise<string> => {
+  try {
+    const response = await instance.get("/filetransfer/download", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: {
+        id,
+        type,
+      },
+    });
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to download file"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export const getReviewRules = async (): Promise<rule[]> => {
   try {
     const response = await instance.get("/review/getReviewRules", {
