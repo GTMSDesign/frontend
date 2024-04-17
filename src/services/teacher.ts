@@ -389,7 +389,23 @@ export const approveDeffer = async (thesisId: string): Promise<void> => {
     });
     console.log(response);
   } catch (error) {
-    throw new Error("Faild to approve Defence");
+    throw new Error("Faild to approve Deffer");
+  }
+};
+
+export const defenseResolution = async (thesisId: string): Promise<void> => {
+  try {
+    const response = await instance.post("/teacher/defenseResolution", null, {
+      params: {
+        thesisId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to DefenseResolution");
   }
 };
 
