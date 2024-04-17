@@ -9,12 +9,12 @@
       <!-- First row -->
       <el-row>
         <el-col :span="8" style="margin-right: 20px;">
-          <el-form-item label="姓名" prop="teacher_name">
+          <el-form-item label="姓名" >
             <el-input v-model="data.teacherName" disabled="true" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="职工号" prop="teacher_id">
+          <el-form-item label="职工号" >
             <el-input v-model="data.teacherId" disabled="true"/>
           </el-form-item>
         </el-col>
@@ -28,7 +28,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="办公室电话" prop="office_phone">
+          <el-form-item label="办公室电话" >
             <el-input v-model="data.officePhone" disabled="true" />
           </el-form-item>
         </el-col>
@@ -42,7 +42,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="类别" prop="category">
+          <el-form-item label="类别">
             <el-input v-model="data.category" disabled="true" />
           </el-form-item>
         </el-col>
@@ -51,12 +51,12 @@
       <!-- Fourth row -->
       <el-row>
         <el-col :span="8" style="margin-right: 20px;">
-          <el-form-item label="学历" prop="education">
+          <el-form-item label="学历">
             <el-input v-model="data.education" disabled="true"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="职称" prop="title">
+          <el-form-item label="职称">
             <el-input v-model="data.title" disabled="true" />
           </el-form-item>
         </el-col>
