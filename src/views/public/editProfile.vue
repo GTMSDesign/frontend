@@ -3,19 +3,20 @@
     <el-dropdown-item command="editProfile">个人中心</el-dropdown-item>
   </el-dropdown>
 
-  <el-dialog v-model="dialogVisible" title="个人信息" width="60%" :before-close="handleClose" :style="{ top: '0', left: '0' }" :append-to-body="true">
-  <el-form ref="ruleFormRef" :model="data" :rules="rules" label-width="auto" class="demo-ruleForm" :size="formSize" status-icon>
+  <el-drawer v-model="dialogVisible" title="个人信息" direction="rtl" size="45%" append-to-body="true" :before-close="handleClose">
+    <el-form ref="ruleFormRef" :model="data" :rules="rules" label-width="auto" class="demo-ruleForm" :size="formSize"
+      status-icon>
 
       <!-- First row -->
       <el-row>
         <el-col :span="8" style="margin-right: 20px;">
-          <el-form-item label="姓名" >
+          <el-form-item label="姓名">
             <el-input v-model="data.teacherName" disabled="true" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="职工号" >
-            <el-input v-model="data.teacherId" disabled="true"/>
+          <el-form-item label="职工号">
+            <el-input v-model="data.teacherId" disabled="true" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -28,7 +29,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="办公室电话" >
+          <el-form-item label="办公室电话">
             <el-input v-model="data.officePhone" disabled="true" />
           </el-form-item>
         </el-col>
@@ -52,7 +53,7 @@
       <el-row>
         <el-col :span="8" style="margin-right: 20px;">
           <el-form-item label="学历">
-            <el-input v-model="data.education" disabled="true"/>
+            <el-input v-model="data.education" disabled="true" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -70,24 +71,26 @@
       </el-form-item>
 
     </el-form>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 
 <style>
-  .button-container {
-    text-align: center;
-    margin-top: 20px;
-  }
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
 
-  .save-button {
-    background-color: #8a2be2; /* Purple */
-  }
+.save-button {
+  background-color: #8a2be2;
+  /* Purple */
+}
 </style>
 
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { teacherInformation, updateEmail, updatePhone } from '@/services/teacher'
 
 const dialogVisible = ref(false)
@@ -102,21 +105,21 @@ const handleClose = (done: () => void) => {
 }
 
 interface RuleForm {
-    teacherId: string
-    teacherName: string
-    phone: string//可编辑
-    officePhone: string
-    email: string//可编辑
-    title: string
-    education: string
-    category: string
+  teacherId: string
+  teacherName: string
+  phone: string//可编辑
+  officePhone: string
+  email: string//可编辑
+  title: string
+  education: string
+  category: string
 }
 
 const data = ref<RuleForm>();
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
-    const result = await teacherInformation(account); 
+    const result = await teacherInformation(account);
     data.value = result; // 更新 tableData
   } catch (error) {
     console.error(error);
@@ -236,8 +239,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 const updateData = async () => {
   try {
     const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
-    await updatePhone(data.value.phone,account); 
-    await updateEmail(data.value.email,account);
+    await updatePhone(data.value.phone, account);
+    await updateEmail(data.value.email, account);
+    ElMessage.success('提交成功');
   } catch (error) {
     console.error(error);
     // 处理错误
@@ -245,8 +249,8 @@ const updateData = async () => {
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {
-    if (!formEl) return
-    formEl.resetFields()
-  }
+  if (!formEl) return
+  formEl.resetFields()
+}
 
 </script>
