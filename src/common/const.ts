@@ -114,6 +114,10 @@ export const PATH = {
         path:'/defenseResolution',
         requiresAuth:[ROLE.TEACHER]
     },
+    Student_List:{
+        path:'/studentList',
+        requiresAuth:[ROLE_TEACHER]
+    },
     //学生
     Student_Dashboard:{
         path:'/studentDashboard',
