@@ -74,6 +74,22 @@ interface reviewMessage {
   externalAdvice: string;
   internalAdvice: string;
 }
+interface ThesisDefense{
+  defenseId: number;
+  thesisId: number;
+  secretary: string;
+  teacher1: string;
+  teacher2: string;
+  teacher3: string;
+  conclusion: string;
+  resolution: string;
+  defenseRemarks: string;
+  defenseUrl: string;
+  resolutionUrl: string;
+  place: string;
+  date: Date;
+  review: string;
+}
 
 export const uploadFile = async (
   attach: File,
@@ -240,6 +256,26 @@ export const teacherInformation = async (
   }
 };
 
+
+
+export const thesisDefenseInf = async(thesisId:string): Promise<ThesisDefense> =>{
+  let errorMessage = ""; // 存储错误消息
+  try {
+    const response = await instance.get("/thesisDefense/findDefenseByThesisId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesisId },
+    });
+    return response.data.result;
+  } catch (error) {
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+}
+
+
+
 export const updatePhone = async (
   phone: string,
   account: string
@@ -302,6 +338,29 @@ export const sendAttachmentMail = async (
     throw new Error("Faild to send email");
   }
 };
+
+export const sendEmail = async (
+  userId: string,
+  subject: string,
+  body: string,
+): Promise<void> => {
+  try {
+    const data = new FormData();
+    data.append("userId", userId);
+    data.append("subject", subject);
+    data.append("body", body);
+
+    const response = await instance.post("/email/send", data, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to send email");
+  }
+};
+
 export const approveDefence = async (thesisId: string): Promise<void> => {
   try {
     const response = await instance.post("/teacher/approveDefence", null, {
@@ -317,6 +376,23 @@ export const approveDefence = async (thesisId: string): Promise<void> => {
     throw new Error("Faild to approve Defence");
   }
 };
+
+export const approveDeffer = async (thesisId: string): Promise<void> => {
+  try {
+    const response = await instance.post("/teacher/approveDeffer", null, {
+      params: {
+        thesisId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to approve Defence");
+  }
+};
+
 export const allReviewThesis = async (account: string): Promise<ReviewVO[]> => {
   try {
     // 发起 GET 请求

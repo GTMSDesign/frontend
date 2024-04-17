@@ -81,10 +81,9 @@
       width="210px"
       fixed="right"
     >
-      <el-button link type="primary" size="small" @click="download"
+      <el-button link type="primary" size="small" @click="download(scope.row)"
         >下载论文</el-button
       >
-      <reviewOpinion :thesisId="scope.row.thesis_id"></reviewOpinion>
       <el-button
         link
         type="primary"
@@ -115,9 +114,7 @@
         />
       </el-form-item>
       <el-form-item label="修改状态为" :label-width="formLabelWidth">
-        <el-select v-model="conclusion" style="width: auto" placeholder="please select your zone">
-        <el-option label="暂缓通过后定稿" value="暂缓通过后定稿" />
-      </el-select>
+        <el-input v-model="conclusion" style="width: auto" disabled />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -132,7 +129,13 @@
 <script setup lang="ts">
 import reviewOpinion from "@/views/public/reviewOpinion.vue";
 import { reactive, ref, computed, onMounted } from "vue";
-import { approveDefence, getThesisByStatus } from "@/services/teacher"; // 导入获取教师相关论文的方法
+import {
+  approveDeffer,
+  sendEmail,
+  getThesisByStatus,
+  downloadFile,
+  thesisDefenseInf,
+} from "@/services/teacher"; // 导入获取教师相关论文的方法
 import { Search } from "@element-plus/icons-vue";
 import type { FormProps } from "element-plus";
 interface Thesis {
@@ -154,8 +157,26 @@ interface CurrentRow {
   studentId: string;
 }
 
+interface ThesisDefense{
+  defenseId: number;
+  thesisId: number;
+  secretary: string;
+  teacher1: string;
+  teacher2: string;
+  teacher3: string;
+  conclusion: string;
+  resolution: string;
+  defenseRemarks: string;
+  defenseUrl: string;
+  resolutionUrl: string;
+  place: string;
+  date: string;
+  review: string;
+}
+
 const formLabelWidth = "100px";
-const conclusion = "暂缓通过";
+const conclusion = "暂缓后定稿";
+const defenseData = ref<ThesisDefense>();
 // 使用ref创建响应式变量
 const loading = ref(true);
 const search = ref({
@@ -190,7 +211,7 @@ const handleReviewButtonClick = (row: Thesis) => {
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem("account") || ""; // 获取 sessionStorage 中的 account
-    const data = await getThesisByStatus(account, "待答辩"); // 调用获取教师相关论文的方法，并传入参数
+    const data = await getThesisByStatus(account, "暂缓通过"); // 调用获取教师相关论文的方法，并传入参数
     tableData.value = data; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
@@ -205,15 +226,45 @@ onMounted(() => {
 
 // 使用ref创建响应式变量
 const tableData = ref<Thesis[]>([]);
-const download = () => {
-  console.log("click");
+const download = async (row: Thesis) => {
+  console.log(row.thesis_id);
+  const url = await downloadFile(row.thesis_id, "thesis");
+  console.log(url);
+  const link = document.createElement("a");
+  link.href = url; // 设置下载链接
+  document.body.appendChild(link); // 将元素添加到文档中
+  link.click(); // 触发下载
+  document.body.removeChild(link); // 下载后移除元素
 };
 
 const submit = async () => {
   //提交结论
   try {
-    await approveDefence(currentrow.value.thesisId);
+    await approveDeffer(currentrow.value.thesisId);
     await fetchData();
+    //发送邮件
+    const defense_data = await thesisDefenseInf(currentrow.value.thesisId);
+    defenseData.value = defense_data;
+    await sendEmail(
+      defenseData.value.secretary,
+      "暂缓通过论文状态变更",
+      "老师需要您再次评审之前的论文",
+    );
+    await sendEmail(
+      defenseData.value.teacher1,
+      "暂缓通过论文状态变更",
+      "老师需要您再次评审之前的论文",
+    );
+    await sendEmail(
+      defenseData.value.teacher2,
+      "暂缓通过论文状态变更",
+      "老师需要您再次评审之前的论文",
+    );
+    await sendEmail(
+      defenseData.value.teacher3,
+      "暂缓通过论文状态变更",
+      "老师需要您再次评审之前的论文",
+    );
   } catch (error) {
     console.log(error);
   }
