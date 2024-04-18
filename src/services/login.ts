@@ -34,4 +34,19 @@ export const login = async (username:string, password:string, captcha:string) =>
   }
 };
 
+export const insertLoginLogs = async (userAccount:string) : Promise<void> =>{
+  let errorMessage = '保存登录日志失败'; // 存储错误消息
+  try {
+    const formData = new FormData();
+    formData.append('userAccount', userAccount);
+    const response = await instance.post('/admin/insertLoginLogs', formData, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      }
+    });
+  } catch (error:any) {
+    throw new Error(errorMessage);
+  }
+};
+
 export default instance;

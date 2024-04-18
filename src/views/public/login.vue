@@ -42,7 +42,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElCard } from 'element-plus';
 import router from '@/router';
-import { login } from '@/services/login.ts';
+import { login, insertLoginLogs } from '@/services/login.ts';
 import Identify from '@/components/public/Identify.vue'
 import { onMounted } from 'vue';
 import { User, Key, Bell } from '@element-plus/icons-vue'
@@ -96,6 +96,7 @@ const handleLogin = async () => {
     await login(formData.value.username, formData.value.password, formData.value.captcha);
     // 登录成功
     sessionStorage.setItem("account", formData.value.username); // 保存登录的id
+    await insertLoginLogs(formData.value.username)
     router.replace('/dashboard')
   } catch (error) {
     refreshCode();
