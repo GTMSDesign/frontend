@@ -574,4 +574,23 @@ export const saveThesisDefense = async (
     throw new Error("Failed to review proposal");
   }
 };
+
+export const allDefenseThesisTeacher = async (account: string): Promise<Thesis[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/thesisDefense/getThesisByTeacherId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { account }, // 传递参数到后端
+    });
+    const data = response.data.result; // 获取 result 字段
+    console.log(data);
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
 export default instance;

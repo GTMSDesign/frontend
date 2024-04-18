@@ -1,141 +1,95 @@
 <template>
-  <el-form
-    ref="ruleFormRef"
-    style="max-width: 800px"
-    :model="ruleForm"
-    :rules="rules"
-    label-width="auto"
-    class="demo-ruleForm"
-    :size="formSize"
-    status-icon
-  >
-  <el-form-item label="论文题目" prop="thesisId">
-      <el-input v-model="ruleForm.thesisId" />
-    </el-form-item>
-    <el-form-item label="答辩结果" prop="state">
-      <el-segmented v-model="ruleForm.state"  />
-      <el-radio-group v-model="radio2">
-        <el-radio-button label="通过" value="pass" />
-        <el-radio-button label="暂缓通过" value="delay" />
-        <el-radio-button label="不通过" value="fail" />
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="答辩附言" prop="defenseRemarks">
-      <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
-    </el-form-item>
-    <el-form-item label="答辩附件" prop="csv">
-      <el-upload
-        v-model:file-list="fileList"
-        class="upload-demo"
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-        multiple
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        :limit="3"
-        :on-exceed="handleExceed"
-        >
-      <el-button type="primary">Click to upload</el-button>
-      </el-upload>
-    </el-form-item>
-    <el-form-item label="三个一评价" prop="review">
-      <el-input v-model="ruleForm.review" rows="5" type="textarea" />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">提 交</el-button>
-      <el-button @click="resetForm(ruleFormRef)">重 写</el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
+      <el-form-item label="标题">
+        <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
+      </el-form-item>
+      <el-form-item label="学生">
+        <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
+      </el-form-item>
+    </el-form>
+    <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
+              :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'thesis_id', order: 'increncing' }">
+      <el-table-column label="答辩ID" prop="defense_id" sortable align="center"></el-table-column>
+      <el-table-column label="论文标题" prop="title" width="200"></el-table-column>
+      <el-table-column label="论文ID" prop="thesis_id" sortable align="center"></el-table-column>
+      <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
+      <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
+      <el-table-column label="论文状态" prop="status" align="center">
+        <template #default="scope">
+          <el-tag type="primary" disable-transitions>{{ scope.row.status }}</el-tag>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>-->
+      <el-table-column label="操作" align="center">
+        <template #default="{ row }">
+          <editDefense :thesis_id="row.thesis_id" />
+
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
-import type { UploadProps, UploadUserFile} from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { saveThesisDefense } from '@/services/teacher'
-const radio2 = ref('通过')
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { allDefenseThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { Search } from '@element-plus/icons-vue'
+import editDefense from '@/views/teacher/defensemanagement/editDefense.vue'
 
-interface RuleForm {
-  thesisId: string
-  state: string
-  defenseRemarks: string
-  defenseUrl: string
-  review: string
+interface Thesis {
+  title: string
+  thesis_id: string
+  student_name: string
+  student_id: string
+  teacher_name: string
+  status: string
 }
 
-const formSize = ref('default')
-const ruleFormRef = ref<FormInstance>()
-const ruleForm = reactive<RuleForm>({
-  thesisId: '555',
-  state: '',
-  defenseRemarks: '',
-  defenseUrl: '',
-  review: '',
-})
+// 使用ref创建响应式变量
+const loading = ref(true)
+const search = ref({
+  title: '',
+  student_name: '',
+});
 
-const rules = reactive<FormRules<RuleForm>>({
-  thesisId: [
-    { required: true, message: '请输入论文名称', trigger: 'blur' },
-  ],
-  defenseRemarks: [
-    { required: true, message: '请输入答辩附言', trigger: 'blur' },
-  ],
-})
-
-const submitForm = async (formEl: FormInstance | undefined) => {
+const fetchData = async () => {
   try {
-    console.log(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
-    await saveThesisDefense(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
+    const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
+    const data = await allDefenseThesisTeacher(account); // 调用获取教师相关论文的方法，并传入参数
+    const theses: Thesis[] = data.map((item: any) => ({
+      title: item.title,
+      thesis_id: item.thesisId,
+      student_name: item.studentName,
+      student_id: item.studentId,
+      teacher_name: item.teacherName,
+      status: item.status,
+    }));
+    tableData.value = theses; // 更新 tableData
+    loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    // 处理错误
   }
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
 }
 
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
+// 在组件挂载后加载数据
+onMounted(() => {
+  fetchData();
+  // console.log(row.thesis_id)
+});
 
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-  value: `${idx + 1}`,
-  label: `${idx + 1}`,
-}))
+// 使用ref创建响应式变量
+const tableData = ref<Thesis[]>([]);
 
+// 计算属性，根据搜索条件过滤表格数据
+const filterTableData = computed(() =>
+    tableData.value.filter(data =>
+        (!search.value.title || data.title.toLowerCase().includes(search.value.title.toLowerCase())) &&
+        (!search.value.student_name || data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase()))
+    )
+)
 
-const fileList = ref<UploadUserFile[]>([
-]) // 上传文件列表
-
-const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
-  console.log(file, uploadFiles)
-}
-
-const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-  console.log(uploadFile)
-}
-
-const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
-  ElMessage.warning(
-    `The limit is 3, you selected ${files.length} files this time, add up to ${
-      files.length + uploadFiles.length
-    } totally`
-  )
-}
-
-const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(
-    `Cancel the transfer of ${uploadFile.name} ?`
-  ).then(
-    () => true,
-    () => false
-  )
-}
 </script>
+
+<style scoped></style>
