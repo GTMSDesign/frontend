@@ -8,7 +8,7 @@ interface accountPO {
   name: string;
   power: string;
 }
-interface dialogDate {
+interface studentInfo {
   studentId: string;
   studentName: string;
   grade: string;
@@ -27,6 +27,18 @@ interface dialogDate {
   fairCourses: number;
   passCourses: number;
 }
+
+interface teacherInfo {
+  teacherId: string;
+  teacherName: string;
+  phone: string;
+  officePhone: string;
+  email: string;
+  title: string;
+  education: string;
+  category: string;
+}
+
 export const getUnenteredStudents = async (): Promise<accountPO[]> => {
   try {
     const response = await instance.get("/registrar/getUnenteredStudents", {
@@ -40,8 +52,20 @@ export const getUnenteredStudents = async (): Promise<accountPO[]> => {
     throw new Error(errorMessage); // 抛出错误
   }
 };
-
-export const submitStudentPO = async (data: dialogDate): Promise<void> => {
+export const getUnenteredTeachers = async (): Promise<accountPO[]> => {
+  try {
+    const response = await instance.get("/registrar/getUnenteredTeachers", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to fetch review unentered teachers"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+export const submitStudentPO = async (data: studentInfo): Promise<void> => {
   try {
     await instance.post("/registrar/submitStudentPO", data, {
       headers: {
@@ -50,6 +74,18 @@ export const submitStudentPO = async (data: dialogDate): Promise<void> => {
     });
   } catch (error) {
     let errorMessage = "Failed to submit studentPO"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+export const submitTeacherPO = async (data: teacherInfo): Promise<void> => {
+  try {
+    await instance.post("/registrar/submitTeacherPO", data, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+  } catch (error) {
+    let errorMessage = "Failed to submit teacherPO"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
   }
 };
