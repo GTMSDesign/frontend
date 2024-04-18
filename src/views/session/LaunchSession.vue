@@ -17,7 +17,7 @@
     <el-table-column label="手机号" prop="phone" align="center"></el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
-        <SessionInfo />
+        <SessionForm :targetId="row.student_id" :targetName="row.student_name"/>
       </template>
     </el-table-column>
   </el-table>
@@ -28,8 +28,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { getStudentByTeacherId } from '@/services/session'; // 导入获取学生的方法
 import { Search } from '@element-plus/icons-vue'
-import StudentInfo from '@/views/public/studentInfo.vue'
-import SessionInfo from '@/views/session/SessionInfo.vue'
+import SessionForm from '@/views/session/SessionForm.vue'
 
 interface Student {
   student_id: string

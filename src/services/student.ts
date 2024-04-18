@@ -25,4 +25,24 @@ export const getStudentById = async (studentId: string) => {
   }
 };
 
+
+export const getStudentNameById = async (studentId: string) => {
+  let errorMessage = ''; // 存储错误消息
+
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/student/getStudentNameById", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { studentId },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    errorMessage = "Failed to fetch student data"
+    throw new Error("Failed to fetch student data");
+  }
+};
+
 export default instance;
