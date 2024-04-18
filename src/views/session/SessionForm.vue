@@ -155,7 +155,15 @@ const submit = async () => {
     setSessionMessageTableData(newSessionId);
     await submitSessionMessageVO(sessionMessageTableData.value);
     ElMessage.success('提交成功')
-    cancel();
+    clearForm();
+};
+
+const clearForm = () => {
+    sessionMessageTableData.value = {
+        sessionId: "",
+        title: "",
+        remarks: "",
+    };
 };
 
 const cancel = () => {
