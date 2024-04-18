@@ -74,7 +74,7 @@ interface reviewMessage {
   externalAdvice: string;
   internalAdvice: string;
 }
-interface ThesisDefense{
+interface ThesisDefense {
   defenseId: number;
   thesisId: number;
   secretary: string;
@@ -90,7 +90,50 @@ interface ThesisDefense{
   date: Date;
   review: string;
 }
+interface ReviewConclusion {
+  title: string;
+  thesisId: string;
+  studentName: string;
+  studentId: string;
+  status: string;
+  internalScore: string;
+  externalScore: string;
+  date: string;
+}
 
+export const getReviewConclusionByTeacherId = async (
+  teacherId: string
+): Promise<ReviewConclusion[]> => {
+  try {
+    const response = await instance.get(
+      "/review/getReviewConclusionByTeacherId",
+      {
+        headers: {
+          token: sessionStorage.getItem("token"),
+        },
+        params: {
+          teacherId,
+        },
+      }
+    );
+    console.log(response);
+    const formattedResults = response.data.result.map((item: any) => ({
+      ...item,
+      date: formatDate(item.date), // 格式化日期
+    }));
+    console.log(formattedResults);
+    return formattedResults;
+  } catch (error) {
+    let errorMessage = "Failed to fetch review conclusion"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+};
 export const uploadFile = async (
   attach: File,
   id: string,
@@ -256,25 +299,26 @@ export const teacherInformation = async (
   }
 };
 
-
-
-export const thesisDefenseInf = async(thesisId:string): Promise<ThesisDefense> =>{
+export const thesisDefenseInf = async (
+  thesisId: string
+): Promise<ThesisDefense> => {
   let errorMessage = ""; // 存储错误消息
   try {
-    const response = await instance.get("/thesisDefense/findDefenseByThesisId", {
-      headers: {
-        token: sessionStorage.getItem("token"),
-      },
-      params: { thesisId },
-    });
+    const response = await instance.get(
+      "/thesisDefense/findDefenseByThesisId",
+      {
+        headers: {
+          token: sessionStorage.getItem("token"),
+        },
+        params: { thesisId },
+      }
+    );
     return response.data.result;
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
   }
-}
-
-
+};
 
 export const updatePhone = async (
   phone: string,
@@ -342,7 +386,7 @@ export const sendAttachmentMail = async (
 export const sendEmail = async (
   userId: string,
   subject: string,
-  body: string,
+  body: string
 ): Promise<void> => {
   try {
     const data = new FormData();
