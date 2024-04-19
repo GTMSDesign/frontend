@@ -55,20 +55,30 @@
             </el-descriptions-item>
 
             <el-descriptions-item>
-                <template #label>
-                    <div class="cell-item">
-                        <el-icon :style="iconStyle">
-                            <Link />
-                        </el-icon>
-                        会话附件
-                    </div>
-                </template>
-                <el-button type="primary">上传附件</el-button>
+
+                <el-form-item :label-width="formLabelWidth">
+                    <el-upload
+                      ref="upload"
+                      :limit="1"
+                      :on-exceed="handleExceed"
+                      :auto-upload="false"
+                      :on-change="change"
+                    >
+                      <template #trigger>
+                        <el-button type="success">选择文件</el-button>
+                      </template>
+            
+                      <template #tip>
+                        确认上传之后不可删除，多次上传会覆盖先前文件
+                      </template>
+                    </el-upload>
+                  </el-form-item>
+
             </el-descriptions-item>
         </el-descriptions>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" @click="submit"> 提交 </el-button>
+                <el-button type="primary" @click="submit" :loading="loading"> 提交 </el-button>
                 <el-button @click="cancel">取消</el-button>
             </div>
         </template>
@@ -80,7 +90,10 @@
 import { reactive, ref, computed, onMounted } from 'vue'
 import { Link, Tickets, User, Message } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { submitSessionVO, submitSessionMessageVO } from '@/services/session'; // 导入获取学生的方法
+import { submitSessionVO, submitSessionMessageVO } from '@/services/session';
+import { getSessionMessage, uploadFile } from '@/services/session';
+import type { FormProps, UploadInstance, UploadProps, UploadRawFile } from "element-plus";
+import { genFileId } from "element-plus";
 
 const props = defineProps({
     targetId: String,
@@ -90,8 +103,8 @@ const props = defineProps({
         default: "000"
     }
 });
-
-const loading = ref(true)
+const formLabelWidth = "100px";
+const loading = ref(false)
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
     dialogVisible.value = true
@@ -118,6 +131,41 @@ interface sessionMessageData {
     title: string,
     remarks: string,
 }
+interface SessionMessage {
+  messageId: string
+  sessionId: string
+  title: string
+  remarks: string
+  messageUrl: string
+  messageTime: string
+}
+interface UploadFile {
+  name: string; // 文件名
+  size: number; // 文件大小
+  uid: number; // 唯一标识
+  status: string; // 上传状态，如 'ready', 'uploading', 'done', 'error'
+  raw: File; // 原始文件对象
+  percentage?: number; // 上传进度百分比
+}
+
+interface CurrentRow {
+  selectFile: File | null; // `selectFile` 可以是 File 类型或者 null
+}
+
+const currentrow = ref<CurrentRow>({
+  selectFile: null, // 初始值为 null
+});
+
+const upload = ref<UploadInstance>();
+const handleExceed: UploadProps["onExceed"] = (files) => {
+  upload.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  upload.value!.handleStart(file);
+};
+const change = (file: UploadFile) => {
+  currentrow.value.selectFile = file.raw;
+};
 
 const sessionTableData = ref<sessionData>({
     teacherId: "",
@@ -149,21 +197,24 @@ const submit = async () => {
         ElMessage.error('会话标题和会话附言均不能为空!');
         return;
     }
+    if (currentrow.value.selectFile === null) {
+      ElMessage.error('请提交文件');
+    return;
+  }
+    loading.value = true;
     let role = sessionStorage.getItem("role");
     setSessionTableData(role);
     const newSessionId = await submitSessionVO(sessionTableData.value);
     setSessionMessageTableData(newSessionId);
-    await submitSessionMessageVO(sessionMessageTableData.value);
+    const newSessionMessageId = await submitSessionMessageVO(sessionMessageTableData.value);
+    await uploadFile(
+      currentrow.value.selectFile,
+      newSessionMessageId,
+      "message"
+    );
+    loading.value = false
     ElMessage.success('提交成功')
-    clearForm();
-};
-
-const clearForm = () => {
-    sessionMessageTableData.value = {
-        sessionId: "",
-        title: "",
-        remarks: "",
-    };
+    cancel();
 };
 
 const cancel = () => {

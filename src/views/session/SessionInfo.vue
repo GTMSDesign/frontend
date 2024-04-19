@@ -12,7 +12,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="350"
+    <el-table :data="filterTableData" style="width: 100%" stripe height="350"
       :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'messageTime', order: 'increncing' }"
       border>
       <el-table-column label="标题" prop="title" align="center"></el-table-column>
@@ -70,12 +70,29 @@
                   回复附件
               </div>
           </template>
-          <el-button type="primary">上传附件</el-button>
+
+          <el-form-item :label-width="formLabelWidth">
+            <el-upload
+              ref="upload"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :auto-upload="false"
+              :on-change="change"
+            >
+              <template #trigger>
+                <el-button type="success">选择文件</el-button>
+              </template>
+    
+              <template #tip>
+                确认上传之后不可删除，多次上传会覆盖先前文件
+              </template>
+            </el-upload>
+          </el-form-item>
       </el-descriptions-item>
   </el-descriptions>
   <template #footer>
       <div class="dialog-footer">
-          <el-button type="primary" @click="submit"> 提交 </el-button>
+          <el-button type="primary" @click="submit" :loading="loading"> 提交 </el-button>
           <el-button @click="cancel">取消</el-button>
       </div>
   </template>
@@ -85,9 +102,11 @@
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import { getSessionMessage } from '@/services/session'; // 导入获取学生的方法
+import { getSessionMessage, uploadFile } from '@/services/session'; // 导入获取学生的方法
 import { ElMessage } from 'element-plus';
 import { submitSessionMessageVO } from '@/services/session';
+import type { FormProps, UploadInstance, UploadProps, UploadRawFile } from "element-plus";
+import { genFileId } from "element-plus";
 
 const props = defineProps({
   session_id: {
@@ -107,7 +126,7 @@ const sessionMessageTableData = ref<sessionMessageData>({
     title: "",
     remarks: "",
 });
-
+const formLabelWidth = "100px";
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
   dialogVisible.value = true
@@ -138,6 +157,33 @@ interface SessionMessage {
   messageUrl: string
   messageTime: string
 }
+interface UploadFile {
+  name: string; // 文件名
+  size: number; // 文件大小
+  uid: number; // 唯一标识
+  status: string; // 上传状态，如 'ready', 'uploading', 'done', 'error'
+  raw: File; // 原始文件对象
+  percentage?: number; // 上传进度百分比
+}
+
+interface CurrentRow {
+  selectFile: File | null; // `selectFile` 可以是 File 类型或者 null
+}
+
+const currentrow = ref<CurrentRow>({
+  selectFile: null, // 初始值为 null
+});
+
+const upload = ref<UploadInstance>();
+const handleExceed: UploadProps["onExceed"] = (files) => {
+  upload.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  upload.value!.handleStart(file);
+};
+const change = (file: UploadFile) => {
+  currentrow.value.selectFile = file.raw;
+};
 
 const setSessionMessageTableData = (sessionId: string | null) => {
     sessionMessageTableData.value.sessionId = sessionId || "";
@@ -148,12 +194,23 @@ const submit = async () => {
         ElMessage.error('会话标题和会话附言均不能为空!');
         return;
     }
+    if (currentrow.value.selectFile === null) {
+      ElMessage.error('请提交文件');
+    return;
+  }
+  loading.value = true
     const newSessionId = props.session_id;
     setSessionMessageTableData(newSessionId);
-    await submitSessionMessageVO(sessionMessageTableData.value);
+    const newSessionMessageId = await submitSessionMessageVO(sessionMessageTableData.value);
+    await uploadFile(
+      currentrow.value.selectFile,
+      newSessionMessageId,
+      "message"
+    );
     ElMessage.success('提交成功')
     fetchData();
     clearForm();
+    loading.value = false
 };
 const clearForm = () => {
     sessionMessageTableData.value = {
@@ -161,6 +218,8 @@ const clearForm = () => {
         title: "",
         remarks: "",
     };
+    currentrow.value.selectFile = null;
+    upload.value!.clearFiles();
 };
 
 const cancel = () => {
@@ -191,7 +250,7 @@ onMounted(() => {
 });
 
 // 使用ref创建响应式变量
-const loading = ref(true)
+const loading = ref(false)
 const search = ref({
   title: '',
   remarks: '',

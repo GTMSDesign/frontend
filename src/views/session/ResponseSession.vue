@@ -10,11 +10,11 @@
   </el-form>
 
   <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'student_id', order: 'increncing' }">
-    <el-table-column label="会话ID" prop="session_id" align="center"></el-table-column>
+    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'session_time', order: 'increncing' }">
+    <el-table-column label="会话ID" prop="session_id" align="center" sortable></el-table-column>
     <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
-    <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
-    <el-table-column label="会话时间" prop="session_time" align="center"></el-table-column>
+    <el-table-column label="学生学号" prop="student_id" align="center"></el-table-column>
+    <el-table-column label="会话时间" prop="session_time" align="center" sortable></el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
         <SessionInfo :session_id="row.session_id" />
