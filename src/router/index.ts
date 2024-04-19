@@ -21,6 +21,7 @@ import AdvisorAssignment from "@/views/registrar/AdvisorAssignment.vue";
 import EnterStudentInfo from "@/views/registrar/informationManagement/EnterStudentInfo.vue";
 import EnterTeacherInfo from "@/views/registrar/informationManagement/EnterTeacherInfo.vue";
 import registrarDashboard from "@/views/registrar/RegistrarDashboard.vue";
+import ReviewRule from "@/views/registrar/ReviewRule.vue";
 //老师
 import DeferredApproval from "@/views/teacher/defensemanagement/DeferredApproval.vue";
 import FormalSubmission from "@/views/teacher/defensemanagement/FormalSubmission.vue";
@@ -132,6 +133,11 @@ const router = createRouter({
           path: PATH.Enter_Teacher_Info.path,
           component: EnterTeacherInfo,
           meta: { requiresAuth: PATH.Enter_Teacher_Info.requiresAuth },
+        },
+        {
+          path: PATH.Review_Rule.path,
+          component: ReviewRule,
+          meta: { requiresAuth: PATH.Review_Rule.requiresAuth },
         },
       ],
     },
@@ -254,7 +260,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to.path);
+  console.log(to);
   let token = sessionStorage.getItem("token");
   let role = sessionStorage.getItem("role");
   console.log(token);

@@ -52,6 +52,10 @@ export const PATH = {
     path: "/enterStudentInfo",
     requiresAuth: [ROLE.REGISTRAR],
   },
+  Review_Rule: {
+    path: "/ReviewRule",
+    requiresAuth: [ROLE.REGISTRAR],
+  },
   Enter_Teacher_Info: {
     path: "/enterTeacherInfo",
     requiresAuth: [ROLE.REGISTRAR],

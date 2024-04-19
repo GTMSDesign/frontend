@@ -25,6 +25,7 @@
       :data="filterTableData"
       style="width: 100%"
       stripe
+      border
       height="550"
       :header-cell-style="{ backgroundColor: '#E9D0F3' }"
       :default-sort="{ prop: 'student_id', order: 'increncing' }"

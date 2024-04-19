@@ -131,6 +131,12 @@ const menuItems = ref([
       },
     ],
   },
+  {
+    index: "/ReviewRule",
+    text: "制定评审规则",
+    icon: "el-icon-s-data",
+    tooltip: "制定评审规则",
+  },
 ]);
 
 // Handle menu selection

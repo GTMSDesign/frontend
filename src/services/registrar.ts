@@ -8,6 +8,11 @@ interface accountPO {
   name: string;
   power: string;
 }
+interface rule {
+  reviewItem: string;
+  reviewElement: string;
+  maxScore: number;
+}
 interface studentInfo {
   studentId: string;
   studentName: string;
@@ -38,7 +43,20 @@ interface teacherInfo {
   education: string;
   category: string;
 }
+export const getReviewRules = async (): Promise<rule[]> => {
+  try {
+    const response = await instance.get("/review/getReviewRules", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
 
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to fetch rules"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
 export const getUnenteredStudents = async (): Promise<accountPO[]> => {
   try {
     const response = await instance.get("/registrar/getUnenteredStudents", {
@@ -62,6 +80,18 @@ export const getUnenteredTeachers = async (): Promise<accountPO[]> => {
     return response.data.result;
   } catch (error) {
     let errorMessage = "Failed to fetch review unentered teachers"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+export const updateReviewRule = async (data: rule[]): Promise<void> => {
+  try {
+    await instance.post("/registrar/updateReviewRule", data, {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+  } catch (error) {
+    let errorMessage = "Failed to update review rules"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
   }
 };
