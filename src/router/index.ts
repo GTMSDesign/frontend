@@ -260,7 +260,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
   let token = sessionStorage.getItem("token");
   let role = sessionStorage.getItem("role");
   console.log(token);
