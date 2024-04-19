@@ -8,6 +8,16 @@ interface accountPO {
   name: string;
   power: string;
 }
+interface Thesis {
+  title: string;
+  thesis_id: string;
+  student_name: string;
+  student_id: string;
+  teacher_name: string;
+  teacher_id: string;
+  status: string;
+  defense_times: string;
+}
 interface rule {
   reviewItem: string;
   reviewElement: string;
@@ -83,6 +93,24 @@ export const getUnenteredTeachers = async (): Promise<accountPO[]> => {
     throw new Error(errorMessage); // 抛出错误
   }
 };
+export const allThesis = async (): Promise<Thesis[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/registrar/getAllThesis", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    const data = response.data.result; // 获取 result 字段
+    console.log(data);
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export const updateReviewRule = async (data: rule[]): Promise<void> => {
   try {
     await instance.post("/registrar/updateReviewRule", data, {
