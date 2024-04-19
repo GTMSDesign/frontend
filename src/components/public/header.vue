@@ -20,7 +20,8 @@
       <template #dropdown>
         <el-dropdown-menu>
           <EditProfile />
-          <el-dropdown-item divided command="exit">退出登录</el-dropdown-item>
+          <StudentProfile :student_id="student_id" />
+          <el-dropdown-item  command="exit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -33,10 +34,13 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import EditProfile from '@/views/public/editProfile.vue'
+import StudentProfile from '@/components/student/StudentProfile.vue'
 
 const router = useRouter()
 
 const name = sessionStorage.getItem('name')
+
+const student_id = sessionStorage.getItem("account");
 
 const handleCommand = (command: string | number | object) => {
   switch (command) {

@@ -20,9 +20,10 @@ export const login = async (username:string, password:string, captcha:string) =>
       }
     });
 
-    // console.log(response.data.result);
+    //console.log(response.data.result);
     sessionStorage.setItem("token",response.data.result.token);
     sessionStorage.setItem("role",response.data.result.role.toString());
+    sessionStorage.setItem("name",response.data.result.name)
     return response.data;
   } catch (error:any) {
     if (error.response && error.response.data && error.response.data.message) {

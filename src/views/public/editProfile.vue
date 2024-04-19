@@ -1,9 +1,9 @@
 <template>
-  <el-dropdown @command="handleCommand" size="large">
+  <el-dropdown @command="handleCommand" size="large" v-if="hasPermission()">
     <el-dropdown-item command="editProfile">个人中心</el-dropdown-item>
   </el-dropdown>
 
-  <el-dialog v-model="dialogVisible" center title="个人信息" width="60%" :before-close="handleClose"
+  <el-dialog v-model="dialogTeacherVisible" center title="个人信息" width="60%" :before-close="handleClose"
     :style="{ top: '0', left: '0' }" :append-to-body="true">
     <el-form ref="ruleFormRef" :model="data" :rules="rules" label-width="auto" class="demo-ruleForm" :size="formSize"
       status-icon>
@@ -71,6 +71,9 @@
       </el-button>
     </el-row>
   </el-dialog>
+
+
+
 </template>
 
 
@@ -92,9 +95,28 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus';
 import { teacherInformation, updateEmail, updatePhone } from '@/services/teacher'
 
-const dialogVisible = ref(false)
+
+const hasPermission = () => {
+  if(sessionStorage.getItem("role") == "ROLE_TEACHER"){
+    return true
+  }else {
+    return false
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+const dialogTeacherVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
-  dialogVisible.value = true
+  dialogTeacherVisible.value = true
 }
 
 const handleClose = (done: () => void) => {
@@ -163,7 +185,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       updateData();
-      dialogVisible.value = false;
+      dialogTeacherVisible.value = false;
     } else {
       ElMessage.error('提交失败!')
     }

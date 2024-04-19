@@ -293,7 +293,6 @@ const fetchData = async () => {
       power: item.power,
     }));
     const filteredLogs = logs.filter(item => item.account !== valueToRemove);
-    console.log(filteredLogs)
     tableData.value = filteredLogs; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
