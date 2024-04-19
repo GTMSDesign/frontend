@@ -5,20 +5,12 @@
       <Header />
       <el-container class="main-container">
         <!-- Sidebar -->
-        <el-menu
-          :router="false"
-          :default-active="defaultActive"
-          @select="handleMenuSelect"
-          background-color="#73116f"
-          :collapse="isCollapse"
-          @open="handleOpen"
-          @close="handleClose"
-          :unique-opened="true"
-        >
+        <el-menu :router="false" :default-active="defaultActive" @select="handleMenuSelect" background-color="#73116f"
+          :collapse="isCollapse" @open="handleOpen" @close="handleClose" :unique-opened="true" :default-openeds="[0]">
           <!-- Iterate over menuItems array -->
           <template v-for="(menuItem, index) in menuItems" :key="index">
             <!-- Check if menuItem is a submenu -->
-            <el-sub-menu v-if="menuItem.submenu" :index="menuItem.index">
+            <el-sub-menu v-if="menuItem.submenu" :index="index">
               <template #title>
                 <span class="menu-item">
                   <el-icon class="menu-icon">
@@ -28,15 +20,8 @@
                 </span>
               </template>
               <!-- Iterate over submenu items -->
-              <template
-                v-for="(subItem, subIndex) in menuItem.items"
-                :key="subIndex"
-              >
-                <el-tooltip
-                  :content="subItem.tooltip"
-                  effect="dark"
-                  placement="right"
-                >
+              <template v-for="(subItem, subIndex) in menuItem.items" :key="subIndex">
+                <el-tooltip :content="subItem.tooltip" effect="dark" placement="right">
                   <el-menu-item :index="subItem.index" class="menu-item">
                     <el-icon class="menu-icon">
                       <Position />
@@ -47,12 +32,7 @@
               </template>
             </el-sub-menu>
             <!-- If menuItem is not a submenu -->
-            <el-tooltip
-              v-else
-              :content="menuItem.tooltip"
-              effect="dark"
-              placement="right"
-            >
+            <el-tooltip v-else :content="menuItem.tooltip" effect="dark" placement="right">
               <el-menu-item :index="menuItem.index" class="menu-item">
                 <el-icon class="menu-icon">
                   <Edit />
