@@ -184,6 +184,8 @@ interface Accounts {
   name: string;
   power: string;
 }
+
+const valueToRemove = sessionStorage.getItem("account"); 
 const deleteDialogVisible = ref(false);
 const dialogVisible = ref(false);
 const dialogCreateVisible = ref(false);
@@ -231,13 +233,11 @@ const submitCreate = async () => {
             message: '创建成功',
             type: 'success',
           })
+      cancelCreate();
     }
-
     await fetchData();
   } catch (error) {
     console.log(error);
-  }finally {
-    cancelCreate();
   }
   cancel();
 };
@@ -292,7 +292,9 @@ const fetchData = async () => {
       name: item.name,
       power: item.power,
     }));
-    tableData.value = logs; // 更新 tableData
+    const filteredLogs = logs.filter(item => item.account !== valueToRemove);
+    console.log(filteredLogs)
+    tableData.value = filteredLogs; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
     console.error(error);
