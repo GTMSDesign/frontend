@@ -44,6 +44,8 @@ import AllThesisStudent from "@/views/student/AllThesisStudent.vue";
 //会话
 import LaunchSession from "@/views/session/LaunchSession.vue";
 import ResponseSession from "@/views/session/ResponseSession.vue";
+import LaunchSessionStudent from "@/views/session/LaunchSessionStudent.vue";
+import ResponseSessionStudent from "@/views/session/ResponseSessionStudent.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -243,15 +245,15 @@ const router = createRouter({
           meta: { requiresAuth: PATH.AllThesis_Student.requiresAuth },
         },
         {
-          path: PATH.Launch_Session.path,
-          component: LaunchSession,
-          meta: { requiresAuth: PATH.Launch_Session.requiresAuth },
+          path: PATH.Launch_Session_Student.path,
+          component: LaunchSessionStudent,
+          meta: { requiresAuth: PATH.Launch_Session_Student.requiresAuth },
           name: "StudentLaunchSession",
         },
         {
-          path: PATH.Response_Session.path,
-          component: ResponseSession,
-          meta: { requiresAuth: PATH.Response_Session.requiresAuth },
+          path: PATH.Response_Session_Student.path,
+          component: ResponseSessionStudent,
+          meta: { requiresAuth: PATH.Response_Session_Student.requiresAuth },
           name: "StudentResponseSession",
         },
       ],

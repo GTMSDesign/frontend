@@ -36,6 +36,25 @@ export const getStudentByTeacherId = async (teacherId: string) => {
   }
 };
 
+export const getTeacherByStudentId = async (studentId: string) => {
+  let errorMessage = ''; // 存储错误消息
+
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/distribution/getTeacherByStudentId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { studentId },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    errorMessage = "Failed to fetch teacher data"
+    throw new Error("Failed to fetch teacher data");
+  }
+};
+
 export const submitSessionVO = async (data: sessionVO): Promise<string> => {
   try {
     // 发起 post 请求 获得新建会话的sessionId
@@ -76,6 +95,31 @@ export const getSessionByTeacherId = async (teacherId: string) => {
         token: sessionStorage.getItem("token"),
       },
       params: { teacherId },
+    });
+    // return response.data.result; // 直接返回结果中的 result
+    const data = response.data.result; // 获取 result 字段
+    const formattedResults = data.map((item:any) => ({
+      ...item,
+      sessionTime: formatDate(item.sessionTime),//格式化日期
+  }))
+  return formattedResults; // 返回处理后的数据
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    errorMessage = "Failed to fetch session data"
+    throw new Error("Failed to fetch session data");
+  }
+};
+
+export const getSessionByStudentId = async (studentId: string) => {
+  let errorMessage = ''; // 存储错误消息
+
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/session/getSessionByStudentId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { studentId },
     });
     // return response.data.result; // 直接返回结果中的 result
     const data = response.data.result; // 获取 result 字段

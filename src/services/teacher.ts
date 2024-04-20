@@ -593,4 +593,24 @@ export const allDefenseThesisTeacher = async (account: string): Promise<Thesis[]
     throw new Error(errorMessage); // 抛出错误
   }
 };
+
+export const getTeacherNameById = async (teacherId: string) => {
+  let errorMessage = ''; // 存储错误消息
+
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/teacher/getTeacherNameById", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { teacherId },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    errorMessage = "Failed to fetch teacher data"
+    throw new Error("Failed to fetch teacher data");
+  }
+};
+
 export default instance;

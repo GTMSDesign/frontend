@@ -10,7 +10,7 @@
                         <el-icon :style="iconStyle">
                             <user />
                         </el-icon>
-                        目标学生姓名
+                        目标姓名
                     </div>
                 </template>
                 {{ $props.targetName }}
@@ -22,7 +22,7 @@
                         <el-icon :style="iconStyle">
                             <Location />
                         </el-icon>
-                        目标学生学号
+                        目标id
                     </div>
                 </template>
                 {{ $props.targetId }}

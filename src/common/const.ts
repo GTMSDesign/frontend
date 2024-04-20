@@ -137,10 +137,18 @@ export const PATH = {
   //会话
   Launch_Session: {
     path: "/launchSession",
-    requiresAuth: [ROLE.STUDENT, ROLE.TEACHER],
+    requiresAuth: [ ROLE.TEACHER],
   },
   Response_Session: {
     path: "/responseSession",
-    requiresAuth: [ROLE.STUDENT, ROLE.TEACHER],
+    requiresAuth: [ ROLE.TEACHER],
+  },
+  Launch_Session_Student: {
+    path: "/launchSessionStduent",
+    requiresAuth: [ROLE.STUDENT],
+  },
+  Response_Session_Student: {
+    path: "/responseSessionStduent",
+    requiresAuth: [ROLE.STUDENT],
   },
 };
