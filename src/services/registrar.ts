@@ -1,4 +1,5 @@
 import axios from "axios";
+import { de } from "element-plus/es/locales.mjs";
 const instance = axios.create({
   baseURL: "http://localhost:8080", // 替换成您的后端 API 地址
   timeout: 5000, // 设置超时时间
@@ -54,7 +55,16 @@ interface studentInfo {
   fairCourses: number;
   passCourses: number;
 }
-
+interface TeacherInf {
+  teacherId: string;
+  teacherName: string;
+  phone: string;
+  officePhone: string;
+  email: string;
+  title: string;
+  education: string;
+  category: string;
+}
 interface teacherInfo {
   teacherId: string;
   teacherName: string;
@@ -65,6 +75,55 @@ interface teacherInfo {
   education: string;
   category: string;
 }
+// export const assignReview = async (
+//   thesisId: string[],
+//   internalId: string,
+//   externalId: string,
+//   deadline: string
+// ): Promise<void> => {
+//   try {
+//     // 发起 POST 请求
+//     await instance.post("/registrar/assignReview", null, {
+//       params: {
+//         thesisId,
+//         internalId,
+//         externalId,
+//         deadline,
+//       },
+//       headers: {
+//         token: sessionStorage.getItem("token"), // 确保发送 token
+//       },
+//     });
+//   } catch (error) {
+//     // 处理错误，这里可以根据需要细化错误处理逻辑
+//     throw new Error("Failed to submit assign review");
+//   }
+// };
+export const assignReview = async (
+  thesisId: string[],
+  internalId: string,
+  externalId: string,
+  deadline: string
+): Promise<void> => {
+  try {
+    const params = new URLSearchParams();
+    thesisId.forEach((id) => {
+      params.append("thesisId", id);
+    });
+    params.append("internalId", internalId);
+    params.append("externalId", externalId);
+    params.append("deadline", deadline);
+    // 发起 POST 请求
+    await instance.post("/registrar/assignReview", params, {
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to submit assign review");
+  }
+};
 export const getReviewRules = async (): Promise<rule[]> => {
   try {
     const response = await instance.get("/review/getReviewRules", {
@@ -211,5 +270,34 @@ export const submitPlagiarismCheck = async (
   } catch (error) {
     // 处理错误，这里可以根据需要细化错误处理逻辑
     throw new Error("Failed to submit plagiarism check");
+  }
+};
+export const getInternalTeachers = async (): Promise<TeacherInf[]> => {
+  try {
+    const response = await instance.get("/registrar/getInternalTeachers", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to get Internal teacher"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const getExternalTeachers = async (): Promise<TeacherInf[]> => {
+  try {
+    const response = await instance.get("/registrar/getExternalTeachers", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to get External teacher"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
   }
 };
