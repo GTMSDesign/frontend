@@ -49,7 +49,7 @@
   const fetchData = async () => {
     try {
       const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
-      const data = await getTeacherByStudentId(account); // 调用获取学生教师的方法，并传入参数
+      const data = await getTeacherByStudentId(account); // 调用获取教师的方法，并传入参数
       const teacher: Teacher[] = data.map((item: any) => ({
         teacher_name: item.teacherName,
         teacher_id: item.teacherId,

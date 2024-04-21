@@ -203,6 +203,108 @@
           </el-descriptions-item>
 
       </el-descriptions>
+
+      <el-descriptions class="margin-top" :column="2" :size="size" border title="导师信息">
+        <!-- <template #extra>
+          <el-button type="primary">Operation</el-button>
+        </template> -->
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon :style="iconStyle">
+                <user />
+              </el-icon>
+              导师姓名
+            </div>
+          </template>
+          {{ tableData2?.teacherName }}
+        </el-descriptions-item>
+  
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon :style="iconStyle">
+                <Location />
+              </el-icon>
+              导师id
+            </div>
+          </template>
+          {{ tableData2?.teacherId }}
+        </el-descriptions-item>
+  
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon :style="iconStyle">
+                <Iphone />
+              </el-icon>
+              手机号
+            </div>
+          </template>
+          {{ tableData2?.phone }}
+        </el-descriptions-item>
+  
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon :style="iconStyle">
+                <Iphone />
+              </el-icon>
+              办公电话
+            </div>
+          </template>
+          {{ tableData2?.officePhone }}
+        </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon :style="iconStyle">
+                  <Message />
+                </el-icon>
+                电子邮箱
+              </div>
+            </template>
+            {{ tableData2?.email }}
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon :style="iconStyle">
+                  <OfficeBuilding />
+                </el-icon>
+                职称
+              </div>
+            </template>
+            {{ tableData2?.title }}
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon :style="iconStyle">
+                  <Tickets/>
+                </el-icon>
+                学历
+              </div>
+            </template>
+            {{ tableData2?.education }}
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon :style="iconStyle">
+                  <Tickets />
+                </el-icon>
+                类别
+              </div>
+            </template>
+            {{ tableData2?.category }}
+          </el-descriptions-item>
+
+      </el-descriptions>
     </el-dialog>
   </template>
   
@@ -210,6 +312,7 @@
   import { reactive, ref, computed, onMounted } from 'vue'
   import { Link, Tickets, User, Iphone, WarningFilled, Message, OfficeBuilding } from '@element-plus/icons-vue'
   import { getStudentById } from '@/services/student'; // 导入获取学生的方法
+  import { getTeacherByStudentId } from "@/services/session";
   
   const props = defineProps({
     student_id: String,
@@ -251,13 +354,26 @@
   fairCourses: number
   passCourses: number
 }
+
+interface Teacher {
+    teacherId: string
+    teacherName: string
+    phone: string
+    officePhone: string
+    email: string
+    title: string
+    education: string
+    category: string
+  }
   
   const fetchData = async () => {
     try {
       const student_id = props.student_id || ''; // 获取 props 中的 student_id
       const data = await getStudentById(student_id); // 调用获取论文详情的方法，并传入参数
+      const data2 = await getTeacherByStudentId(student_id);
       tableData.value = data;
-      console.log(data)
+      tableData2.value = data2[0];
+      console.log(tableData2.value);
       loading.value = false; // 数据加载完成，loading 状态设为 false
     } catch (error) {
       console.error(error);
@@ -272,6 +388,7 @@
   
   // 使用ref创建响应式变量
   const tableData = ref<Student>();
+  const tableData2 = ref<Teacher>();
   
   const size = ref('default')
   const iconStyle = computed(() => {
