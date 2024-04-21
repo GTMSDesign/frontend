@@ -55,7 +55,14 @@
             </el-descriptions-item>
 
             <el-descriptions-item>
-
+                <template #label>
+                    <div class="cell-item">
+                        <el-icon :style="iconStyle">
+                            <Link />
+                        </el-icon>
+                        会话附件
+                    </div>
+                </template>
                 <el-form-item :label-width="formLabelWidth">
                     <el-upload
                       ref="upload"
