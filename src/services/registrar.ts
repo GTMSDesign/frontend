@@ -301,3 +301,112 @@ export const getExternalTeachers = async (): Promise<TeacherInf[]> => {
     throw new Error(errorMessage); // 抛出错误
   }
 };
+
+
+export const getAllTeacher = async (status: string): Promise<teacherInfo[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/registrar/getAllTeacher", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    const data = response.data.result; // 获取 result 字段
+    const teachers: teacherInfo[] = data.map((item: any) => ({
+      teacherId: item.teacherId,
+      teacherName: item.teacherName,
+      phone: item.phone,
+      officePhone: item.officePhone,
+      email: item.email,
+      title: item.title,
+      education: item.education,
+      category: item.category,
+    }));
+    return teachers; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teachers"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const getAllStudent = async (status: string): Promise<studentInfo[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/registrar/getAllStudent", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    const data = response.data.result; // 获取 result 字段
+    const students: StudentInfo[] = data.map((item: any) => ({
+      studentId: item.studentId,
+      studentName: item.studentName,
+      grade: item.grade,
+      phone: item.phone,
+      officePhone: item.officePhone,
+      homePhone: item.homePhone,
+      emergencyContactName: item.emergencyContactName,
+      emergencyContactPhone: item.emergencyContactPhone,
+      email1: item.email1,
+      email2: item.email2,
+      company: item.company,
+      position: item.position,
+      distribute: item.distribute,
+      excellentCourses: item.excellentCourses,
+      goodCourses: item.goodCourses,
+      fairCourses: item.fairCourses,
+      passCourses: item.passCourses,
+    }));
+    return students; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teachers"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+
+
+
+export const submitAssignment = async (
+  studentId: string,
+  teacherId: string
+): Promise<void> => {
+  try {
+    // 发起 POST 请求
+    await instance.post("/registrar/submitAssignment", null, {
+      params: {
+        studentId,
+        teacherId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to submit Assignment");
+  }
+};
+
+export const deleteAssignment = async (
+  studentId: string,
+  teacherId: string
+): Promise<void> => {
+  try {
+    // 发起 POST 请求
+    await instance.post("/registrar/deleteAssignment", null, {
+      params: {
+        studentId,
+        teacherId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to delete Assignment");
+  }
+};
