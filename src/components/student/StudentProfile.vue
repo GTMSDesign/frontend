@@ -373,7 +373,6 @@ interface Teacher {
       const data2 = await getTeacherByStudentId(student_id);
       tableData.value = data;
       tableData2.value = data2[0];
-      console.log(tableData2.value);
       loading.value = false; // 数据加载完成，loading 状态设为 false
     } catch (error) {
       console.error(error);

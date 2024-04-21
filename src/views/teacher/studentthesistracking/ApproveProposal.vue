@@ -249,7 +249,7 @@ const handleReviewButtonClick = (row: Thesis) => {
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem("account") || ""; // 获取 sessionStorage 中的 account
-    const data = await getThesisByStatus(account, "待开题"); // 调用获取教师相关论文的方法，并传入参数
+    const data = await getThesisByStatus(account, "未开题"); // 调用获取教师相关论文的方法，并传入参数
     tableData.value = data; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {

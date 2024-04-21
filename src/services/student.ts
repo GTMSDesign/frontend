@@ -6,6 +6,17 @@ const instance = axios.create({
   timeout: 5000, // 设置超时时间
 });
 
+interface Thesis {
+  title: string;
+  thesis_id: string;
+  student_name: string;
+  student_id: string;
+  teacher_name: string;
+  teacher_id: string;
+  status: string;
+  defense_times: string;
+}
+
 export const getStudentById = async (studentId: string) => {
   let errorMessage = ''; // 存储错误消息
 
@@ -42,6 +53,42 @@ export const getStudentNameById = async (studentId: string) => {
     // 如果发生错误，将错误消息抛出
     errorMessage = "Failed to fetch student data"
     throw new Error("Failed to fetch student data");
+  }
+};
+
+export const allThesisStudent = async (account: string): Promise<Thesis[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/thesis/getThesisByStudentId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { account }, // 传递参数到后端
+    });
+    const data = response.data.result; // 获取 result 字段
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch student theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const finishDraft = async (thesisId: string): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/student/finishDraft", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesisId }, // 传递参数到后端
+    });
+    const data = response.data.result; // 获取 result 字段
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to set finish draft"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
   }
 };
 

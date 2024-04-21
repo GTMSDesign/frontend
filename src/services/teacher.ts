@@ -254,7 +254,6 @@ export const allThesisTeacher = async (account: string): Promise<Thesis[]> => {
       params: { account }, // 传递参数到后端
     });
     const data = response.data.result; // 获取 result 字段
-    console.log(data);
     return data; // 返回处理后的数据
   } catch (error) {
     errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
