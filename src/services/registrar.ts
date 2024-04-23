@@ -410,3 +410,24 @@ export const deleteAssignment = async (
     throw new Error("Failed to delete Assignment");
   }
 };
+
+export const generateEvaluation = async (thesisId: string, studentId: string): Promise<string> => {
+  try {
+    // 发起 post 请求 获得新建会话的sessionId
+    const response = await instance.post("/registrar/generateEvaluation", null, {
+      params: {
+        thesisId,
+        studentId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+    });
+    return response.data.result;
+  } catch (error) {
+    let errorMessage = "Failed to generate evaluation"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export default instance;

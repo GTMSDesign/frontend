@@ -81,7 +81,7 @@
       width="210px"
       fixed="right"
     >
-      <el-button link type="primary" size="small" @click="download(scope.row)">安排印刷</el-button>
+      <el-button link type="primary" size="small">安排印刷</el-button>
     </el-table-column>
   </el-table>
 </template>
