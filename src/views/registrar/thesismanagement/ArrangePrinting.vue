@@ -81,7 +81,7 @@
       width="210px"
       fixed="right"
     >
-      <el-button link type="primary" size="small">安排印刷</el-button>
+      <el-button link type="primary" size="small" @click="download(scope.row)">安排印刷</el-button>
     </el-table-column>
   </el-table>
 </template>
@@ -90,7 +90,10 @@
 import { reactive, ref, computed, onMounted } from "vue";
 import {
   getThesisByStatus,
-} from "@/services/registrar"; // 导入获取教师相关论文的方法
+} from "@/services/registrar";
+import {
+  downloadFile,
+} from "@/services/teacher";
 import { Search } from "@element-plus/icons-vue";
 import type { FormProps } from "element-plus";
 interface Thesis {
@@ -132,6 +135,18 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
+
+
+const download = async (row: Thesis) => {
+  console.log(row.thesis_id);
+  const url = await downloadFile(row.thesis_id, "thesis");
+  console.log(url);
+  const link = document.createElement("a");
+  link.href = url; // 设置下载链接
+  document.body.appendChild(link); // 将元素添加到文档中
+  link.click(); // 触发下载
+  document.body.removeChild(link); // 下载后移除元素
+};
 
 // 使用ref创建响应式变量
 const tableData = ref<Thesis[]>([]);
