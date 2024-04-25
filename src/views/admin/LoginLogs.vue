@@ -1,19 +1,19 @@
 <template>
   <div>
-  <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
-    <el-form-item label="登录账号">
-      <el-input v-model="search.userAccount" placeholder="Type to search" clearable :prefix-icon="Search" />
-    </el-form-item>
-  </el-form>
+    <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
+      <el-form-item label="登录账号">
+        <el-input v-model="search.userAccount" placeholder="输入账号以搜索" clearable :prefix-icon="Search" />
+      </el-form-item>
+    </el-form>
 
-  <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'id', order: 'increncing' }">
-    <el-table-column label="ID" prop="id" width="300"></el-table-column>
-    <el-table-column label="登录账号" prop="userAccount" align="center"></el-table-column>
-    <el-table-column label="登录IP" prop="ipAddress" align="center"></el-table-column>
-    <el-table-column label="登录时间" prop="loginTime" sortable align="center"></el-table-column>
-  </el-table>
-</div>
+    <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
+      :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'id', order: 'increncing' }">
+      <el-table-column label="ID" prop="id"></el-table-column>
+      <el-table-column label="登录账号" prop="userAccount" align="center"></el-table-column>
+      <el-table-column label="登录IP" prop="ipAddress" align="center"></el-table-column>
+      <el-table-column label="登录时间" prop="loginTime" sortable align="center"></el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -36,7 +36,7 @@ const search = ref({
 
 const fetchData = async () => {
   try {
-    const data = await allLoginLogs(); 
+    const data = await allLoginLogs();
     const logs: LoginLogs[] = data.map((item: any) => ({
       id: item.id,
       userAccount: item.userAccount,

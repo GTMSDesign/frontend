@@ -1,52 +1,21 @@
 <template>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="账号">
-      <el-input
-        v-model="search.account"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+      <el-input v-model="search.account" placeholder="输入账号以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item label="姓名">
-      <el-input
-        v-model="search.name"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+      <el-input v-model="search.name" placeholder="输入姓名以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item>
-     <el-button type="primary" @click="handleCreateButtonClick">新建账号</el-button>
+      <el-button type="primary" @click="handleCreateButtonClick">新建账号</el-button>
     </el-form-item>
   </el-form>
 
-  <el-table
-    v-loading="loading"
-    v-if="!loading"
-    :data="filterTableData"
-    style="width: 100%"
-    stripe
-    height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-    :default-sort="{ prop: 'account', order: 'increncing' }"
-  >
-    <el-table-column
-      label="账号"
-      prop="account"
-      width="300"
-    ></el-table-column>
-    <el-table-column
-      label="密码"
-      prop="password"
-      sortable
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="姓名"
-      prop="name"
-      align="center"
-    ></el-table-column>
+  <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
+    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'account', order: 'increncing' }">
+    <el-table-column label="账号" prop="account" width="300"></el-table-column>
+    <el-table-column label="密码" prop="password" sortable align="center"></el-table-column>
+    <el-table-column label="姓名" prop="name" align="center"></el-table-column>
     <el-table-column label="权限" prop="power" align="center">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{
@@ -54,54 +23,28 @@
         }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column
-      label="操作"
-      align="center"
-      #default="scope"
-      width="210px"
-      fixed="right">
-        <el-button
-        link
-        type="primary"
-        size="small"
-        @click="handleAccountButtonClick(scope.row)"
-        >修改</el-button>
-        <el-button
-        link
-        type="primary"
-        size="small"
-        @click="handleDeleteButtonClick(scope.row)"
-        >删除</el-button>
+    <el-table-column label="操作" align="center" #default="scope" width="210px" fixed="right">
+      <el-button link type="primary" @click="handleAccountButtonClick(scope.row)">修改</el-button>
+      <el-button link type="primary" @click="handleDeleteButtonClick(scope.row)">删除</el-button>
     </el-table-column>
   </el-table>
   <el-dialog v-model="dialogFormVisible" title="修改信息" width="40%" center>
     <hr size="4" color="#faf8f8" />
     <el-form :label-position="labelPosition">
       <el-form-item label="账号" :label-width="formLabelWidth">
-        <el-input v-model="currentrow.account" style="width: auto" disabled="true"/>
+        <el-input v-model="currentrow.account" style="width: auto" disabled="true" />
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.password"
-          style="width: auto"
-        />
+        <el-input v-model="currentrow.password" style="width: auto" />
       </el-form-item>
       <el-form-item label="姓名" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.name"
-          style="width: auto"
-        />
+        <el-input v-model="currentrow.name" style="width: auto" />
       </el-form-item>
       <el-form-item label="权限" :label-width="formLabelWidth">
-    <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
-    <el-option
-      v-for="(label, power) in powerLabels"
-      :key="power"
-      :label="label"
-      :value="power"
-    />
-    </el-select>
-    </el-form-item>
+        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
+          <el-option v-for="(label, power) in powerLabels" :key="power" :label="label" :value="power" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
@@ -115,30 +58,19 @@
     <hr size="4" color="#faf8f8" />
     <el-form :label-position="labelPosition">
       <el-form-item label="账号" :label-width="formLabelWidth">
-        <el-input v-model="currentrow.account" style="width: auto"/>
+        <el-input v-model="currentrow.account" style="width: auto" />
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.password"
-          style="width: auto"
-        />
+        <el-input v-model="currentrow.password" style="width: auto" />
       </el-form-item>
       <el-form-item label="姓名" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.name"
-          style="width: auto"
-        />
+        <el-input v-model="currentrow.name" style="width: auto" />
       </el-form-item>
       <el-form-item label="权限" :label-width="formLabelWidth">
-    <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
-    <el-option
-      v-for="(label, power) in powerLabels"
-      :key="power"
-      :label="label"
-      :value="power"
-    />
-    </el-select>
-    </el-form-item>
+        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
+          <el-option v-for="(label, power) in powerLabels" :key="power" :label="label" :value="power" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
@@ -148,12 +80,7 @@
     </template>
   </el-dialog>
 
-  <el-dialog
-    v-model="deleteDialogVisible"
-    title="确认删除"
-    width="40%"
-    center
-  >
+  <el-dialog v-model="deleteDialogVisible" title="确认删除" width="40%" center>
     <span>确定要删除该条记录吗？</span>
     <template #footer>
       <div class="dialog-footer">
@@ -185,7 +112,7 @@ interface Accounts {
   power: string;
 }
 
-const valueToRemove = sessionStorage.getItem("account"); 
+const valueToRemove = sessionStorage.getItem("account");
 const deleteDialogVisible = ref(false);
 const dialogVisible = ref(false);
 const dialogCreateVisible = ref(false);
@@ -225,14 +152,14 @@ const cancelCreate = () => {
 
 const submitCreate = async () => {
   try {
-    const ifsuccess = await createAccount(currentrow.value.account,currentrow.value.password,currentrow.value.name,currentrow.value.power);
-    if(ifsuccess == "创建失败！"){
+    const ifsuccess = await createAccount(currentrow.value.account, currentrow.value.password, currentrow.value.name, currentrow.value.power);
+    if (ifsuccess == "创建失败！") {
       ElMessage.error('创建失败！')
-    }else if(ifsuccess == "创建成功"){
+    } else if (ifsuccess == "创建成功") {
       ElMessage.success({
-            message: '创建成功',
-            type: 'success',
-          })
+        message: '创建成功',
+        type: 'success',
+      })
       cancelCreate();
     }
     await fetchData();
@@ -255,15 +182,15 @@ const cancelDelete = () => {
   deleteDialogVisible.value = false;
 };
 const confirmDelete = async () => {
-    try {
-      await deleteByAccount(delete_account.value);
-      fetchData()
-    } catch (error) {
-      console.error('Error deleting item:', error);
-    } finally {
-      cancelDelete();
-    }
-  
+  try {
+    await deleteByAccount(delete_account.value);
+    fetchData()
+  } catch (error) {
+    console.error('Error deleting item:', error);
+  } finally {
+    cancelDelete();
+  }
+
 };
 
 
@@ -285,7 +212,7 @@ const handleAccountButtonClick = (row: Accounts) => {
 
 const fetchData = async () => {
   try {
-    const data = await getAllAccount(); 
+    const data = await getAllAccount();
     const logs: Accounts[] = data.map((item: any) => ({
       account: item.account,
       password: item.password,
@@ -313,7 +240,7 @@ const tableData = ref<Accounts[]>([]);
 const submit = async () => {
   //提交结论
   try {
-    await updateAccount(currentrow.value.account,currentrow.value.password,currentrow.value.name,currentrow.value.power);
+    await updateAccount(currentrow.value.account, currentrow.value.password, currentrow.value.name, currentrow.value.power);
     await fetchData();
   } catch (error) {
     console.log(error);
@@ -324,7 +251,7 @@ const submit = async () => {
 
 const filterTableData = computed(() =>
   tableData.value.filter(data =>
-    (!search.value.account || data.account.toLowerCase().includes(search.value.account.toLowerCase()))&&
+    (!search.value.account || data.account.toLowerCase().includes(search.value.account.toLowerCase())) &&
     (!search.value.name || data.name.toLowerCase().includes(search.value.name.toLowerCase()))
   )
 )
@@ -346,18 +273,28 @@ const getPowerLabel = (power: string) => {
 <style scoped>
 /* Add any necessary styles */
 .text-container {
-  background-color: #f4f4f9; /* 浅灰色背景 */
-  border-left: 5px solid #5b9bd5; /* 左侧有一个蓝色边框 */
-  padding: 20px; /* 内部填充 */
-  margin: 20px; /* 外部边距 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 轻微的阴影效果 */
+  background-color: #f4f4f9;
+  /* 浅灰色背景 */
+  border-left: 5px solid #5b9bd5;
+  /* 左侧有一个蓝色边框 */
+  padding: 20px;
+  /* 内部填充 */
+  margin: 20px;
+  /* 外部边距 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* 轻微的阴影效果 */
 }
 
 .text-container p {
-  color: #333; /* 深灰色文字 */
-  font-family: "Arial", sans-serif; /* 使用Arial字体 */
-  font-size: 16px; /* 字体大小 */
-  line-height: 1.6; /* 行间距 */
-  text-align: justify; /* 两端对齐文本 */
+  color: #333;
+  /* 深灰色文字 */
+  font-family: "Arial", sans-serif;
+  /* 使用Arial字体 */
+  font-size: 16px;
+  /* 字体大小 */
+  line-height: 1.6;
+  /* 行间距 */
+  text-align: justify;
+  /* 两端对齐文本 */
 }
 </style>

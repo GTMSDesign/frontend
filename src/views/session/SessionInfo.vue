@@ -5,10 +5,10 @@
     align-center>
     <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
       <el-form-item label="标题">
-        <el-input v-model="search.title" placeholder="搜索标题" clearable :prefix-icon="Search" />
+        <el-input v-model="search.title" placeholder="输入标题以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
       <el-form-item label="附言">
-        <el-input v-model="search.remarks" placeholder="搜索附言" clearable :prefix-icon="Search" />
+        <el-input v-model="search.remarks" placeholder="输入附言以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
     </el-form>
 
@@ -105,6 +105,7 @@ import { Search } from '@element-plus/icons-vue'
 import { getSessionMessage, uploadFile } from '@/services/session'; // 导入获取学生的方法
 import { ElMessage } from 'element-plus';
 import { submitSessionMessageVO } from '@/services/session';
+import { sendEmail } from "@/services/teacher";
 import type { FormProps, UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import { genFileId } from "element-plus";
 
@@ -112,7 +113,11 @@ const props = defineProps({
   session_id: {
         type: String,
         default: "000"
-    }
+    },
+  target_id: {
+        type: String,
+        default: "000"
+    },
 });
 
 interface sessionMessageData {
@@ -206,6 +211,11 @@ const submit = async () => {
       currentrow.value.selectFile,
       newSessionMessageId,
       "message"
+    );
+    await sendEmail(
+       props.target_id,
+      "导师发送了新的会话信息：" + sessionMessageTableData.value.title,
+      sessionMessageTableData.value.remarks,
     );
     ElMessage.success('提交成功')
     fetchData();

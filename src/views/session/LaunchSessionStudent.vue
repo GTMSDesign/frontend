@@ -1,18 +1,18 @@
 <template>
     <div>
     <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
-      <el-form-item label="教师id">
-        <el-input v-model="search.teacher_id" placeholder="输入教师id搜索" clearable :prefix-icon="Search" />
+      <el-form-item label="导师ID">
+        <el-input v-model="search.teacher_id" placeholder="输入导师ID以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
-      <el-form-item label="教师姓名">
-        <el-input v-model="search.teacher_name" placeholder="输入姓名搜索" clearable :prefix-icon="Search" />
+      <el-form-item label="导师姓名">
+        <el-input v-model="search.teacher_name" placeholder="输入导师姓名以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
     </el-form>
   
     <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
       :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'teacher_id', order: 'increncing' }">
-      <el-table-column label="教师姓名" prop="teacher_name" align="center"></el-table-column>
-      <el-table-column label="教师id" prop="teacher_id" sortable align="center"></el-table-column>
+      <el-table-column label="导师姓名" prop="teacher_name" align="center"></el-table-column>
+      <el-table-column label="导师ID" prop="teacher_id" sortable align="center"></el-table-column>
       <el-table-column label="办公电话" prop="office_phone" align="center"></el-table-column>
       <el-table-column label="手机号" prop="phone" align="center"></el-table-column>
       <el-table-column label="邮箱" prop="email" align="center"></el-table-column>

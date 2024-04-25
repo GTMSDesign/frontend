@@ -1,54 +1,19 @@
 <template>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="职工号">
-      <el-input
-        v-model="search.teacherId"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+      <el-input v-model="search.teacherId" placeholder="输入职工号以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item label="姓名">
-      <el-input
-        v-model="search.teacherName"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+      <el-input v-model="search.teacherName" placeholder="输入姓名以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 
-  <el-table
-    v-loading="loading"
-    v-if="!loading"
-    :data="filterTableData"
-    style="width: 100%"
-    stripe
-    height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-    :default-sort="{ prop: 'thesis_id', order: 'increncing' }"
-  >
-    <el-table-column
-      label="职工号"
-      prop="teacherId"
-      width="300"
-      sortable
-    ></el-table-column>
-    <el-table-column
-      label="姓名"
-      prop="teacherName"
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="学历"
-      prop="education"
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="类别"
-      prop="category"
-      align="center"
-    ></el-table-column>
+  <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
+    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'thesis_id', order: 'increncing' }">
+    <el-table-column label="职工号" prop="teacherId" width="300" sortable></el-table-column>
+    <el-table-column label="姓名" prop="teacherName" align="center"></el-table-column>
+    <el-table-column label="学历" prop="education" align="center"></el-table-column>
+    <el-table-column label="类别" prop="category" align="center"></el-table-column>
     <el-table-column label="职称" prop="title" align="center">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{
@@ -56,37 +21,16 @@
         }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column
-      label="操作"
-      align="center"
-      #default="scope"
-      width="210px"
-      fixed="right"
-    >
-      <el-button
-        link
-        type="primary"
-        size="small"
-        @click="handleReviewButtonClick(scope.row)"
-        >分配学生</el-button
-      >
-      <el-button
-        link
-        type="primary"
-        size="small"
-        @click="handleButtonClick(scope.row)"
-        >取消分配
-    </el-button>
+    <el-table-column label="操作" align="center" #default="scope" width="210px" fixed="right">
+      <el-button link type="primary" size="small" @click="handleReviewButtonClick(scope.row)">分配学生</el-button>
+      <el-button link type="primary" size="small" @click="handleButtonClick(scope.row)">取消分配
+      </el-button>
     </el-table-column>
   </el-table>
   <el-dialog v-model="dialogFormVisible" title="分配学生" width="40%" center>
     <hr size="4" color="#faf8f8" />
-    <el-transfer
-    v-model="transferValue"
-    :data="transferData"
-    :titles="['待分配学生', '已分配学生']"
-    >
-  </el-transfer>
+    <el-transfer v-model="transferValue" :data="transferData" :titles="['待分配学生', '已分配学生']">
+    </el-transfer>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
@@ -96,12 +40,8 @@
   </el-dialog>
   <el-dialog v-model="dialogStudentVisible" title="取消分配学生" width="40%" center>
     <hr size="4" color="#faf8f8" />
-    <el-transfer
-    v-model="assignmentValue"
-    :data="assignmentData"
-    :titles="['已分配学生', '待分配学生']"
-    >
-  </el-transfer>
+    <el-transfer v-model="assignmentValue" :data="assignmentData" :titles="['已分配学生', '待分配学生']">
+    </el-transfer>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="cancelassign">取消</el-button>
@@ -121,7 +61,7 @@ import {
   getAllStudent,
   submitAssignment,
   deleteAssignment,
-} from "@/services/registrar"; 
+} from "@/services/registrar";
 import { getStudentByTeacherId } from '@/services/session';
 import { Search } from "@element-plus/icons-vue";
 import type { FormProps } from "element-plus";
@@ -176,14 +116,14 @@ const currentRowTeacherId = ref<string>("");
 
 const cancel = () => {
   currentRowTeacherId.value = "";
-  transferValue.value=[];
+  transferValue.value = [];
   fetchData();
   fetchAssignData();
   dialogFormVisible.value = false;
 };
 const cancelassign = () => {
   currentRowTeacherId.value = "";
-  assignmentValue.value=[];
+  assignmentValue.value = [];
   fetchData();
   fetchAssignData();
   dialogStudentVisible.value = false;
@@ -234,7 +174,7 @@ const fetchData = async () => {
       fairCourses: item.fairCourses,
       passCourses: item.passCourses,
     }));
-  
+
     allStudents.value = students;
     splitStudentsByDistribute(students);
     tableData.value = teachers; // 更新 tableData
@@ -265,7 +205,7 @@ const assignmentValue = ref([])
 
 
 const fetchAssignData = async () => {
-  try{
+  try {
     const assignData = await getStudentByTeacherId(currentRowTeacherId.value);
     const assign_students: StudentPO[] = assignData.map((item: any) => ({
       studentId: item.studentId,
@@ -286,12 +226,12 @@ const fetchAssignData = async () => {
       fairCourses: item.fairCourses,
       passCourses: item.passCourses,
     }));
-    
-    const data0: Option[] =  assign_students.map((item: any) => ({
+
+    const data0: Option[] = assign_students.map((item: any) => ({
       key: item.studentId,
-      label: item.studentId+" "+item.studentName
+      label: item.studentId + " " + item.studentName
     }));
-    
+
     // console.log(distributeNoStudents.value)
     assignmentData.value = data0
   }
@@ -306,12 +246,12 @@ const fetchAssignData = async () => {
 const submit = async () => {
   //提交结论
   try {
-    transferValue.value.map(async (item:any) => {
+    transferValue.value.map(async (item: any) => {
       //console.log(item);
-      await submitAssignment(item,currentRowTeacherId.value);
+      await submitAssignment(item, currentRowTeacherId.value);
     });
     currentRowTeacherId.value = "";
-    transferValue.value=[];
+    transferValue.value = [];
     fetchData();
     ElMessage.success("分配成功")
   } catch (error) {
@@ -322,9 +262,9 @@ const submit = async () => {
 const submitassign = async () => {
   //提交结论
   try {
-    assignmentValue.value.map(async (item:any) => {
+    assignmentValue.value.map(async (item: any) => {
       //console.log(item);
-      await deleteAssignment(item,currentRowTeacherId.value);
+      await deleteAssignment(item, currentRowTeacherId.value);
     });
     ElMessage.success("删除分配成功")
   } catch (error) {
@@ -347,11 +287,11 @@ const filterTableData = computed(() =>
 const splitStudentsByDistribute = (students: StudentPO[]) => {
   distributeYesStudents.value = students.filter(student => student.distribute === "是");
   distributeNoStudents.value = students.filter(student => student.distribute === "否");
-  const data: Option[] =  distributeNoStudents.value.map((item: any) => ({
-      key: item.studentId,
-      label: item.studentId+" "+item.studentName
+  const data: Option[] = distributeNoStudents.value.map((item: any) => ({
+    key: item.studentId,
+    label: item.studentId + " " + item.studentName
   }));
-  transferData.value=data
+  transferData.value = data
 };
 
 

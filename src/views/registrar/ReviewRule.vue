@@ -4,122 +4,53 @@
       <div class="left-buttons">
         <button class="addButton" @click="addRow">
           <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
               <path fill="none" d="M0 0h24v24H0z"></path>
-              <path
-                fill="currentColor"
-                d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
-              ></path>
+              <path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path>
             </svg>
             添加
           </span>
         </button>
         <button class="refreshButton" type="button" @click="refresh">
           <span class="button__text">刷新</span>
-          <span class="button__icon"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              viewBox="0 0 48 48"
-              height="48"
-              class="svg"
-            >
+          <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" viewBox="0 0 48 48" height="48"
+              class="svg">
               <path
-                d="M35.3 12.7c-2.89-2.9-6.88-4.7-11.3-4.7-8.84 0-15.98 7.16-15.98 16s7.14 16 15.98 16c7.45 0 13.69-5.1 15.46-12h-4.16c-1.65 4.66-6.07 8-11.3 8-6.63 0-12-5.37-12-12s5.37-12 12-12c3.31 0 6.28 1.38 8.45 3.55l-6.45 6.45h14v-14l-4.7 4.7z"
-              ></path>
-              <path fill="none" d="M0 0h48v48h-48z"></path></svg
-          ></span>
+                d="M35.3 12.7c-2.89-2.9-6.88-4.7-11.3-4.7-8.84 0-15.98 7.16-15.98 16s7.14 16 15.98 16c7.45 0 13.69-5.1 15.46-12h-4.16c-1.65 4.66-6.07 8-11.3 8-6.63 0-12-5.37-12-12s5.37-12 12-12c3.31 0 6.28 1.38 8.45 3.55l-6.45 6.45h14v-14l-4.7 4.7z">
+              </path>
+              <path fill="none" d="M0 0h48v48h-48z"></path>
+            </svg></span>
         </button>
-        <p>Total Max Score: {{ totalMaxScore }}</p>
+        <p>合计最大总分: {{ totalMaxScore }}</p>
       </div>
-      <el-button type="success" class="submitButton" @click="preserve"
-        >保存</el-button
-      >
+      <el-button type="success" class="submitButton" @click="preserve">保存</el-button>
     </div>
-    <el-table
-      v-loading="loading"
-      v-if="!loading"
-      :data="tableData"
-      style="width: 100%"
-      stripe
-      border
-      height="550"
-      :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'student_id', order: 'increncing' }"
-    >
-      <el-table-column
-        label="序号"
-        sortable
-        align="center"
-        type="index"
-        width="100px"
-      ></el-table-column>
-      <el-table-column
-        label="评价项目"
-        prop="reviewItem"
-        align="center"
-        width="300px"
-      ></el-table-column>
-      <el-table-column
-        label="评价要素"
-        prop="reviewElement"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="单项满分"
-        prop="maxScore"
-        align="center"
-        width="100px"
-      >
+    <el-table v-loading="loading" v-if="!loading" :data="tableData" style="width: 100%" stripe border height="550"
+      :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'student_id', order: 'increncing' }">
+      <el-table-column label="序号" sortable align="center" type="index" width="100px"></el-table-column>
+      <el-table-column label="评价项目" prop="reviewItem" align="center" width="300px"></el-table-column>
+      <el-table-column label="评价要素" prop="reviewElement" align="center"></el-table-column>
+      <el-table-column label="单项满分" prop="maxScore" align="center" width="100px">
       </el-table-column>
 
-      <el-table-column
-        label="操作"
-        align="center"
-        #default="scope"
-        width="200px"
-      >
-        <el-button type="primary" plain @click="openDialog(scope.row)"
-          >修改</el-button
-        >
-        <el-button type="warning" plain @click="deleteRow(scope.$index)"
-          >删除</el-button
-        >
+      <el-table-column label="操作" align="center" #default="scope" width="200px">
+        <el-button type="primary" plain @click="openDialog(scope.row)">修改</el-button>
+        <el-button type="warning" plain @click="deleteRow(scope.$index)">删除</el-button>
       </el-table-column>
     </el-table>
   </div>
 
-  <el-dialog
-    v-model="dialogVisible"
-    :title="title"
-    width="40%"
-    :before-close="handleClose"
-    center
-    :append-to-body="true"
-  >
+  <el-dialog v-model="dialogVisible" :title="title" width="40%" :before-close="handleClose" center
+    :append-to-body="true">
     <el-form :model="dialogTableData" label-width="auto">
       <el-form-item label="评价项目">
         <el-input v-model="dialogTableData.reviewItem" />
       </el-form-item>
       <el-form-item label="评价要素">
-        <el-input
-          v-model="dialogTableData.reviewElement"
-          :rows="5"
-          type="textarea"
-        />
+        <el-input v-model="dialogTableData.reviewElement" :rows="5" type="textarea" />
       </el-form-item>
       <el-form-item label="单项满分">
-        <el-input-number
-          v-model="dialogTableData.maxScore"
-          :min="0"
-          :max="100"
-          size="small"
-        />
+        <el-input-number v-model="dialogTableData.maxScore" :min="0" :max="100" size="small" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -382,16 +313,19 @@ const refresh = async () => {
 .refreshButton:active {
   border: 1px solid #006cd0;
 }
+
 .button-container {
   display: flex;
   height: 50px;
   justify-content: space-between;
 }
+
 .button-container .addButton,
 .button-container .refreshButton,
 .submitButton {
   margin: 5px;
 }
+
 .submitButton {
   height: 35px;
   width: 75px;
@@ -399,7 +333,9 @@ const refresh = async () => {
   border-radius: 0.7em;
   padding: 0.8em 0.4em 0.5em 0.4em;
 }
+
 .left-buttons {
-  display: flex; /* 确保左侧按钮紧挨在一起 */
+  display: flex;
+  /* 确保左侧按钮紧挨在一起 */
 }
 </style>

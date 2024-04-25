@@ -1,138 +1,50 @@
 <template>
   <div class="button-container">
     <div class="left-buttons">
-      <el-form
-        :inline="true"
-        :model="search"
-        class="demo-form-inline"
-        id="input"
-      >
+      <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
         <el-form-item label="论文">
-          <el-input
-            v-model="search.title"
-            placeholder="输入标题"
-            clearable
-            :prefix-icon="Search"
-            style="width: 200px"
-          />
+          <el-input v-model="search.title" placeholder="输入论文标题以搜索" clearable :prefix-icon="Search" style="width: 230px" />
         </el-form-item>
         <el-form-item label="内审老师">
-          <el-input
-            v-model="search.internalTeacher"
-            placeholder="输入姓名"
-            clearable
-            :prefix-icon="Search"
-            style="width: 120px"
-          />
+          <el-input v-model="search.internalTeacher" placeholder="输入内审老师姓名以搜索" clearable :prefix-icon="Search"
+            style="width: 230px" />
         </el-form-item>
         <el-form-item label="外审老师">
-          <el-input
-            v-model="search.externalTeacher"
-            placeholder="输入姓名"
-            clearable
-            :prefix-icon="Search"
-            style="width: 120px"
-          />
+          <el-input v-model="search.externalTeacher" placeholder="输入外审老师姓名以搜索" clearable :prefix-icon="Search"
+            style="width: 230px" />
         </el-form-item>
       </el-form>
     </div>
     <div class="right-buttons">
-      <el-date-picker
-        v-model="deadline"
-        type="date"
-        placeholder="选择截止日期"
-        :disabled-date="disabledDate"
-        style="width: 130px"
-      />
-      <el-button type="success" class="submitButton" @click="submit"
-        >提交</el-button
-      >
+      <el-date-picker v-model="deadline" type="date" placeholder="选择截止日期" :disabled-date="disabledDate"
+        style="width: 130px" />
+      <el-button type="success" class="submitButton" @click="submit">提交</el-button>
     </div>
   </div>
   <div class="table-container">
-    <el-table
-      class="table-item"
-      v-loading="loading"
-      v-if="!loading"
-      :data="filterTableData"
-      stripe
-      height="500"
-      :row-style="{ height: '50px' }"
-      :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }"
-      ref="thesisTableRef"
-      @selection-change="selectThesis"
-    >
+    <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterTableData" stripe height="500"
+      :row-style="{ height: '50px' }" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
+      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="thesisTableRef" @selection-change="selectThesis">
       <el-table-column type="selection" width="55" />
       <el-table-column label="论文标题" prop="title"></el-table-column>
-      <el-table-column
-        label="论文ID"
-        prop="thesis_id"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="学生姓名"
-        prop="student_name"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="学生学号"
-        prop="student_id"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="论文ID" prop="thesis_id" align="center"></el-table-column>
+      <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
+      <el-table-column label="学生学号" prop="student_id" align="center"></el-table-column>
     </el-table>
-    <el-table
-      class="table-item"
-      v-loading="loading"
-      v-if="!loading"
-      :data="filterInternalTeachers"
-      :row-style="{ height: '50px' }"
-      stripe
-      border
-      height="500"
-      :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }"
-      ref="internalTableRef"
-      @selection-change="selectInternal"
-    >
+    <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterInternalTeachers"
+      :row-style="{ height: '50px' }" stripe border height="500" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
+      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="internalTableRef"
+      @selection-change="selectInternal">
       <el-table-column type="selection" width="55" />
-      <el-table-column
-        label="内审老师ID"
-        prop="teacherId"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="内审老师姓名"
-        prop="teacherName"
-        align="center"
-      ></el-table-column
-    ></el-table>
-    <el-table
-      class="table-item"
-      v-loading="loading"
-      v-if="!loading"
-      :data="filterExternalTeachers"
-      :row-style="{ height: '50px' }"
-      stripe
-      border
-      height="500"
-      :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }"
-      ref="externalTableRef"
-      @selection-change="selectExternal"
-    >
+      <el-table-column label="内审老师ID" prop="teacherId" align="center"></el-table-column>
+      <el-table-column label="内审老师姓名" prop="teacherName" align="center"></el-table-column></el-table>
+    <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterExternalTeachers"
+      :row-style="{ height: '50px' }" stripe border height="500" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
+      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="externalTableRef"
+      @selection-change="selectExternal">
       <el-table-column type="selection" width="55" />
-      <el-table-column
-        label="外审老师ID"
-        prop="teacherId"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="外审老师姓名"
-        prop="teacherName"
-        align="center"
-      ></el-table-column
-    ></el-table>
+      <el-table-column label="外审老师ID" prop="teacherId" align="center"></el-table-column>
+      <el-table-column label="外审老师姓名" prop="teacherName" align="center"></el-table-column></el-table>
   </div>
 </template>
 
@@ -320,18 +232,24 @@ const disabledDate = (time: Date) => {
   border: 0;
   border-top: 1px dashed #a2a9b6;
 }
+
 .table-container {
   display: flex;
   justify-content: space-between;
 }
 
 .table-item {
-  margin: 2px; /* 为表格之间添加一些间隔 */
-  flex-grow: 0; /* 防止表格拉伸超过指定宽度 */
-  flex-shrink: 0; /* 防止表格缩小于指定宽度 */
+  margin: 2px;
+  /* 为表格之间添加一些间隔 */
+  flex-grow: 0;
+  /* 防止表格拉伸超过指定宽度 */
+  flex-shrink: 0;
+  /* 防止表格缩小于指定宽度 */
 }
+
 .table-item:first-child {
-  flex-basis: 50%; /* 左边的表格更宽 */
+  flex-basis: 50%;
+  /* 左边的表格更宽 */
 }
 
 .table-item:nth-child(2) {
@@ -341,6 +259,7 @@ const disabledDate = (time: Date) => {
 .table-item:nth-child(3) {
   flex-basis: 25%;
 }
+
 .addButton {
   height: 35px;
   width: 75px;
@@ -426,11 +345,13 @@ const disabledDate = (time: Date) => {
 .refreshButton:active {
   border: 1px solid #006cd0;
 }
+
 .button-container {
   display: flex;
   height: 50px;
   justify-content: space-between;
 }
+
 /* .button-container .addButton,
 .button-container .refreshButton,
 .submitButton {
@@ -443,13 +364,18 @@ const disabledDate = (time: Date) => {
   border-radius: 0.7em;
   padding: 0.8em 0.4em 0.5em 0.4em;
 }
+
 .left-buttons {
-  display: flex; /* 确保左侧按钮紧挨在一起 */
+  display: flex;
+  /* 确保左侧按钮紧挨在一起 */
 }
+
 .right-buttons {
   display: flex;
 }
-.right-buttons > * {
-  margin-left: 15px; /* 为每个子元素左侧添加10px的外边距 */
+
+.right-buttons>* {
+  margin-left: 15px;
+  /* 为每个子元素左侧添加10px的外边距 */
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
-    <el-form-item label="标题">
-      <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
+    <el-form-item label="论文标题">
+      <el-input v-model="search.title" placeholder="输入论文标题以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
-    <el-form-item label="学生">
-      <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
+    <el-form-item label="学生姓名">
+      <el-input v-model="search.student_name" placeholder="输入学生姓名以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 

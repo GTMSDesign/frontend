@@ -2,10 +2,10 @@
   <div>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
     <el-form-item label="学生学号">
-      <el-input v-model="search.student_id" placeholder="输入学号搜索" clearable :prefix-icon="Search" />
+      <el-input v-model="search.student_id" placeholder="输入学生学号以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
     <el-form-item label="学生姓名">
-      <el-input v-model="search.student_name" placeholder="输入姓名搜索" clearable :prefix-icon="Search" />
+      <el-input v-model="search.student_name" placeholder="输入学生姓名以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 
@@ -17,7 +17,7 @@
     <el-table-column label="会话时间" prop="session_time" align="center" sortable></el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
-        <SessionInfo :session_id="row.session_id" />
+        <SessionInfo :session_id="row.session_id" :target_id="row.student_id" />
       </template>
     </el-table-column>
   </el-table>

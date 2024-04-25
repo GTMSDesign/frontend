@@ -22,7 +22,7 @@
                         <el-icon :style="iconStyle">
                             <Location />
                         </el-icon>
-                        目标id
+                        目标ID
                     </div>
                 </template>
                 {{ $props.targetId }}
@@ -99,6 +99,7 @@ import { Link, Tickets, User, Message } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { submitSessionVO, submitSessionMessageVO } from '@/services/session';
 import { getSessionMessage, uploadFile } from '@/services/session';
+import { sendEmail } from "@/services/teacher";
 import type { FormProps, UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import { genFileId } from "element-plus";
 
@@ -218,6 +219,11 @@ const submit = async () => {
       currentrow.value.selectFile,
       newSessionMessageId,
       "message"
+    );
+    await sendEmail(
+       props.targetId || '',
+      "导师发送了新的会话信息：" + sessionMessageTableData.value.title,
+      sessionMessageTableData.value.remarks,
     );
     loading.value = false
     ElMessage.success('提交成功')

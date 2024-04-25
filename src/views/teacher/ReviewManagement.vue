@@ -3,38 +3,19 @@
     <div class="card">
       <div class="searchForm">
         <div class="form">
-          <el-form
-            :inline="true"
-            :model="formInline"
-            class="demo-form-inline"
-            id="input"
-          >
+          <el-form :inline="true" :model="formInline" class="demo-form-inline" id="input">
             <el-form-item label="标题">
-              <el-input
-                v-model="formInline.title"
-                placeholder="待输入"
-                clearable
-              />
+              <el-input v-model="formInline.title" placeholder="输入标题以查询" clearable />
             </el-form-item>
             <el-form-item label="指导老师">
-              <el-input
-                v-model="formInline.teacher"
-                placeholder="待输入"
-                clearable
-              />
+              <el-input v-model="formInline.teacher" placeholder="输入指导老师以查询" clearable />
             </el-form-item>
             <el-form-item label="学生">
-              <el-input
-                v-model="formInline.student"
-                placeholder="待输入"
-                clearable
-              />
+              <el-input v-model="formInline.student" placeholder="输入学生以查询" clearable />
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="updateFilterTableData"
-                >查询</el-button
-              >
+              <el-button type="primary" @click="updateFilterTableData">查询</el-button>
               <el-button type="default" @click="resetSearch">重置</el-button>
             </el-form-item>
           </el-form>
@@ -42,34 +23,13 @@
       </div>
 
       <div class="table">
-        <el-table
-          :data="filterTableData"
-          style="width: 100%"
-          height="400"
-          :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-        >
-          <el-table-column
-            fixed
-            label="论文标题"
-            prop="title"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            label="论文ID"
-            prop="thesisId"
-            align="center"
-          ></el-table-column>
+        <el-table :data="filterTableData" style="width: 100%" height="400"
+          :header-cell-style="{ backgroundColor: '#E9D0F3' }">
+          <el-table-column fixed label="论文标题" prop="title" align="center"></el-table-column>
+          <el-table-column label="论文ID" prop="thesisId" align="center"></el-table-column>
 
-          <el-table-column
-            label="学生姓名"
-            prop="studentName"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            label="导师姓名"
-            prop="teacherName"
-            align="center"
-          ></el-table-column>
+          <el-table-column label="学生姓名" prop="studentName" align="center"></el-table-column>
+          <el-table-column label="导师姓名" prop="teacherName" align="center"></el-table-column>
           <el-table-column label="论文状态" prop="status" align="center">
             <template #default="scope">
               <el-tag type="primary" disable-transitions>{{
@@ -77,101 +37,37 @@
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="120"
-            align="center"
-          >
+          <el-table-column fixed="right" label="操作" width="120" align="center">
             <template #default="scope">
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="download(scope.row)"
-                >下载</el-button
-              >
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="openDialog(scope.row)"
-                >提交评审</el-button
-              >
+              <el-button link type="primary" size="small" @click="download(scope.row)">下载</el-button>
+              <el-button link type="primary" size="small" @click="openDialog(scope.row)">提交评审</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </div>
 
-    <el-dialog
-      v-model="dialogFormVisible"
-      title="提交评审"
-      width="70%"
-      center
-      align-center
-    >
+    <el-dialog v-model="dialogFormVisible" title="提交评审" width="70%" center align-center>
       <el-scrollbar height="500px">
-        <el-table
-          :data="rules"
-          style="width: 100%"
-          :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-        >
-          <el-table-column
-            fixed
-            label="评价项目"
-            prop="reviewItem"
-            width="200px"
-          ></el-table-column>
-          <el-table-column
-            label="评价要素"
-            prop="reviewElement"
-          ></el-table-column>
+        <el-table :data="rules" style="width: 100%" :header-cell-style="{ backgroundColor: '#E9D0F3' }">
+          <el-table-column fixed label="评价项目" prop="reviewItem" width="200px"></el-table-column>
+          <el-table-column label="评价要素" prop="reviewElement"></el-table-column>
 
-          <el-table-column
-            label="单项满分"
-            prop="maxScore"
-            align="center"
-            width="100px"
-          ></el-table-column>
-          <el-table-column
-            fixed="right"
-            label="最终评分"
-            align="center"
-            width="165px"
-          >
+          <el-table-column label="单项满分" prop="maxScore" align="center" width="100px"></el-table-column>
+          <el-table-column fixed="right" label="最终评分" align="center" width="165px">
             <template #default="scope">
-              <el-input-number
-                v-model="scope.row.actualScore"
-                :min="0"
-                :max="scope.row.maxScore"
-                size="small"
-              />
+              <el-input-number v-model="scope.row.actualScore" :min="0" :max="scope.row.maxScore" size="small" />
             </template>
           </el-table-column>
         </el-table>
         <br />
         <el-form :model="form" :label-position="labelPosition">
           <el-form-item label="对论文的学术评语" :label-width="formLabelWidth">
-            <el-input
-              v-model="form.comment"
-              style="width: 90%"
-              :rows="6"
-              type="textarea"
-              placeholder="待评审老师填写，不少于两百字"
-            />
+            <el-input v-model="form.comment" style="width: 90%" :rows="6" type="textarea"
+              placeholder="待评审老师填写，不少于两百字" />
           </el-form-item>
-          <el-form-item
-            label="论文的不足之处和建议"
-            :label-width="formLabelWidth"
-          >
-            <el-input
-              v-model="form.advice"
-              style="width: 90%"
-              :rows="6"
-              type="textarea"
-              placeholder="待评审老师填写，不少于一百字"
-            />
+          <el-form-item label="论文的不足之处和建议" :label-width="formLabelWidth">
+            <el-input v-model="form.advice" style="width: 90%" :rows="6" type="textarea" placeholder="待评审老师填写，不少于一百字" />
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -310,15 +206,18 @@ const download = async (row: Thesis) => {
 .main-content {
   background-color: #faf8f8;
 }
+
 .body {
   background-color: #fff;
 
   width: 100%;
   height: 90%;
 }
+
 .card {
   background-color: white;
 }
+
 .demo-form-inline .el-input {
   --el-input-width: 220px;
 }

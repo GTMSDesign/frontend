@@ -1,65 +1,21 @@
 <template>
   <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
-    <el-form-item label="标题">
-      <el-input
-        v-model="search.title"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+    <el-form-item label="论文标题">
+      <el-input v-model="search.title" placeholder="输入论文标题以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
-    <el-form-item label="学生">
-      <el-input
-        v-model="search.student_name"
-        placeholder="Type to search"
-        clearable
-        :prefix-icon="Search"
-      />
+    <el-form-item label="学生姓名">
+      <el-input v-model="search.student_name" placeholder="输入学生姓名以搜索" clearable :prefix-icon="Search" />
     </el-form-item>
   </el-form>
 
-  <el-table
-    v-loading="loading"
-    v-if="!loading"
-    :data="filterTableData"
-    style="width: 100%"
-    stripe
-    height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-    :default-sort="{ prop: 'thesis_id', order: 'increncing' }"
-  >
-    <el-table-column
-      label="论文标题"
-      prop="title"
-      width="300"
-    ></el-table-column>
-    <el-table-column
-      label="论文ID"
-      prop="thesis_id"
-      sortable
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="学生姓名"
-      prop="student_name"
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="学生学号"
-      prop="student_id"
-      sortable
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="导师姓名"
-      prop="teacher_name"
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="导师ID"
-      prop="teacher_id"
-      align="center"
-    ></el-table-column>
+  <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
+    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'thesis_id', order: 'increncing' }">
+    <el-table-column label="论文标题" prop="title" width="300"></el-table-column>
+    <el-table-column label="论文ID" prop="thesis_id" sortable align="center"></el-table-column>
+    <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
+    <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
+    <el-table-column label="导师姓名" prop="teacher_name" align="center"></el-table-column>
+    <el-table-column label="导师ID" prop="teacher_id" align="center"></el-table-column>
     <el-table-column label="论文状态" prop="status" align="center">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{
@@ -67,29 +23,10 @@
         }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column
-      label="答辩次数"
-      prop="defense_times"
-      width="110"
-      sortable
-      align="center"
-    ></el-table-column>
-    <el-table-column
-      label="操作"
-      align="center"
-      #default="scope"
-      fixed="right"
-      width="200px"
-    >
-      <el-button type="primary" plain @click="download(scope.row)"
-        >下载</el-button
-      >
-      <el-button
-        type="primary"
-        plain
-        @click="handleReviewButtonClick(scope.row)"
-        >提交结果</el-button
-      >
+    <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>
+    <el-table-column label="操作" align="center" #default="scope" fixed="right" width="200px">
+      <el-button type="primary" plain @click="download(scope.row)">下载</el-button>
+      <el-button type="primary" plain @click="handleReviewButtonClick(scope.row)">提交结果</el-button>
     </el-table-column>
   </el-table>
   <el-dialog v-model="dialogFormVisible" title="提交审批" width="40%" center>
@@ -99,34 +36,16 @@
         <el-input v-model="currentrow.thesisId" style="width: auto" disabled />
       </el-form-item>
       <el-form-item label="论文标题" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.thesisName"
-          style="width: auto"
-          disabled
-        />
+        <el-input v-model="currentrow.thesisName" style="width: auto" disabled />
       </el-form-item>
       <el-form-item label="学生姓名" :label-width="formLabelWidth">
-        <el-input
-          v-model="currentrow.studentName"
-          style="width: auto"
-          disabled
-        />
+        <el-input v-model="currentrow.studentName" style="width: auto" disabled />
       </el-form-item>
       <el-form-item label="重复率%" :label-width="formLabelWidth">
-        <el-input-number
-          v-model="currentrow.repetitionRate"
-          :precision="2"
-          :step="0.1"
-          :min="0"
-          :max="100"
-        />
+        <el-input-number v-model="currentrow.repetitionRate" :precision="2" :step="0.1" :min="0" :max="100" />
       </el-form-item>
       <el-form-item label="评审结论" :label-width="formLabelWidth">
-        <el-select
-          v-model="currentrow.conclusion"
-          style="width: 100px"
-          placeholder="请选择"
-        >
+        <el-select v-model="currentrow.conclusion" style="width: 100px" placeholder="请选择">
           <el-option label="通过" value="通过" />
           <el-option label="不通过" value="不通过" />
         </el-select>

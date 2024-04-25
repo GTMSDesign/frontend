@@ -2,52 +2,18 @@
   <div>
     <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
       <el-form-item label="账户">
-        <el-input
-          v-model="search.account"
-          placeholder="输入账户搜索"
-          clearable
-          :prefix-icon="Search"
-        />
+        <el-input v-model="search.account" placeholder="输入账户以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
       <el-form-item label="姓名">
-        <el-input
-          v-model="search.name"
-          placeholder="输入姓名搜索"
-          clearable
-          :prefix-icon="Search"
-        />
+        <el-input v-model="search.name" placeholder="输入姓名以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
     </el-form>
 
-    <el-table
-      v-loading="loading"
-      v-if="!loading"
-      :data="filterTableData"
-      style="width: 100%"
-      stripe
-      border
-      height="550"
-      :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'student_id', order: 'increncing' }"
-    >
-      <el-table-column
-        label="序号"
-        sortable
-        align="center"
-        type="index"
-        width="100px"
-      ></el-table-column>
-      <el-table-column
-        label="账户"
-        prop="account"
-        sortable
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="姓名"
-        prop="name"
-        align="center"
-      ></el-table-column>
+    <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe border height="550"
+      :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'student_id', order: 'increncing' }">
+      <el-table-column label="序号" sortable align="center" type="index" width="100px"></el-table-column>
+      <el-table-column label="账户" prop="account" sortable align="center"></el-table-column>
+      <el-table-column label="姓名" prop="name" align="center"></el-table-column>
       <el-table-column label="权限" prop="status" align="center">
         <template #default="scope">
           <el-tag type="primary" disable-transitions>{{
@@ -57,22 +23,13 @@
       </el-table-column>
 
       <el-table-column label="操作" align="center" #default="scope">
-        <el-button type="primary" plain @click="openDialog(scope.row)"
-          >录入信息</el-button
-        >
+        <el-button type="primary" plain @click="openDialog(scope.row)">录入信息</el-button>
       </el-table-column>
     </el-table>
   </div>
 
-  <el-dialog
-    v-model="dialogVisible"
-    title="信息录入"
-    width="60%"
-    :before-close="handleClose"
-    center
-    :append-to-body="true"
-    align-center
-  >
+  <el-dialog v-model="dialogVisible" title="信息录入" width="60%" :before-close="handleClose" center :append-to-body="true"
+    align-center>
     <el-descriptions class="margin-top" :column="2" :size="size" border>
       <el-descriptions-item>
         <template #label>
@@ -83,11 +40,7 @@
             学生姓名
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.studentName"
-          placeholder="请输入"
-          disabled
-        ></el-input>
+        <el-input v-model="dialogTableData.studentName" placeholder="请输入" disabled></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -99,11 +52,7 @@
             学生学号
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.studentId"
-          placeholder="请输入"
-          disabled
-        ></el-input>
+        <el-input v-model="dialogTableData.studentId" placeholder="请输入" disabled></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -115,10 +64,7 @@
             班级
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.grade"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.grade" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -130,10 +76,7 @@
             电话
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.phone"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.phone" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -145,10 +88,7 @@
             办公电话
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.officePhone"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.officePhone" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -160,10 +100,7 @@
             家庭电话
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.homePhone"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.homePhone" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -175,10 +112,7 @@
             紧急联系人
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.emergencyContactName"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.emergencyContactName" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -190,10 +124,7 @@
             紧急联系电话
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.emergencyContactPhone"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.emergencyContactPhone" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -205,10 +136,7 @@
             电子邮箱1
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.email1"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.email1" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -220,10 +148,7 @@
             电子邮箱2
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.email2"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.email2" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -235,10 +160,7 @@
             实习/工作单位
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.company"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.company" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -250,10 +172,7 @@
             职务
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.position"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="dialogTableData.position" placeholder="请输入"></el-input>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -265,11 +184,7 @@
             优秀课程数
           </div>
         </template>
-        <el-input-number
-          v-model="dialogTableData.excellentCourses"
-          placeholder="请输入"
-          :min="0"
-        ></el-input-number>
+        <el-input-number v-model="dialogTableData.excellentCourses" placeholder="请输入" :min="0"></el-input-number>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -281,11 +196,7 @@
             良好课程数
           </div>
         </template>
-        <el-input-number
-          v-model="dialogTableData.goodCourses"
-          placeholder="请输入"
-          :min="0"
-        ></el-input-number>
+        <el-input-number v-model="dialogTableData.goodCourses" placeholder="请输入" :min="0"></el-input-number>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -297,11 +208,7 @@
             中等课程数
           </div>
         </template>
-        <el-input-number
-          :min="0"
-          v-model="dialogTableData.fairCourses"
-          placeholder="请输入"
-        ></el-input-number>
+        <el-input-number :min="0" v-model="dialogTableData.fairCourses" placeholder="请输入"></el-input-number>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -313,11 +220,7 @@
             通过课程数
           </div>
         </template>
-        <el-input-number
-          v-model="dialogTableData.passCourses"
-          placeholder="请输入"
-          :min="0"
-        ></el-input-number>
+        <el-input-number v-model="dialogTableData.passCourses" placeholder="请输入" :min="0"></el-input-number>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
@@ -328,11 +231,7 @@
             是否分配
           </div>
         </template>
-        <el-input
-          v-model="dialogTableData.distribute"
-          placeholder="请输入"
-          disabled
-        ></el-input>
+        <el-input v-model="dialogTableData.distribute" placeholder="请输入" disabled></el-input>
       </el-descriptions-item>
     </el-descriptions>
     <template #footer>

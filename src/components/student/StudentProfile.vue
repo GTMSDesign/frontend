@@ -226,7 +226,7 @@
               <el-icon :style="iconStyle">
                 <Location />
               </el-icon>
-              导师id
+              导师ID
             </div>
           </template>
           {{ tableData2?.teacherId }}
