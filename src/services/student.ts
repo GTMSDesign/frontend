@@ -92,4 +92,20 @@ export const finishDraft = async (thesisId: string): Promise<void> => {
   }
 };
 
+export const addNewThesis = async (studentId: string, title: string): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/student/addNewThesis", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { title, studentId }, // 传递参数到后端
+    });
+  } catch (error) {
+    errorMessage = "添加论文失败"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export default instance;

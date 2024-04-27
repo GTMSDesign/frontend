@@ -205,7 +205,7 @@ import { reactive, ref, computed, onMounted } from 'vue'
 import Upload from '@/components/public/upload.vue'
 import Download from '@/components/public/download.vue'
 import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus/icons-vue'
-import { getThesisDetail } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { getThesisDetail, downloadFile } from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { finishDraft } from "@/services/student";
 import { ElMessage, ElMessageBox } from 'element-plus';
 
@@ -231,8 +231,9 @@ const handleClose = (done: () => void) => {
 }
 
 const handleFinishDraft = async () => {
+    const url = await downloadFile(props.thesis_id || '', "thesis");
     ElMessageBox.confirm(
-        '您确认要设置完成初稿?',
+        '您确认要设置完成初稿?请确保已经提交合适的论文初稿',
         '提示',
         {
             confirmButtonText: '确认',
@@ -241,11 +242,18 @@ const handleFinishDraft = async () => {
         }
     )
         .then(() => {
-            ElMessage({
-                type: 'success',
-                message: '成功设置完成初稿！',
-            })
-            FinishDraft()
+            if (url === "Error") {
+                ElMessage.error("你还未上传任何论文附件，无法设置完成初稿")
+                return;
+            } else {
+                console.log(url);
+                ElMessage({
+                    type: 'success',
+                    message: '成功设置完成初稿！',
+                })
+                FinishDraft();
+            }
+
         })
         .catch(() => {
             ElMessage({

@@ -51,12 +51,12 @@
         <el-upload ref="upload" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :limit="1"
           :on-exceed="handleExceed" :auto-upload="false" :on-change="change">
           <template #trigger>
-            <el-button type="success">select file</el-button>
+            <el-button type="success">选择文件</el-button>
           </template>
 
           <template #tip>
             <div class="el-upload__tip text-red">
-              limit 1 file, new file will cover the old file
+              仅限 doc/docx 文件，确认上传之后不可删除，多次上传会覆盖先前文件
             </div>
           </template>
         </el-upload>
@@ -65,7 +65,8 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submit"> 提交 </el-button>
+        <el-button type="primary" @click="submit" v-if="hasUrl"> 提交 </el-button>
+        <el-text type="danger" tag="mark" v-if="!hasUrl"> 学生还未提交开题报告 </el-text>
       </div>
     </template>
   </el-dialog>
@@ -86,7 +87,7 @@ import type {
   UploadProps,
   UploadRawFile,
 } from "element-plus";
-import { genFileId } from "element-plus";
+import { genFileId, ElMessage } from "element-plus";
 interface Thesis {
   title: string;
   thesis_id: string;
@@ -120,6 +121,7 @@ const form = reactive({
 });
 // 使用ref创建响应式变量
 const loading = ref(true);
+const hasUrl = ref(false);
 const search = ref({
   title: "",
   student_name: "",
@@ -154,14 +156,13 @@ const cancel = () => {
 
 const change = (file: UploadFile) => {
   currentrow.value.selectFile = file.raw;
-  console.log(file);
-  console.log(file.raw);
 };
 const handleReviewButtonClick = (row: Thesis) => {
   currentrow.value.thesisId = row.thesis_id;
   currentrow.value.thesisName = row.title;
   currentrow.value.studentId = row.student_id;
   currentrow.value.studentName = row.student_name;
+  hasUrl.value = row.proposal_url !== null; // 更新 hasUrl
   dialogFormVisible.value = true;
 };
 const fetchData = async () => {
@@ -183,22 +184,25 @@ onMounted(() => {
 // 使用ref创建响应式变量
 const tableData = ref<Thesis[]>([]);
 const download = async (row: Thesis) => {
-  console.log(row.thesis_id);
   const url = await downloadFile(row.thesis_id, "proposal");
-  console.log(url);
+  if (url === "Error"){
+    ElMessage.error('该文件还未被上传');
+    return;
+  } else {
   const link = document.createElement("a");
   link.href = url; // 设置下载链接
   document.body.appendChild(link); // 将元素添加到文档中
   link.click(); // 触发下载
   document.body.removeChild(link); // 下载后移除元素
+  }
 };
 
 const submit = async () => {
   if (currentrow.value.selectFile === null) {
-    alert("Please select a file.");
+    alert("请提交文件");
     return;
   } else if (form.conclusion === "") {
-    alert("Please select a conclusion");
+    alert("请选择一种评审结论");
     return;
   }
   //提交结论
