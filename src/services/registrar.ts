@@ -303,7 +303,7 @@ export const getExternalTeachers = async (): Promise<TeacherInf[]> => {
 };
 
 
-export const getAllTeacher = async (status: string): Promise<teacherInfo[]> => {
+export const getAllTeacher = async (): Promise<teacherInfo[]> => {
   let errorMessage = ""; // 存储错误消息
 
   try {
@@ -330,7 +330,7 @@ export const getAllTeacher = async (status: string): Promise<teacherInfo[]> => {
   }
 };
 
-export const getAllStudent = async (status: string): Promise<studentInfo[]> => {
+export const getAllStudent = async (): Promise<studentInfo[]> => {
   let errorMessage = ""; // 存储错误消息
 
   try {
@@ -340,7 +340,7 @@ export const getAllStudent = async (status: string): Promise<studentInfo[]> => {
       },
     });
     const data = response.data.result; // 获取 result 字段
-    const students: StudentInfo[] = data.map((item: any) => ({
+    const students: studentInfo[] = data.map((item: any) => ({
       studentId: item.studentId,
       studentName: item.studentName,
       grade: item.grade,
@@ -361,7 +361,7 @@ export const getAllStudent = async (status: string): Promise<studentInfo[]> => {
     }));
     return students; // 返回处理后的数据
   } catch (error) {
-    errorMessage = "Failed to fetch teachers"; // 设置错误消息
+    errorMessage = "Failed to fetch students"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
   }
 };
@@ -427,6 +427,38 @@ export const generateEvaluation = async (thesisId: string, studentId: string): P
   } catch (error) {
     let errorMessage = "Failed to generate evaluation"; // 设置错误消息
     throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const assignDefense = async (
+  thesisId: string[],
+  secretaryId: string,
+  teacherId1: string,
+  teacherId2: string,
+  teacherId3: string,
+  place: string,
+  deadline: string
+): Promise<void> => {
+  try {
+    const params = new URLSearchParams();
+    thesisId.forEach((id) => {
+      params.append("thesisId", id);
+    });
+    params.append("secretaryId", secretaryId);
+    params.append("teacherId1", teacherId1);
+    params.append("teacherId2", teacherId2);
+    params.append("teacherId3", teacherId3);
+    params.append("place", place);
+    params.append("deadline", deadline);
+    // 发起 POST 请求
+    await instance.post("/registrar/assignDefense", params, {
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to submit assign defense");
   }
 };
 
