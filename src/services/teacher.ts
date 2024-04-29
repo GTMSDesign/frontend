@@ -50,6 +50,15 @@ interface ThesisDetail {
   opinion: string;
 }
 
+interface DefenseDetail{
+  thesisId: string;
+  state: string;
+  defenseRemarks: string;
+  defenseUrl: string;
+  review: string;
+
+}
+
 interface ReviewVO {
   title: string;
   thesisId: string;
@@ -73,6 +82,21 @@ interface reviewMessage {
   internalComment: string;
   externalAdvice: string;
   internalAdvice: string;
+}
+interface DefensedThesis {
+  defenseId: number;
+  thesisId: number;
+  conclusion: string;
+  studentName: string;
+  studentId: number;
+  teacherName: string;
+  teacherId: string;
+  title: string;
+  defenseRemarks: string;
+  review: string;
+  thesisUrl: string;
+  defenseUrl: string;
+  status: string;
 }
 interface ThesisDefense {
   defenseId: number;
@@ -278,6 +302,43 @@ export const getThesisDetail = async (
     throw new Error("Failed to fetch detailed thesis data");
   }
 };
+
+export const getDefenseThesisDetail = async (
+    defenseId: string
+): Promise<DefensedThesis> => {
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/thesisDefense/getDefensedThesis", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { defenseId },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    throw new Error("Failed to fetch detailed thesis data");
+  }
+};
+
+export const getDefenseDetail = async (
+    defenseId: number
+): Promise<DefenseDetail> => {
+  try {
+    // 发起 GET 请求
+    const response = await instance.get("/thesisDefense/getDefenseByDefenseId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { defenseId },
+    });
+    return response.data.result; // 直接返回结果中的 result
+  } catch (error) {
+    // 如果发生错误，将错误消息抛出
+    throw new Error("Failed to fetch detailed defense data");
+  }
+};
+
 
 export const teacherInformation = async (
   teacherId: string
@@ -593,6 +654,25 @@ export const allDefenseThesisTeacher = async (account: string): Promise<Thesis[]
   }
 };
 
+export const allDefenseThesisTeacher1 = async (account: string): Promise<Thesis[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/thesisDefense/getThesisByTeacher1Id", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { account }, // 传递参数到后端
+    });
+    const data = response.data.result; // 获取 result 字段
+    console.log(data);
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export const getTeacherNameById = async (teacherId: string) => {
   let errorMessage = ''; // 存储错误消息
 
@@ -609,6 +689,22 @@ export const getTeacherNameById = async (teacherId: string) => {
     // 如果发生错误，将错误消息抛出
     errorMessage = "Failed to fetch teacher data"
     throw new Error("Failed to fetch teacher data");
+  }
+};
+
+export const defenseSubmission = async (defenseId: string): Promise<void> => {
+  try {
+    const response = await instance.post("/thesisDefense/submission", null,{
+      params: {
+        defenseId,
+      },
+      headers: {
+        token: sessionStorage.getItem("token"), // 确保发送 token
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error("Faild to approve Defence");
   }
 };
 

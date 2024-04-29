@@ -1,30 +1,24 @@
 <template>
   <div>
     <el-form :inline="true" :model="search" class="demo-form-inline" id="input">
-      <el-form-item label="标题">
-        <el-input v-model="search.title" placeholder="Type to search" clearable :prefix-icon="Search" />
+      <el-form-item label="答辩编号">
+        <el-input v-model="search.defenseId" placeholder="请输入答辩编号以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
-      <el-form-item label="学生">
-        <el-input v-model="search.student_name" placeholder="Type to search" clearable :prefix-icon="Search" />
+      <el-form-item label="答辩主席">
+        <el-input v-model="search.teacher1" placeholder="请输入答辩主席以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
     </el-form>
     <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
-              :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'thesis_id', order: 'increncing' }">
-      <el-table-column label="答辩ID" prop="defense_id" sortable align="center"></el-table-column>
-      <el-table-column label="论文标题" prop="title" width="200"></el-table-column>
-      <el-table-column label="论文ID" prop="thesis_id" sortable align="center"></el-table-column>
-      <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
-      <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
-      <el-table-column label="论文状态" prop="status" align="center">
-        <template #default="scope">
-          <el-tag type="primary" disable-transitions>{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>-->
+              :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'defenseId', order: 'increncing' }">
+      <el-table-column label="答辩ID" prop="defenseId" sortable align="center"></el-table-column>
+      <el-table-column label="论文ID" prop="thesisId" sortable align="center"></el-table-column>
+      <el-table-column label="秘书" prop="secretary" align="center"></el-table-column>
+      <el-table-column label="答辩主席" prop="teacher1" align="center"></el-table-column>
+      <el-table-column label="答辩教师2" prop="teacher2" align="center"></el-table-column>
+      <el-table-column label="答辩教师3" prop="teacher3" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <defenseInfo :thesis_id="row.thesis_id" />
-
+          <modifyDefense :defenseId="row.defenseId" />
         </template>
       </el-table-column>
     </el-table>
@@ -33,37 +27,40 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { allDefenseThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { allDefenseThesisTeacher1 } from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { Search } from '@element-plus/icons-vue'
-import defenseInfo from '@/views/teacher/defensemanagement/defenseInfo.vue'
+import modifyDefense from '@/views/teacher/defensemanagement/modifyDefense.vue'
 
 interface Thesis {
-  title: string
-  thesis_id: string
-  student_name: string
-  student_id: string
-  teacher_name: string
-  status: string
+  defenseId: number
+  thesisId: number
+  secretary: string
+  teacher1: string
+  teacher2: string
+  teacher3: string
+  // status: string
 }
 
 // 使用ref创建响应式变量
 const loading = ref(true)
 const search = ref({
-  title: '',
-  student_name: '',
+  defenseId: '',
+  teacher1: '',
 });
 
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
-    const data = await allDefenseThesisTeacher(account); // 调用获取教师相关论文的方法，并传入参数
+    const data = await allDefenseThesisTeacher1(account); // 调用获取教师相关论文的方法，并传入参数
+    console.log(data)
     const theses: Thesis[] = data.map((item: any) => ({
-      title: item.title,
-      thesis_id: item.thesisId,
-      student_name: item.studentName,
-      student_id: item.studentId,
-      teacher_name: item.teacherName,
-      status: item.status,
+      defenseId: item.defenseId,
+      thesisId: item.thesisId,
+      secretary: item.secretary,
+      teacher1: item.teacher1,
+      teacher2: item.teacher2,
+      teacher3: item.teacher3,
+      // status: item.status,
     }));
     tableData.value = theses; // 更新 tableData
     loading.value = false; // 数据加载完成，loading 状态设为 false
@@ -85,8 +82,8 @@ const tableData = ref<Thesis[]>([]);
 // 计算属性，根据搜索条件过滤表格数据
 const filterTableData = computed(() =>
     tableData.value.filter(data =>
-        (!search.value.title || data.title.toLowerCase().includes(search.value.title.toLowerCase())) &&
-        (!search.value.student_name || data.student_name.toLowerCase().includes(search.value.student_name.toLowerCase()))
+        (!search.value.defenseId || data.defenseId === parseInt(search.value.defenseId)) &&
+        (!search.value.teacher1 || data.teacher1.toLowerCase().includes(search.value.teacher1.toLowerCase()))
     )
 )
 

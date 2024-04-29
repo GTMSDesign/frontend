@@ -1,10 +1,8 @@
 <template>
   <el-button type="primary" plain @click="handleCommand">详情</el-button>
-
   <el-dialog v-model="dialogVisible" title="答辩详情" width="60%" :before-close="handleClose" center :append-to-body="true"
              align-center>
     <el-descriptions class="margin-top" :column="2" :size="size" border>
-
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
@@ -23,13 +21,14 @@
             <el-icon :style="iconStyle">
               <tickets />
             </el-icon>
-            论文状态
+            答辩结果
           </div>
         </template>
         <el-tag size="big">
           {{ tableData?.status }}
         </el-tag>
       </el-descriptions-item>
+
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
@@ -48,7 +47,7 @@
             <el-icon :style="iconStyle">
               <Location />
             </el-icon>
-            学生学号
+            学生ID
           </div>
         </template>
         {{ tableData?.studentId }}
@@ -101,7 +100,7 @@
             答辩附言
           </div>
         </template>
-        {{ tableData?.comment }}
+        {{ tableData?.defenseRemarks }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -113,7 +112,7 @@
             三个一评价
           </div>
         </template>
-        {{ tableData?.opinion }}
+        {{ tableData?.review }}
       </el-descriptions-item>
 
     </el-descriptions>
@@ -127,7 +126,7 @@
             论文附件
           </div>
         </template>
-        <Download :id="thesis_id" type="thesis" />
+        <Download :id="defenseId" type="thesis" />
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -139,12 +138,12 @@
             答辩附件
           </div>
         </template>
-        <Download :id="thesis_id" type="opinion" />
+        <Download :id="defenseId" type="opinion" />
       </el-descriptions-item>
 
       <el-descriptions-item>
-        <el-button type="primary" @click="submit()">同意通过</el-button>
-        <el-button @click="rejectForm()">不通过</el-button>
+        <el-button type="primary" @click="submit">提交</el-button>
+<!--        <el-button @click="rejectForm()">不通过</el-button>-->
       </el-descriptions-item>
     </el-descriptions>
   </el-dialog>
@@ -152,25 +151,14 @@
 
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted } from 'vue'
-import Upload from '@/components/public/upload.vue'
 import Download from '@/components/public/download.vue'
 import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus/icons-vue'
-import {getThesisDetail, saveThesisDefense} from '@/services/teacher';
-import type {FormInstance} from "element-plus"; // 导入获取教师相关论文的方法
-
-const submit = (done: () => void) => {
-  console.log('submit!')
-  done()
-}
-const rejectForm = (done: () => void) => {
-  console.log('submit!')
-  done()
-
-}
-
+import {getDefenseThesisDetail, defenseSubmission} from '@/services/teacher';
+import {deleteByAccount} from "@/services/admin";
+// import type {FormInstance} from "element-plus"; // 导入获取教师相关论文的方法
 
 const props = defineProps({
-  thesis_id: String,
+  defenseId: String,
 });
 
 const loading = ref(true)
@@ -183,22 +171,26 @@ const handleClose = (done: () => void) => {
   done()
 }
 
-interface Thesis {
-  title: string
-  thesisId: string
+interface DefensedThesis {
+  defenseId: number
+  thesisId: number
+  conclusion: string
   studentName: string
-  studentId: string
+  studentId: number
   teacherName: string
   teacherId: string
+  title: string
+  defenseRemarks: string
+  review: string
+  thesisUrl: string
+  defenseUrl: string
   status: string
-  comment: string
-  opinion: string
 }
 
 const fetchData = async () => {
   try {
-    const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
-    const data = await getThesisDetail(thesis_id); // 调用获取论文详情的方法，并传入参数
+    const defenseId = props.defenseId || ''; // 获取 props 中的 defenseId
+    const data = await getDefenseThesisDetail(defenseId) // 调用获取论文答辩详细信息的方法，并传入参数
     tableData.value = data;
     loading.value = false; // 数据加载完成，loading 状态设为 false
   } catch (error) {
@@ -207,13 +199,25 @@ const fetchData = async () => {
   }
 }
 
+const submit = async () => {
+  try {
+    const defenseId = props.defenseId || '';
+    await defenseSubmission(defenseId)
+    console.log('submit!')
+  } catch (error) {
+    console.error(error);
+  }
+
+}
+
+
 // 在组件挂载后加载数据
 onMounted(() => {
   fetchData();
 });
 
 // 使用ref创建响应式变量
-const tableData = ref<Thesis>();
+const tableData = ref<DefensedThesis>();
 
 const size = ref('default')
 const iconStyle = computed(() => {

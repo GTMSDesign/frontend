@@ -3,24 +3,24 @@
 
   <el-dialog v-model="dialogVisible" title="答辩详情" width="60%" :before-close="handleClose" center :append-to-body="true"
              align-center>
-<!--    <el-descriptions class="margin-top" :column="2" :size="size" border>-->
-      <el-form
-          ref="ruleFormRef"
-          style="max-width: 800px"
-          :model="ruleForm"
-          :rules="rules"
-          label-width="auto"
-          class="demo-ruleForm"
-          :size="formSize"
-          status-icon
-      >
+    <!--    <el-descriptions class="margin-top" :column="2" :size="size" border>-->
+    <el-form
+        ref="ruleFormRef"
+        style="max-width: 800px"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="auto"
+        class="demo-ruleForm"
+        :size="formSize"
+        status-icon
+    >
 
       <el-form-item label="论文题目" prop="thesisId">
         <el-input v-model="ruleForm.thesisId" />
       </el-form-item>
       <el-form-item label="答辩结果" prop="state">
         <el-radio-group v-model="ruleForm.state" >
-<!--        <el-radio-group v-model="radio2">-->
+          <!--        <el-radio-group v-model="radio2">-->
           <el-radio-button label="通过" value="pass" />
           <el-radio-button label="暂缓通过" value="delay" />
           <el-radio-button label="不通过" value="fail" />
@@ -52,31 +52,31 @@
         <el-button @click="resetForm(ruleFormRef)">重 写</el-button>
       </el-form-item>
     </el-form>
-<!--      </el-form>-->
-<!--    </el-descriptions>-->
+    <!--      </el-form>-->
+    <!--    </el-descriptions>-->
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import {onMounted, reactive, ref, watch} from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { UploadProps, UploadUserFile} from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { saveThesisDefense } from '@/services/teacher'
+import {getDefenseDetail, saveThesisDefense} from '@/services/teacher'
 
-// const ruleForm.state = ref('通过')
+const loading = ref(true)
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
   dialogVisible.value = true
+  // fetchData();
 }
 
 const handleClose = (done: () => void) => {
   resetForm(ruleFormRef.value);
-  // fetchData();
   done()
 }
 
-interface RuleForm {
+interface Defense {
   thesisId: string
   state: string
   defenseRemarks: string
@@ -84,17 +84,56 @@ interface RuleForm {
   review: string
 }
 
+const props = defineProps({
+  defenseId: Number,
+});
+
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
-const ruleForm = reactive<RuleForm>({
-  thesisId: '555',
-  state: "pass",
+const ruleForm = reactive<Defense>({
+  thesisId: '',
+  state: '',
   defenseRemarks: '',
   defenseUrl: '',
   review: '',
 })
 
-const rules = reactive<FormRules<RuleForm>>({
+// 观察 dialogVisible 值的改变
+watch(dialogVisible, (newValue) => {
+  if (newValue) {
+    fetchData()
+  }
+})
+
+
+
+const fetchData = async () => {
+  try {
+    const defenseId = props.defenseId || 0 ; // 获取 props 中的 defenseId
+    const results = await getDefenseDetail(defenseId);// 调用获取答辩详情的方法，并传入参数
+    // tableData.value = data;
+    if (results){
+      const data = results
+      ruleForm.thesisId = data.thesisId
+      ruleForm.state = data.state
+      ruleForm.defenseRemarks = data.defenseRemarks
+      ruleForm.defenseUrl = data.defenseUrl
+      ruleForm.review = data.review
+      loading.value = false; // 数据加载完成，loading 状态设为 false
+      console.log(props.defenseId)
+      console.log(data)
+      console.log(data.review)
+    }else {
+      ElMessage.error('未能获取到答辩详情数据');
+    }
+
+  } catch (error) {
+    console.error(error);
+    // 处理错误
+  }
+}
+
+const rules = reactive<FormRules<Defense>>({
   thesisId: [
     { required: true, message: '请输入论文名称', trigger: 'blur' },
   ],
@@ -102,6 +141,14 @@ const rules = reactive<FormRules<RuleForm>>({
     { required: true, message: '请输入答辩附言', trigger: 'blur' },
   ],
 })
+
+// 在组件挂载后加载数据
+// onMounted(() => {
+//   fetchData();
+// });
+
+// 使用ref创建响应式变量
+const tableData = ref<Defense>();
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   try {
