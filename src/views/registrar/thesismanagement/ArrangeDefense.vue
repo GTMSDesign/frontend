@@ -148,6 +148,12 @@ const selectSecretary = async (val: TeacherInf[]) => {
   isSelecting = true;
   if (val.length > 0) {
     const lastSelected = val[val.length - 1];
+    if (lastSelected.teacherId == selectedTeacher1.value || lastSelected.teacherId == selectedTeacher2.value || lastSelected.teacherId == selectedTeacher3.value) {
+      ElMessage.error("禁止选择重复的教师")
+      secretaryTableRef.value!.toggleRowSelection(lastSelected, false);
+      isSelecting = false;
+      return;
+    }
     secretaryTableRef.value!.clearSelection();
     if (selectedSecretary.value !== lastSelected.teacherId) {
       secretaryTableRef.value!.toggleRowSelection(lastSelected, true);
@@ -164,6 +170,12 @@ const selectTeacher1 = async (val: TeacherInf[]) => {
   isSelecting = true;
   if (val.length > 0) {
     const lastSelected = val[val.length - 1];
+    if (lastSelected.teacherId == selectedSecretary.value || lastSelected.teacherId == selectedTeacher2.value || lastSelected.teacherId == selectedTeacher3.value) {
+      ElMessage.error("禁止选择重复的教师")
+      teacher1TableRef.value!.toggleRowSelection(lastSelected, false);
+      isSelecting = false;
+      return;
+    }
     teacher1TableRef.value!.clearSelection();
     if (selectedTeacher1.value !== lastSelected.teacherId) {
       teacher1TableRef.value!.toggleRowSelection(lastSelected, true);
@@ -180,6 +192,12 @@ const selectTeacher2 = async (val: TeacherInf[]) => {
   isSelecting = true;
   if (val.length > 0) {
     const lastSelected = val[val.length - 1];
+    if (lastSelected.teacherId == selectedSecretary.value || lastSelected.teacherId == selectedTeacher1.value || lastSelected.teacherId == selectedTeacher3.value) {
+      ElMessage.error("禁止选择重复的教师")
+      teacher2TableRef.value!.toggleRowSelection(lastSelected, false);
+      isSelecting = false;
+      return;
+    }
     teacher2TableRef.value!.clearSelection();
     if (selectedTeacher2.value !== lastSelected.teacherId) {
       teacher2TableRef.value!.toggleRowSelection(lastSelected, true);
@@ -196,6 +214,12 @@ const selectTeacher3 = async (val: TeacherInf[]) => {
   isSelecting = true;
   if (val.length > 0) {
     const lastSelected = val[val.length - 1];
+    if (lastSelected.teacherId == selectedSecretary.value || lastSelected.teacherId == selectedTeacher1.value || lastSelected.teacherId == selectedTeacher2.value) {
+      ElMessage.error("禁止选择重复的教师")
+      teacher3TableRef.value!.toggleRowSelection(lastSelected, false);
+      isSelecting = false;
+      return;
+    }
     teacher3TableRef.value!.clearSelection();
     if (selectedTeacher3.value !== lastSelected.teacherId) {
       teacher3TableRef.value!.toggleRowSelection(lastSelected, true);
@@ -254,13 +278,16 @@ const search = ref({
 
 const submit = async () => {
   if (selectedSecretary.value === "" || selectedTeacher1.value === "" || selectedTeacher2.value === "" || selectedTeacher3.value === "") {
-    ElMessage.error("请完整选择老师");
+    ElMessage.error("请完整选择秘书及评委");
     return;
   } else if (selectedThesis.value.length == 0) {
     ElMessage.error("请选择要安排的论文");
     return;
   } else if (deadline.value === "") {
     ElMessage.error("请选择答辩日期");
+    return;
+  } else if (place.value === "") {
+    ElMessage.error("请填写答辩地点")
     return;
   }
   try {
@@ -283,6 +310,7 @@ const submit = async () => {
     );
 
     await fetchData();
+    ElMessage.success("提交成功")
   } catch (error) {
     console.log(error);
   }
