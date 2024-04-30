@@ -25,7 +25,7 @@
           </div>
         </template>
         <el-tag size="big">
-          {{ tableData?.status }}
+          {{ tableData?.conclusion }}
         </el-tag>
       </el-descriptions-item>
 
@@ -138,7 +138,7 @@
             答辩附件
           </div>
         </template>
-        <Download :id="defenseId" type="opinion" />
+        <Download :id="defenseId" type="resolution" />
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -154,6 +154,7 @@ import { reactive, ref, computed, onMounted } from 'vue'
 import Download from '@/components/public/download.vue'
 import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus/icons-vue'
 import {getDefenseThesisDetail, defenseSubmission} from '@/services/teacher';
+
 import {deleteByAccount} from "@/services/admin";
 // import type {FormInstance} from "element-plus"; // 导入获取教师相关论文的方法
 

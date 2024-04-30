@@ -29,20 +29,9 @@
       <el-form-item label="答辩附言" prop="defenseRemarks">
         <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
       </el-form-item>
-      <el-form-item label="答辩附件" prop="csv">
-        <el-upload
-            v-model:file-list="fileList"
-            class="upload-demo"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            multiple
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-        >
-          <el-button type="primary">Click to upload</el-button>
-        </el-upload>
+      <el-form-item label="答辩附件" prop="defenseId">
+        <Download :id="defenseId?.toString()" type="resolution" />
+        <Upload :id="defenseId?.toString()" type="resolution" />
       </el-form-item>
       <el-form-item label="三个一评价" prop="review">
         <el-input v-model="ruleForm.review" rows="5" type="textarea" />
@@ -63,6 +52,8 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { UploadProps, UploadUserFile} from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {getDefenseDetail, saveThesisDefense} from '@/services/teacher'
+import Upload from "@/components/public/upload.vue";
+import Download from "@/components/public/download.vue";
 
 const loading = ref(true)
 const dialogVisible = ref(false)
@@ -88,6 +79,7 @@ const props = defineProps({
   defenseId: Number,
 });
 
+const defense_id = props.defenseId?.toString()
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<Defense>({

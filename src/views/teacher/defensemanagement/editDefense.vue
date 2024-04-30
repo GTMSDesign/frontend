@@ -20,7 +20,6 @@
       </el-form-item>
       <el-form-item label="答辩结果" prop="state">
         <el-radio-group v-model="ruleForm.state" >
-<!--        <el-radio-group v-model="radio2">-->
           <el-radio-button label="通过" value="pass" />
           <el-radio-button label="暂缓通过" value="delay" />
           <el-radio-button label="不通过" value="fail" />
@@ -29,20 +28,8 @@
       <el-form-item label="答辩附言" prop="defenseRemarks">
         <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
       </el-form-item>
-      <el-form-item label="答辩附件" prop="csv">
-        <el-upload
-            v-model:file-list="fileList"
-            class="upload-demo"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            multiple
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-        >
-          <el-button type="primary">Click to upload</el-button>
-        </el-upload>
+      <el-form-item label="答辩附件" prop="defenseId">
+          <Upload :id="defenseId" type="resolution" />
       </el-form-item>
       <el-form-item label="三个一评价" prop="review">
         <el-input v-model="ruleForm.review" rows="5" type="textarea" />
@@ -60,9 +47,14 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { UploadProps, UploadUserFile} from 'element-plus'
+// import type { UploadProps, UploadUserFile} from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { saveThesisDefense } from '@/services/teacher'
+import Upload from '@/components/public/upload.vue'
+
+const props = defineProps({
+  defenseId: String,
+});
 
 // const ruleForm.state = ref('通过')
 const dialogVisible = ref(false)
@@ -77,6 +69,7 @@ const handleClose = (done: () => void) => {
 }
 
 interface RuleForm {
+  // defenseId: string
   thesisId: string
   state: string
   defenseRemarks: string
@@ -87,6 +80,7 @@ interface RuleForm {
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
+  // defenseId: props.defenseId,
   thesisId: '555',
   state: "pass",
   defenseRemarks: '',
@@ -129,35 +123,6 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
   value: `${idx + 1}`,
   label: `${idx + 1}`,
 }))
-
-
-const fileList = ref<UploadUserFile[]>([
-]) // 上传文件列表
-
-const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
-  console.log(file, uploadFiles)
-}
-
-const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-  console.log(uploadFile)
-}
-
-const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
-  ElMessage.warning(
-      `The limit is 3, you selected ${files.length} files this time, add up to ${
-          files.length + uploadFiles.length
-      } totally`
-  )
-}
-
-const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(
-      `Cancel the transfer of ${uploadFile.name} ?`
-  ).then(
-      () => true,
-      () => false
-  )
-}
 
 </script>
 

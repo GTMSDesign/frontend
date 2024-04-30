@@ -23,7 +23,7 @@
 <!--      </el-table-column>-->
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <editDefense :thesis_id="row.thesis_id" />
+          <editDefense :defenseId="row.defenseId" />
         </template>
       </el-table-column>
     </el-table>
