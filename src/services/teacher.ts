@@ -620,13 +620,42 @@ export const saveThesisDefense = async (
       "/thesisDefense/preliminaryResolution",
       formData,
       {
-        // params: {
-        //   thesisId, result, desc, descUrl, evaluation
-        // },
         headers: {
           token: sessionStorage.getItem("token"), // 确保发送 token
         },
       }
+    );
+    console.log(respond);
+  } catch (error) {
+    // 处理错误，这里可以根据需要细化错误处理逻辑
+    throw new Error("Failed to review proposal");
+  }
+};
+
+
+export const saveDeferredDefense = async (
+    thesisId: string,
+    state: string,
+    defenseRemarks: string,
+    defenseUrl: string,
+    review: string
+): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+  try {
+    const formData = new FormData();
+    formData.append("thesisId", thesisId);
+    formData.append("state", state);
+    formData.append("defenseRemarks", defenseRemarks);
+    formData.append("defenseUrl", defenseUrl);
+    formData.append("review", review);
+    const respond = await instance.post(
+        "/thesisDefense/deferredDefense",
+        formData,
+        {
+          headers: {
+            token: sessionStorage.getItem("token"), // 确保发送 token
+          },
+        }
     );
     console.log(respond);
   } catch (error) {
@@ -640,6 +669,25 @@ export const allDefenseThesisTeacher = async (account: string): Promise<Thesis[]
 
   try {
     const response = await instance.get("/thesisDefense/getThesisByTeacherId", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { account }, // 传递参数到后端
+    });
+    const data = response.data.result; // 获取 result 字段
+    console.log(data);
+    return data; // 返回处理后的数据
+  } catch (error) {
+    errorMessage = "Failed to fetch teacher theses data"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const allDefenseThesisAllTeachers = async (account: string): Promise<Thesis[]> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/thesisDefense/getAllThesisByTeachersId", {
       headers: {
         token: sessionStorage.getItem("token"),
       },

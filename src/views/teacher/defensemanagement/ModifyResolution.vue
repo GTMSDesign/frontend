@@ -4,8 +4,8 @@
       <el-form-item label="答辩编号">
         <el-input v-model="search.defenseId" placeholder="请输入答辩编号以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
-      <el-form-item label="答辩主席">
-        <el-input v-model="search.teacher1" placeholder="请输入答辩主席以搜索" clearable :prefix-icon="Search" />
+      <el-form-item label="答辩秘书">
+        <el-input v-model="search.secretary" placeholder="请输入答辩秘书以搜索" clearable :prefix-icon="Search" />
       </el-form-item>
     </el-form>
     <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
@@ -45,7 +45,7 @@ interface Thesis {
 const loading = ref(true)
 const search = ref({
   defenseId: '',
-  teacher1: '',
+  secretary: '',
 });
 
 const fetchData = async () => {
@@ -83,7 +83,7 @@ const tableData = ref<Thesis[]>([]);
 const filterTableData = computed(() =>
     tableData.value.filter(data =>
         (!search.value.defenseId || data.defenseId === parseInt(search.value.defenseId)) &&
-        (!search.value.teacher1 || data.teacher1.toLowerCase().includes(search.value.teacher1.toLowerCase()))
+        (!search.value.secretary || data.secretary.toLowerCase().includes(search.value.secretary.toLowerCase()))
     )
 )
 

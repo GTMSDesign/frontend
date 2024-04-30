@@ -19,7 +19,7 @@
       <el-table-column label="状态" prop="status" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <defenseInfo :defenseId="row.defenseId" />
+          <deferredThesis :defenseId="row.defenseId" />
         </template>
       </el-table-column>
     </el-table>
@@ -28,9 +28,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { allDefenseThesisTeacher } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import {allDefenseThesisAllTeachers} from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { Search } from '@element-plus/icons-vue'
-import defenseInfo from '@/views/teacher/defensemanagement/defenseInfo.vue'
+import deferredThesis from '@/views/teacher/defensemanagement/deferredThesis.vue'
 
 
 interface Thesis {
@@ -53,7 +53,7 @@ const search = ref({
 const fetchData = async () => {
   try {
     const account = sessionStorage.getItem('account') || ''; // 获取 sessionStorage 中的 account
-    const data = await allDefenseThesisTeacher(account); // 调用获取教师相关论文的方法，并传入参数
+    const data = await allDefenseThesisAllTeachers(account); // 调用获取教师相关论文的方法，并传入参数
     const theses: Thesis[] = data.map((item: any) => ({
       defenseId: item.defenseId,
       thesisId: item.thesisId,
@@ -89,5 +89,4 @@ const filterTableData = computed(() =>
 )
 
 </script>
-
 <style scoped></style>
