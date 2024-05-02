@@ -16,7 +16,7 @@
     <el-table-column label="学生学号" prop="student_id" sortable align="center"></el-table-column>
     <el-table-column label="导师姓名" prop="teacher_name" align="center"></el-table-column>
     <el-table-column label="导师ID" prop="teacher_id" align="center"></el-table-column>
-    <el-table-column label="论文状态" prop="status" align="center">
+    <el-table-column label="论文状态" prop="status" align="center" width="110">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{
           scope.row.status

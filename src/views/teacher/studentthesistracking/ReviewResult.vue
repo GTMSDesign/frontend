@@ -14,7 +14,7 @@
     <el-table-column label="论文ID" prop="thesisId" sortable align="center"></el-table-column>
     <el-table-column label="学生姓名" prop="studentName" align="center"></el-table-column>
     <el-table-column label="学生学号" prop="studentId" sortable align="center"></el-table-column>
-    <el-table-column label="论文状态" prop="status" align="center">
+    <el-table-column label="论文状态" prop="status" align="center" width="110">
       <template #default="scope">
         <el-tag type="primary" disable-transitions>{{
           scope.row.status
