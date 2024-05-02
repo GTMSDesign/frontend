@@ -15,8 +15,8 @@
           status-icon
       >
 
-      <el-form-item label="论文题目" prop="thesisId">
-        <el-input v-model="ruleForm.thesisId" />
+      <el-form-item label="答辩ID" prop="defenseId">
+        <el-input v-model="ruleForm.defenseId" :disabled="true"/>
       </el-form-item>
       <el-form-item label="答辩结果" prop="state">
         <el-radio-group v-model="ruleForm.state" >
@@ -29,7 +29,7 @@
         <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
       </el-form-item>
       <el-form-item label="答辩附件" prop="defenseId">
-          <Upload :id="defenseId" type="resolution" />
+          <Upload :id="defenseId" type="defense" />
       </el-form-item>
       <el-form-item label="三个一评价" prop="review">
         <el-input v-model="ruleForm.review" rows="5" type="textarea" />
@@ -47,8 +47,6 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-// import type { UploadProps, UploadUserFile} from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { saveThesisDefense } from '@/services/teacher'
 import Upload from '@/components/public/upload.vue'
 
@@ -70,7 +68,7 @@ const handleClose = (done: () => void) => {
 
 interface RuleForm {
   // defenseId: string
-  thesisId: string
+  defenseId: string
   state: string
   defenseRemarks: string
   defenseUrl: string
@@ -81,7 +79,7 @@ const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   // defenseId: props.defenseId,
-  thesisId: '555',
+  defenseId: props.defenseId || "",
   state: "pass",
   defenseRemarks: '',
   defenseUrl: '',
@@ -89,9 +87,9 @@ const ruleForm = reactive<RuleForm>({
 })
 
 const rules = reactive<FormRules<RuleForm>>({
-  thesisId: [
-    { required: true, message: '请输入论文名称', trigger: 'blur' },
-  ],
+  // thesisId: [
+  //   { required: true, message: '请输入论文名称', trigger: 'blur' },
+  // ],
   defenseRemarks: [
     { required: true, message: '请输入答辩附言', trigger: 'blur' },
   ],
@@ -99,8 +97,8 @@ const rules = reactive<FormRules<RuleForm>>({
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   try {
-    console.log(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
-    await saveThesisDefense(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
+    console.log(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
+    await saveThesisDefense(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
   } catch (error) {
     console.log(error);
   }

@@ -15,8 +15,8 @@
         status-icon
     >
 
-      <el-form-item label="论文题目" prop="thesisId">
-        <el-input v-model="ruleForm.thesisId" />
+      <el-form-item label="答辩ID" prop="defenseId">
+        <el-input v-model="ruleForm.defenseId" :disabled="true"/>
       </el-form-item>
       <el-form-item label="答辩结果" prop="state">
         <el-radio-group v-model="ruleForm.state" >
@@ -29,20 +29,8 @@
       <el-form-item label="答辩附言" prop="defenseRemarks">
         <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
       </el-form-item>
-      <el-form-item label="答辩附件" prop="csv">
-        <el-upload
-            v-model:file-list="fileList"
-            class="upload-demo"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            multiple
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-        >
-          <el-button type="primary">Click to upload</el-button>
-        </el-upload>
+      <el-form-item label="答辩附件" prop="defenseId">
+        <Upload :id="defenseId" type="defense" />
       </el-form-item>
       <el-form-item label="三个一评价" prop="review">
         <el-input v-model="ruleForm.review" rows="5" type="textarea" />
@@ -63,6 +51,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { UploadProps, UploadUserFile} from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {getDefenseDetail, saveDeferredDefense} from '@/services/teacher'
+import Upload from "@/components/public/upload.vue";
 
 const loading = ref(true)
 const dialogVisible = ref(false)
@@ -77,7 +66,7 @@ const handleClose = (done: () => void) => {
 }
 
 interface Defense {
-  thesisId: string
+  defenseId: string
   state: string
   defenseRemarks: string
   defenseUrl: string
@@ -85,13 +74,13 @@ interface Defense {
 }
 
 const props = defineProps({
-  defenseId: Number,
+  defenseId: String,
 });
 
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<Defense>({
-  thesisId: '',
+  defenseId: props.defenseId || "",
   state: '',
   defenseRemarks: '',
   defenseUrl: '',
@@ -109,12 +98,12 @@ watch(dialogVisible, (newValue) => {
 
 const fetchData = async () => {
   try {
-    const defenseId = props.defenseId || 0 ; // 获取 props 中的 defenseId
+    const defenseId = props.defenseId || ''; // 获取 props 中的 defenseId
     const results = await getDefenseDetail(defenseId);// 调用获取答辩详情的方法，并传入参数
     // tableData.value = data;
     if (results){
       const data = results
-      ruleForm.thesisId = data.thesisId
+      ruleForm.defenseId = defenseId
       ruleForm.state = data.state
       ruleForm.defenseRemarks = data.defenseRemarks
       ruleForm.defenseUrl = data.defenseUrl
@@ -122,7 +111,6 @@ const fetchData = async () => {
       loading.value = false; // 数据加载完成，loading 状态设为 false
       console.log(props.defenseId)
       console.log(data)
-      console.log(data.review)
     }else {
       ElMessage.error('未能获取到答辩详情数据');
     }
@@ -134,9 +122,9 @@ const fetchData = async () => {
 }
 
 const rules = reactive<FormRules<Defense>>({
-  thesisId: [
-    { required: true, message: '请输入论文名称', trigger: 'blur' },
-  ],
+  // thesisId: [
+  //   { required: true, message: '请输入论文名称', trigger: 'blur' },
+  // ],
   defenseRemarks: [
     { required: true, message: '请输入答辩附言', trigger: 'blur' },
   ],
@@ -152,8 +140,8 @@ const tableData = ref<Defense>();
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   try {
-    console.log(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
-    await saveDeferredDefense(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
+    console.log(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
+    await saveDeferredDefense(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
   } catch (error) {
     console.log(error);
   }

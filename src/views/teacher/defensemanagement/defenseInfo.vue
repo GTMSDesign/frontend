@@ -123,10 +123,11 @@
             <el-icon :style="iconStyle">
               <Link />
             </el-icon>
-            论文附件
+            决议附件
           </div>
         </template>
-        <Download :id="defenseId" type="thesis" />
+<!--        <Download :id="defenseId" type="resolution" />-->
+        <Upload :id="defenseId" type="resolution" />
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -138,7 +139,7 @@
             答辩附件
           </div>
         </template>
-        <Download :id="defenseId" type="resolution" />
+        <Download :id="defenseId" type="defense" />
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -156,6 +157,7 @@ import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus
 import {getDefenseThesisDetail, defenseSubmission} from '@/services/teacher';
 
 import {deleteByAccount} from "@/services/admin";
+import Upload from "@/components/public/upload.vue";
 // import type {FormInstance} from "element-plus"; // 导入获取教师相关论文的方法
 
 const props = defineProps({

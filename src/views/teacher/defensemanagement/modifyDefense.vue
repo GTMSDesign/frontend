@@ -15,8 +15,8 @@
         status-icon
     >
 
-      <el-form-item label="论文题目" prop="thesisId">
-        <el-input v-model="ruleForm.thesisId" />
+      <el-form-item label="答辩ID" prop="defenseId">
+        <el-input v-model="ruleForm.defenseId" :disabled="true" />
       </el-form-item>
       <el-form-item label="答辩结果" prop="state">
         <el-radio-group v-model="ruleForm.state" >
@@ -30,8 +30,8 @@
         <el-input v-model="ruleForm.defenseRemarks" rows="8" type="textarea" />
       </el-form-item>
       <el-form-item label="答辩附件" prop="defenseId">
-        <Download :id="defenseId?.toString()" type="resolution" />
-        <Upload :id="defenseId?.toString()" type="resolution" />
+        <Download :id="defenseId" type="defense" />
+        <Upload :id="defenseId" type="defense" />
       </el-form-item>
       <el-form-item label="三个一评价" prop="review">
         <el-input v-model="ruleForm.review" rows="5" type="textarea" />
@@ -54,12 +54,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {getDefenseDetail, saveThesisDefense} from '@/services/teacher'
 import Upload from "@/components/public/upload.vue";
 import Download from "@/components/public/download.vue";
-
 const loading = ref(true)
 const dialogVisible = ref(false)
 const handleCommand = (command: string | number | object) => {
   dialogVisible.value = true
-  // fetchData();
 }
 
 const handleClose = (done: () => void) => {
@@ -68,7 +66,7 @@ const handleClose = (done: () => void) => {
 }
 
 interface Defense {
-  thesisId: string
+  defenseId: string
   state: string
   defenseRemarks: string
   defenseUrl: string
@@ -76,14 +74,14 @@ interface Defense {
 }
 
 const props = defineProps({
-  defenseId: Number,
+  defenseId: String,
 });
 
-const defense_id = props.defenseId?.toString()
+// const defense_id = props.defenseId?.toString()
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<Defense>({
-  thesisId: '',
+  defenseId: props.defenseId || "",
   state: '',
   defenseRemarks: '',
   defenseUrl: '',
@@ -101,12 +99,12 @@ watch(dialogVisible, (newValue) => {
 
 const fetchData = async () => {
   try {
-    const defenseId = props.defenseId || 0 ; // 获取 props 中的 defenseId
+    const defenseId = props.defenseId || "0" ; // 获取 props 中的 defenseId
     const results = await getDefenseDetail(defenseId);// 调用获取答辩详情的方法，并传入参数
     // tableData.value = data;
     if (results){
       const data = results
-      ruleForm.thesisId = data.thesisId
+      ruleForm.defenseId = defenseId
       ruleForm.state = data.state
       ruleForm.defenseRemarks = data.defenseRemarks
       ruleForm.defenseUrl = data.defenseUrl
@@ -126,9 +124,9 @@ const fetchData = async () => {
 }
 
 const rules = reactive<FormRules<Defense>>({
-  thesisId: [
-    { required: true, message: '请输入论文名称', trigger: 'blur' },
-  ],
+  // thesisId: [
+  //   { required: true, message: '请输入论文名称', trigger: 'blur' },
+  // ],
   defenseRemarks: [
     { required: true, message: '请输入答辩附言', trigger: 'blur' },
   ],
@@ -144,11 +142,12 @@ const tableData = ref<Defense>();
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   try {
-    console.log(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
-    await saveThesisDefense(ruleForm.thesisId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
+    console.log(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review)
+    await saveThesisDefense(ruleForm.defenseId, ruleForm.state, ruleForm.defenseRemarks, ruleForm.defenseUrl,ruleForm.review);
   } catch (error) {
     console.log(error);
   }
+
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {

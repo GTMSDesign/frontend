@@ -322,7 +322,7 @@ export const getDefenseThesisDetail = async (
 };
 
 export const getDefenseDetail = async (
-  defenseId: number
+  defenseId: string
 ): Promise<DefenseDetail> => {
   try {
     // 发起 GET 请求
@@ -602,7 +602,7 @@ export const getThesisByStatus = async (
 };
 
 export const saveThesisDefense = async (
-  thesisId: string,
+  defenseId: string,
   state: string,
   defenseRemarks: string,
   defenseUrl: string,
@@ -611,7 +611,7 @@ export const saveThesisDefense = async (
   let errorMessage = ""; // 存储错误消息
   try {
     const formData = new FormData();
-    formData.append("thesisId", thesisId);
+    formData.append("defenseId", defenseId);
     formData.append("state", state);
     formData.append("defenseRemarks", defenseRemarks);
     formData.append("defenseUrl", defenseUrl);
@@ -634,7 +634,7 @@ export const saveThesisDefense = async (
 
 
 export const saveDeferredDefense = async (
-  thesisId: string,
+  defenseId: string,
   state: string,
   defenseRemarks: string,
   defenseUrl: string,
@@ -643,7 +643,7 @@ export const saveDeferredDefense = async (
   let errorMessage = ""; // 存储错误消息
   try {
     const formData = new FormData();
-    formData.append("thesisId", thesisId);
+    formData.append("defenseId", defenseId);
     formData.append("state", state);
     formData.append("defenseRemarks", defenseRemarks);
     formData.append("defenseUrl", defenseUrl);
