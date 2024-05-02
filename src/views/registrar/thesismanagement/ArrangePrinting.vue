@@ -25,7 +25,7 @@
     </el-table-column>
     <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>
     <el-table-column label="操作" align="center" #default="scope" width="210px" fixed="right">
-      <el-button link type="primary" size="small">安排印刷</el-button>
+      <el-button link type="primary" @click="download(scope.row)">安排印刷</el-button>
     </el-table-column>
   </el-table>
 </template>
@@ -40,6 +40,7 @@ import {
 } from "@/services/teacher";
 import { Search } from "@element-plus/icons-vue";
 import type { FormProps } from "element-plus";
+import { ElMessage } from "element-plus";
 interface Thesis {
   title: string;
   thesis_id: string;
@@ -82,14 +83,17 @@ onMounted(() => {
 
 
 const download = async (row: Thesis) => {
-  console.log(row.thesis_id);
   const url = await downloadFile(row.thesis_id, "thesis");
-  console.log(url);
-  const link = document.createElement("a");
-  link.href = url; // 设置下载链接
-  document.body.appendChild(link); // 将元素添加到文档中
-  link.click(); // 触发下载
-  document.body.removeChild(link); // 下载后移除元素
+  if (url === "Error") {
+    ElMessage.error('该文件还未被上传');
+    return;
+  } else {
+    const link = document.createElement("a");
+    link.href = url; // 设置下载链接
+    document.body.appendChild(link); // 将元素添加到文档中
+    link.click(); // 触发下载
+    document.body.removeChild(link); // 下载后移除元素
+  }
 };
 
 // 使用ref创建响应式变量
