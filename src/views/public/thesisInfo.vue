@@ -110,6 +110,31 @@
         </template>
         <el-button type="danger" @click="handleDelete">确认删除</el-button>
       </el-descriptions-item>
+
+      <el-descriptions-item v-if="tableData && tableData.status === '待答辩'">
+        <template #label>
+          <div class="cell-item">
+            <el-icon :style="iconStyle">
+              <View />
+            </el-icon>
+            设置答辩前定稿
+          </div>
+        </template>
+        <el-button type="primary" @click="handleBeforeDefense">确认答辩前定稿</el-button>
+      </el-descriptions-item>
+
+      <el-descriptions-item v-if="tableData && tableData.status === '通过答辩'">
+        <template #label>
+          <div class="cell-item">
+            <el-icon :style="iconStyle">
+              <View />
+            </el-icon>
+            设置答辩后定稿
+          </div>
+        </template>
+        <el-button type="primary" @click="handleAfterDefense">确认答辩后定稿</el-button>
+      </el-descriptions-item>
+
     </el-descriptions>
 
     <el-descriptions class="margin-top" :column="1" :size="size" border>
@@ -199,7 +224,7 @@ import { reactive, ref, computed, onMounted } from 'vue'
 import Upload from '@/components/public/upload.vue'
 import Download from '@/components/public/download.vue'
 import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus/icons-vue'
-import { getThesisDetail, finishDelete } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { getThesisDetail, finishDelete, finishBeforeDefense, finishAfterDefense } from '@/services/teacher'; // 导入获取教师相关论文的方法
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const props = defineProps({
@@ -249,15 +274,89 @@ const handleDelete = async () => {
 }
 
 const FinishDelete = async () => {
-    try {
-        const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
-        await finishDelete(thesis_id);
-        dialogVisible.value = false;
-        fetchData();
-        location.reload();
-    } catch (error) {
-        ElMessage.error("删除错误")
+  try {
+    const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
+    await finishDelete(thesis_id);
+    dialogVisible.value = false;
+    fetchData();
+    location.reload();
+  } catch (error) {
+    ElMessage.error("删除错误")
+  }
+}
+
+const handleBeforeDefense = async () => {
+  ElMessageBox.confirm(
+    '您确认设置为答辩前定稿？',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
     }
+  )
+    .then(() => {
+      FinishBeforeDefense();
+      ElMessage({
+        type: 'success',
+        message: '成功设置',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消设置',
+      })
+    })
+}
+
+const FinishBeforeDefense = async () => {
+  try {
+    const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
+    await finishBeforeDefense(thesis_id);
+    dialogVisible.value = false;
+    fetchData();
+    location.reload();
+  } catch (error) {
+    ElMessage.error("设置错误")
+  }
+}
+
+const handleAfterDefense = async () => {
+  ElMessageBox.confirm(
+    '您确认设置为答辩后定稿？',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      FinishAfterDefense();
+      ElMessage({
+        type: 'success',
+        message: '成功设置',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消设置',
+      })
+    })
+}
+
+const FinishAfterDefense = async () => {
+  try {
+    const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
+    await finishAfterDefense(thesis_id);
+    dialogVisible.value = false;
+    fetchData();
+    location.reload();
+  } catch (error) {
+    ElMessage.error("设置错误")
+  }
 }
 
 interface Thesis {

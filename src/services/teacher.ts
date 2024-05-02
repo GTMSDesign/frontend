@@ -772,4 +772,36 @@ export const finishDelete = async (thesisId: string): Promise<void> => {
   }
 };
 
+export const finishBeforeDefense = async (thesisId: string): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/teacher/finishBeforeDefense", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesisId }, // 传递参数到后端
+    });
+  } catch (error) {
+    errorMessage = "Failed to set finish before defense"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
+export const finishAfterDefense = async (thesisId: string): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/teacher/finishAfterDefense", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesisId }, // 传递参数到后端
+    });
+  } catch (error) {
+    errorMessage = "Failed to set finish after defense"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
+  }
+};
+
 export default instance;
