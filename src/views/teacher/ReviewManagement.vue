@@ -86,7 +86,7 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted, computed } from "vue";
 import type { FormProps } from "element-plus";
-import { genFileId } from "element-plus";
+import { ElMessage, genFileId } from "element-plus";
 import {
   allReviewThesis,
   getReviewRules,
@@ -148,6 +148,7 @@ const submit = async () => {
     form.comment,
     form.advice
   );
+  ElMessage.success("提交成功！")
   await fetchData();
   cancel();
 };

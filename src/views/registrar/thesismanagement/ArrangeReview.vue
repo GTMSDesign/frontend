@@ -24,7 +24,7 @@
   <div class="table-container">
     <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterTableData" stripe height="500"
       :row-style="{ height: '50px' }" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="thesisTableRef" @selection-change="selectThesis">
+      :default-sort="{ prop: 'thesis_id', order: 'ascending' }" ref="thesisTableRef" @selection-change="selectThesis">
       <el-table-column type="selection" width="55" />
       <el-table-column label="论文标题" prop="title"></el-table-column>
       <el-table-column label="论文ID" prop="thesis_id" align="center"></el-table-column>
@@ -33,14 +33,14 @@
     </el-table>
     <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterInternalTeachers"
       :row-style="{ height: '50px' }" stripe border height="500" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="internalTableRef"
+      :default-sort="{ prop: 'thesis_id', order: 'ascending' }" ref="internalTableRef"
       @selection-change="selectInternal">
       <el-table-column type="selection" width="55" />
       <el-table-column label="内审老师ID" prop="teacherId" align="center"></el-table-column>
       <el-table-column label="内审老师姓名" prop="teacherName" align="center"></el-table-column></el-table>
     <el-table class="table-item" v-loading="loading" v-if="!loading" :data="filterExternalTeachers"
       :row-style="{ height: '50px' }" stripe border height="500" :header-cell-style="{ backgroundColor: '#E9D0F3' }"
-      :default-sort="{ prop: 'thesis_id', order: 'increncing' }" ref="externalTableRef"
+      :default-sort="{ prop: 'thesis_id', order: 'ascending' }" ref="externalTableRef"
       @selection-change="selectExternal">
       <el-table-column type="selection" width="55" />
       <el-table-column label="外审老师ID" prop="teacherId" align="center"></el-table-column>
@@ -58,7 +58,7 @@ import {
   getExternalTeachers,
   assignReview,
 } from "@/services/registrar";
-import { ElTable } from "element-plus";
+import { ElTable, ElMessage } from "element-plus";
 interface Thesis {
   title: string;
   thesis_id: string;
@@ -129,7 +129,7 @@ const selectExternal = async (val: TeacherInf[]) => {
 
 const fetchData = async () => {
   try {
-    const data = await getThesisByStatus("初步定稿");
+    const data = await getThesisByStatus("通过重复率检测");
     internalTeachers.value = await getInternalTeachers();
     externalTeachers.value = await getExternalTeachers();
     tableData.value = data; // 更新 tableData
@@ -164,13 +164,13 @@ const search = ref({
 });
 const submit = async () => {
   if (selectedInternal.value === "" || selectedExternal.value === "") {
-    alert("请选择老师");
+    ElMessage.error("请选择老师");
     return;
   } else if (selectedThesis.value.length == 0) {
-    alert("请选择要分配的论文！");
+    ElMessage.error("请选择要分配的论文！");
     return;
   } else if (deadline.value === "") {
-    alert("请选择截止日期");
+    ElMessage.error("请选择截止日期");
     return;
   }
   try {
@@ -188,7 +188,7 @@ const submit = async () => {
       selectedExternal.value,
       dateString
     );
-
+    ElMessage.success("安排成功")
     await fetchData();
   } catch (error) {
     console.log(error);

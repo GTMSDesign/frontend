@@ -22,7 +22,7 @@
         <el-tag type="primary" disable-transitions>{{ scope.row.status }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column label="答辩次数" prop="defense_times" width="110" sortable align="center"></el-table-column>
+    <el-table-column label="答辩次数" prop="defense_times" width="100" sortable align="center"></el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
         <ThesisInfo :thesis_id="row.thesis_id" />

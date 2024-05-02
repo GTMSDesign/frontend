@@ -41,7 +41,7 @@
         <el-input v-model="currentrow.name" style="width: auto" />
       </el-form-item>
       <el-form-item label="权限" :label-width="formLabelWidth">
-        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
+        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 200px;">
           <el-option v-for="(label, power) in powerLabels" :key="power" :label="label" :value="power" />
         </el-select>
       </el-form-item>
@@ -67,7 +67,7 @@
         <el-input v-model="currentrow.name" style="width: auto" />
       </el-form-item>
       <el-form-item label="权限" :label-width="formLabelWidth">
-        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 100px;">
+        <el-select v-model="currentrow.power" placeholder="请选择权限" style="width: 200px;">
           <el-option v-for="(label, power) in powerLabels" :key="power" :label="label" :value="power" />
         </el-select>
       </el-form-item>

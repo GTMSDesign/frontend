@@ -10,7 +10,7 @@
   </el-form>
 
   <el-table v-loading="loading" v-if="!loading" :data="filterTableData" style="width: 100%" stripe height="550"
-    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'session_time', order: 'increncing' }">
+    :header-cell-style="{ backgroundColor: '#E9D0F3' }" :default-sort="{ prop: 'session_id', order: 'descending' }">
     <el-table-column label="会话ID" prop="session_id" align="center" sortable></el-table-column>
     <el-table-column label="学生姓名" prop="student_name" align="center"></el-table-column>
     <el-table-column label="学生学号" prop="student_id" align="center"></el-table-column>

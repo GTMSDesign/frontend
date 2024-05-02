@@ -1,6 +1,6 @@
 <template>
   <el-upload v-model:file-list="fileList" :headers="Headers" ref="upload" class="upload-demo"
-    action="http://localhost:8080/filetransfer/upload" :limit="5" accept=".doc, .docx, .txt" :on-exceed="handleExceed"
+    action="http://localhost:8080/filetransfer/upload" :limit="5" accept=".doc, .docx, .txt, .pdf" :on-exceed="handleExceed"
     :on-success="handleSuccess" :on-error="handleError" :on-remove="handleRemove" :auto-upload="false" drag :data="uploadForm">
     <template #trigger>
       <div class="el-upload__text">
@@ -11,7 +11,7 @@
       确认上传
     </el-button>
     <template #tip>
-      仅限 doc/docx 文件，确认上传之后不可删除，多次上传会覆盖先前文件
+      仅限 doc/docx/txt/pdf 文件，确认上传之后不可删除，多次上传会覆盖先前文件
     </template>
   </el-upload>
 </template>

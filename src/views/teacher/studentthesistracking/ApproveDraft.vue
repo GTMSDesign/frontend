@@ -196,7 +196,7 @@ const download = async (row: Thesis) => {
 
 const submit = async () => {
   if (currentrow.value.selectFile === null) {
-    alert("Please select a file.");
+    ElMessage.error("请选择文件");
     return;
   }
   //提交结论

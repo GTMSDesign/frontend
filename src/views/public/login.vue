@@ -212,9 +212,9 @@ onMounted(() => {
 }
 
 .login-button:hover {
-  background-color: #409EFF;
+  background-color: #73116f;
   /* 鼠标悬停时的背景色 */
-  border-color: #409EFF;
+  border-color: #73116f;
   /* 鼠标悬停时的边框颜色 */
 }
 </style>

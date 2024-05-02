@@ -50,7 +50,7 @@ interface ThesisDetail {
   opinion: string;
 }
 
-interface DefenseDetail{
+interface DefenseDetail {
   thesisId: string;
   state: string;
   defenseRemarks: string;
@@ -304,7 +304,7 @@ export const getThesisDetail = async (
 };
 
 export const getDefenseThesisDetail = async (
-    defenseId: string
+  defenseId: string
 ): Promise<DefensedThesis> => {
   try {
     // 发起 GET 请求
@@ -322,7 +322,7 @@ export const getDefenseThesisDetail = async (
 };
 
 export const getDefenseDetail = async (
-    defenseId: number
+  defenseId: number
 ): Promise<DefenseDetail> => {
   try {
     // 发起 GET 请求
@@ -634,11 +634,11 @@ export const saveThesisDefense = async (
 
 
 export const saveDeferredDefense = async (
-    thesisId: string,
-    state: string,
-    defenseRemarks: string,
-    defenseUrl: string,
-    review: string
+  thesisId: string,
+  state: string,
+  defenseRemarks: string,
+  defenseUrl: string,
+  review: string
 ): Promise<void> => {
   let errorMessage = ""; // 存储错误消息
   try {
@@ -649,13 +649,13 @@ export const saveDeferredDefense = async (
     formData.append("defenseUrl", defenseUrl);
     formData.append("review", review);
     const respond = await instance.post(
-        "/thesisDefense/deferredDefense",
-        formData,
-        {
-          headers: {
-            token: sessionStorage.getItem("token"), // 确保发送 token
-          },
-        }
+      "/thesisDefense/deferredDefense",
+      formData,
+      {
+        headers: {
+          token: sessionStorage.getItem("token"), // 确保发送 token
+        },
+      }
     );
     console.log(respond);
   } catch (error) {
@@ -742,7 +742,7 @@ export const getTeacherNameById = async (teacherId: string) => {
 
 export const defenseSubmission = async (defenseId: string): Promise<void> => {
   try {
-    const response = await instance.post("/thesisDefense/submission", null,{
+    const response = await instance.post("/thesisDefense/submission", null, {
       params: {
         defenseId,
       },
@@ -753,6 +753,22 @@ export const defenseSubmission = async (defenseId: string): Promise<void> => {
     console.log(response);
   } catch (error) {
     throw new Error("Faild to approve Defence");
+  }
+};
+
+export const finishDelete = async (thesisId: string): Promise<void> => {
+  let errorMessage = ""; // 存储错误消息
+
+  try {
+    const response = await instance.get("/teacher/finishDelete", {
+      headers: {
+        token: sessionStorage.getItem("token"),
+      },
+      params: { thesisId }, // 传递参数到后端
+    });
+  } catch (error) {
+    errorMessage = "Failed to set finish delete"; // 设置错误消息
+    throw new Error(errorMessage); // 抛出错误
   }
 };
 

@@ -185,29 +185,30 @@ onMounted(() => {
 const tableData = ref<Thesis[]>([]);
 const download = async (row: Thesis) => {
   const url = await downloadFile(row.thesis_id, "proposal");
-  if (url === "Error"){
+  if (url === "Error") {
     ElMessage.error('该文件还未被上传');
     return;
   } else {
-  const link = document.createElement("a");
-  link.href = url; // 设置下载链接
-  document.body.appendChild(link); // 将元素添加到文档中
-  link.click(); // 触发下载
-  document.body.removeChild(link); // 下载后移除元素
+    const link = document.createElement("a");
+    link.href = url; // 设置下载链接
+    document.body.appendChild(link); // 将元素添加到文档中
+    link.click(); // 触发下载
+    document.body.removeChild(link); // 下载后移除元素
   }
 };
 
 const submit = async () => {
   if (currentrow.value.selectFile === null) {
-    alert("请提交文件");
+    ElMessage.error("请提交文件");
     return;
   } else if (form.conclusion === "") {
-    alert("请选择一种评审结论");
+    ElMessage.error("请选择一种评审结论");
     return;
   }
   //提交结论
   try {
     await reviewProposal(currentrow.value.thesisId, form.conclusion);
+    ElMessage.success("提交成功")
     await fetchData();
   } catch (error) {
     console.log(error);

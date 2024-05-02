@@ -21,8 +21,8 @@
         }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column label="内审老师评分" prop="internalScore" align="center"></el-table-column>
-    <el-table-column label="外审老师评分" prop="externalScore" align="center"></el-table-column>
+    <el-table-column label="内审评分" prop="internalScore" align="center"></el-table-column>
+    <el-table-column label="外审评分" prop="externalScore" align="center"></el-table-column>
 
     <el-table-column label="评审时间" prop="date" width="110" sortable align="center"></el-table-column>
     <el-table-column label="操作" align="center" #default="scope" width="210px" fixed="right">
@@ -34,22 +34,22 @@
   <el-dialog v-model="dialogVisible" title="评审意见" width="50%" center>
     <hr size="4" color="#faf8f8" />
     <el-tabs v-model="activeName" class="demo-tabs">
-      <el-tab-pane label="内审老师的评价" name="first">
+      <el-tab-pane label="内审评价" name="first">
         <div class="text-container">
           <p>{{ form.internalComment }}</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="内审老师的建议" name="second">
+      <el-tab-pane label="内审建议" name="second">
         <div class="text-container">
           <p>{{ form.internalAdvice }}</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="外审老师的评价" name="third">
+      <el-tab-pane label="外审评价" name="third">
         <div class="text-container">
           <p>{{ form.externalComment }}</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="外审老师的建议" name="fourth">
+      <el-tab-pane label="外审建议" name="fourth">
         <div class="text-container">
           <p>{{ form.externalAdvice }}</p>
         </div>
@@ -57,9 +57,6 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false">
-          确定
-        </el-button>
       </div>
     </template>
   </el-dialog>

@@ -67,6 +67,7 @@ import { downloadFile } from "@/services/teacher"; // 导入获取教师相关�
 import { getThesisByStatus, submitPlagiarismCheck } from "@/services/registrar";
 import { Search } from "@element-plus/icons-vue";
 import type { FormProps } from "element-plus";
+import { ElMessage } from "element-plus";
 interface Thesis {
   title: string;
   thesis_id: string;
@@ -162,7 +163,7 @@ const download = async (row: Thesis) => {
 
 const submit = async () => {
   if (currentrow.value.conclusion === "") {
-    alert("Please select a conclusion");
+    ElMessage.error("请选择一种结论");
     return;
   }
   //提交结论
@@ -173,6 +174,7 @@ const submit = async () => {
       currentrow.value.repetitionRate,
       currentrow.value.conclusion
     );
+    ElMessage.success("提交成功！")
     await fetchData();
   } catch (error) {
     console.log(error);

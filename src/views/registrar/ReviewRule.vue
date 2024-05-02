@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox, ElMessage } from "element-plus";
 import { getReviewRules, updateReviewRule } from "@/services/registrar"; // 导入获取学生的方法
 import { Search } from "@element-plus/icons-vue";
 import StudentInfo from "@/views/public/studentInfo.vue";
@@ -118,10 +118,8 @@ onMounted(() => {
 const openDialog = (row: rule) => {
   title.value = "规则修改";
   dialogTableData.value.reviewItem = row.reviewItem;
-
   dialogTableData.value.reviewElement = row.reviewElement;
   dialogTableData.value.maxScore = row.maxScore;
-  console.log(dialogTableData);
   dialogVisible.value = true;
 };
 const addRow = () => {
@@ -169,6 +167,7 @@ const preserve = async () => {
     .then(() => {
       // 用户点击“确定”
       updateReviewRule(tableData.value);
+      ElMessage.success("保存成功！")
     })
     .catch(() => {
       // 用户点击“取消”或关闭对话框
@@ -187,6 +186,7 @@ const deleteRow = (index: number) => {
   )
     .then(() => {
       // 用户点击“确定”
+      ElMessage.success("删除成功")
       tableData.value.splice(index, 1);
     })
     .catch(() => {
@@ -195,6 +195,10 @@ const deleteRow = (index: number) => {
     });
 };
 const submit = () => {
+  if (dialogTableData.value.reviewElement == '' || dialogTableData.value.reviewItem == ''){
+    ElMessage.error("请完整填写评价项目和要素")
+    return;
+  }
   const index = tableData.value.findIndex(
     (item) => item.reviewItem === dialogTableData.value.reviewItem
   );
@@ -204,6 +208,7 @@ const submit = () => {
   } else {
     tableData.value.push({ ...dialogTableData.value });
   }
+  ElMessage.success("规则修改成功")
   cancel();
 };
 
@@ -219,6 +224,7 @@ const refresh = async () => {
   )
     .then(() => {
       fetchData(); // 当用户确认时，调用 fetchData 函数加载数据
+      ElMessage.success("刷新成功")
     })
     .catch(() => {
       console.log("刷新操作已取消");

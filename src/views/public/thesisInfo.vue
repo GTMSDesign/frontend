@@ -100,7 +100,15 @@
       </el-descriptions-item>
 
       <el-descriptions-item>
-        <!-- 仅占位 -->
+        <template #label>
+          <div class="cell-item">
+            <el-icon :style="iconStyle">
+              <View />
+            </el-icon>
+            删除该论文
+          </div>
+        </template>
+        <el-button type="danger" @click="handleDelete">确认删除</el-button>
       </el-descriptions-item>
     </el-descriptions>
 
@@ -191,7 +199,8 @@ import { reactive, ref, computed, onMounted } from 'vue'
 import Upload from '@/components/public/upload.vue'
 import Download from '@/components/public/download.vue'
 import { Link, Tickets, User, Comment, ChatLineRound, View } from '@element-plus/icons-vue'
-import { getThesisDetail } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { getThesisDetail, finishDelete } from '@/services/teacher'; // 导入获取教师相关论文的方法
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const props = defineProps({
   thesis_id: String,
@@ -212,6 +221,43 @@ const handleClose = (done: () => void) => {
   //     // catch error
   //   })
   done()
+}
+
+const handleDelete = async () => {
+  ElMessageBox.confirm(
+    '您确认要删除该论文?删除后无法恢复！',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      FinishDelete();
+      ElMessage({
+        type: 'success',
+        message: '成功删除',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      })
+    })
+}
+
+const FinishDelete = async () => {
+    try {
+        const thesis_id = props.thesis_id || ''; // 获取 props 中的 thesis_id
+        await finishDelete(thesis_id);
+        dialogVisible.value = false;
+        fetchData();
+        location.reload();
+    } catch (error) {
+        ElMessage.error("删除错误")
+    }
 }
 
 interface Thesis {
